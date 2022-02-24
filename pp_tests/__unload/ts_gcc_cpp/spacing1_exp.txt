@@ -1,0 +1,7 @@
+ 44 ;
+B Q B Q A Q A:
+f
+bar
+A
+bad
+g "1 2" bam baz

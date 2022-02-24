@@ -1,0 +1,12 @@
+ "1 block open"
+        "2 block open"
+         "3 block open"
+          "in 3: block open"
+           "OK"
+          "in 3: block close"
+         "3 block close"
+        "2 block close"
+    "1 block close"
+32
+FIRST_OPEN (no expanded)
+SECOND_OPEN (no expanded)

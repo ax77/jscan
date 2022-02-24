@@ -1,0 +1,13 @@
+static const char s1[] = "1.1";
+static const char t1[] = "1.1";
+static const char s2[] = "1+h(2)";
+static const char t2[] = "1+h(2)";
+int
+main(void)
+{
+  if (strcmp (s1, t1))
+    abort ();
+  if (strcmp (s2, t2))
+    abort ();
+  return 0;
+}

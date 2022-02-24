@@ -1,0 +1,1 @@
+switch (planet) { case PLANET_MERCURY: PLANET_MERCURY_landing_procedure(x, y); break; case PLANET_VENUS: PLANET_VENUS_landing_procedure(x, y); break; case PLANET_EARTH: PLANET_EARTH_landing_procedure(x, y); break; default: break; };

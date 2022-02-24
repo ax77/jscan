@@ -1,0 +1,6 @@
+enum foo {
+    FOO = 3,
+};
+int __test() {
+    return FOO;
+}

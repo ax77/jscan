@@ -1,0 +1,9 @@
+main( void)
+{
+    int a = 1, x = 2, y = -3;
+    fputs( "started\n", stderr);
+    assert( - - -a == -1);
+    assert( x- -y == -1);
+    fputs( "success\n", stderr);
+    return 0;
+}

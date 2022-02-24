@@ -1,0 +1,4 @@
+int main() {
+    printf("zero args: %d\n", 0);
+    printf("three args: %d\n", 3);
+}

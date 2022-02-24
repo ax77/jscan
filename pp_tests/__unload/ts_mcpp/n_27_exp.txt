@@ -1,0 +1,15 @@
+main( void)
+{
+    int a = 1, b = 2, c, m = 1, n = 2;
+    fputs( "started\n", stderr);
+    assert( 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 == 36);
+    assert( (1) + (1 + 2) + 1 + 2 + 1 + 2 + 3 + 1 + 2 + 3 + 4 == 23);
+    assert( 1 == 1);
+    assert( ((a) - (b)) == -1);
+    c = (a - b);
+    assert( c == -1);
+    c = n;
+    assert( c == 2);
+    fputs( "success\n", stderr);
+    return 0;
+}

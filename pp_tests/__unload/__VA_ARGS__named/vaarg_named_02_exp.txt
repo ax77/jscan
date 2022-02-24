@@ -1,0 +1,6 @@
+a: x
+b: x y, z,h
+c: foo(x)
+fprintf (stderr, "%s:%d: " , input_file_name, line_number)
+do { if((2) <= DEBUG_LEVEL) fprintf(stderr, " s=%d", dcode25->s10); } while(0);
+do { if((2) <= DEBUG_LEVEL) fprintf(stderr, " s=%d", dcode25->s10); } while(0);

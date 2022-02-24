@@ -1,0 +1,4 @@
+char const *foo_string = "foo"; char const *bar_string = "bar"; char const *baz_string = "baz";
+void function(int foo , int bar , int baz);
+putchar ('a'); putchar ('b'); putchar ('c');
+putchar ('a') , putchar ('b') , putchar ('c');

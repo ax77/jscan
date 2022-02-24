@@ -1,0 +1,19 @@
+extern unsigned errors;
+extern unsigned main_terminated;
+extern void fail( unsigned line );
+unsigned errors;
+unsigned main_terminated;
+void fail( unsigned line )
+{
+    ++errors;
+    printf( "failure on line %u\n", line );
+    if( main_terminated || errors > 5 ) {
+        abort();
+    }
+}
+unsigned x = 0xae+0x51;
+int main() {
+    if( x != 0xff ) fail(8);
+    if( (0xae+0x51) != 0xff ) fail(9);
+    if( ! errors ) { puts( "PASS " "" ); fflush( stdout ); } main_terminated = 1; return( errors != 0 );;
+}

@@ -1,0 +1,17 @@
+extern JNINativeMethod java_lang_Class_Natives[]; extern VMuint Number_java_lang_Class_Natives;
+extern JNINativeMethod java_lang_ClassLoader_Natives[]; extern VMuint Number_java_lang_ClassLoader_Natives;
+extern JNINativeMethod java_lang_Compiler_Natives[]; extern VMuint Number_java_lang_Compiler_Natives;
+extern JNINativeMethod java_lang_Double_Natives[]; extern VMuint Number_java_lang_Double_Natives;
+extern JNINativeMethod java_lang_Float_Natives[]; extern VMuint Number_java_lang_Float_Natives;
+extern JNINativeMethod java_lang_Math_Natives[]; extern VMuint Number_java_lang_Math_Natives;
+extern JNINativeMethod java_lang_Object_Natives[]; extern VMuint Number_java_lang_Object_Natives;
+extern JNINativeMethod java_lang_Runtime_Natives[]; extern VMuint Number_java_lang_Runtime_Natives;
+extern JNINativeMethod java_lang_SecurityManager_Natives[]; extern VMuint Number_java_lang_SecurityManager_Natives;
+extern JNINativeMethod java_lang_String_Natives[]; extern VMuint Number_java_lang_String_Natives;
+extern JNINativeMethod java_lang_System_Natives[]; extern VMuint Number_java_lang_System_Natives;
+extern JNINativeMethod java_lang_Thread_Natives[]; extern VMuint Number_java_lang_Thread_Natives;
+extern JNINativeMethod java_lang_Throwable_Natives[]; extern VMuint Number_java_lang_Throwable_Natives;
+extern JNINativeMethod java_lang_reflect_Array_Natives[]; extern VMuint Number_java_lang_reflect_Array_Natives;
+extern JNINativeMethod java_lang_reflect_Constructor_Natives[]; extern VMuint Number_java_lang_reflect_Constructor_Natives;
+extern JNINativeMethod java_lang_reflect_Field_Natives[]; extern VMuint Number_java_lang_reflect_Field_Natives;
+extern JNINativeMethod java_lang_reflect_Method_Natives[]; extern VMuint Number_java_lang_reflect_Method_Natives;

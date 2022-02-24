@@ -1,0 +1,9 @@
+const char p[] = "x ## y";
+const char q[] = "x ## y";
+int
+main (void)
+{
+  if (strcmp (p, q))
+    abort ();
+  return 0;
+}

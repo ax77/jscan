@@ -1,0 +1,13 @@
+       
+       
+       
+       
+       
+int main()
+{
+    TEST_ASSERT(3 == 3);
+    TEST_ASSERT(2 == 2);
+    TEST_ASSERT(1 == 1);
+    TEST_ASSERT(3 == 3);
+    return 0;
+}

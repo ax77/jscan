@@ -1,0 +1,15 @@
+typedef enum _e_PLANET { PLANET_MERCURY, PLANET_VENUS, PLANET_EARTH, } PLANET;
+char * PLANET_name[] = { "Mercury", "Venus", "Earth", };
+int PLANET_radius[] = { 2439, 6051, 6378, };
+const char * PLANET_element_name[] = { "MERCURY", "VENUS", "EARTH", };
+void PLANET_MERCURY_landing_procedure(int x, int y) { }
+void PLANET_VENUS_landing_procedure(int x, int y) { }
+void PLANET_EARTH_landing_procedure(int x, int y) { }
+int main() {
+    int x, y;
+    for (PLANET planet = (PLANET) 0; planet < (0 + 1 + 1 + 1); planet = (PLANET) (((int) planet) + 1)) {
+        printf("%s %s %d\n", PLANET_element_name[planet], PLANET_name[planet], PLANET_radius[planet]);
+    }
+    PLANET planet;
+    switch (planet) { case PLANET_MERCURY: PLANET_MERCURY_landing_procedure(x, y); break; case PLANET_VENUS: PLANET_VENUS_landing_procedure(x, y); break; case PLANET_EARTH: PLANET_EARTH_landing_procedure(x, y); break; default: break; };
+}

@@ -1,0 +1,3 @@
+fprintf (stderr, "hello, no args", , last);
+fprintf (stderr, "hello, one arg %s", "bye", last);
+fprintf (stderr, "hello, two args %d %s", 2, "bye", last);

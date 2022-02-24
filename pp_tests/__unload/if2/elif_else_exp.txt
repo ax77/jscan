@@ -1,0 +1,9 @@
+    keep
+    squash
+    perhaps
+    erase
+    discard
+    toss
+    perhaps this
+    trash
+    perhaps keep

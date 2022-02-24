@@ -1,0 +1,13 @@
+int printf(const char *, ...);
+static int foo;
+static int max(int a, int b) {
+ return a + b;
+}
+int main(void) {
+ int b = (1 + foo);
+ int c = (1 + max(1, (1 + foo)));
+ int d = (1 + max(1, (2 + max(1, (1 + foo)))));
+ int e = ((1 + foo) + 3 + max(1, ((1 + foo) + max(1, (1 + foo) - 2))))
+  + (1 + foo);
+ return printf("%d, %d, %d, %d\n", b, c, d, e);
+}

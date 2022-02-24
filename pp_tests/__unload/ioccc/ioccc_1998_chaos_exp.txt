@@ -1,0 +1,71 @@
+char Q[3792];
+int K, M=0, E, B;
+long Z;
+float H[] = { 1,0,0,0,0,1,0,0,0,0,1,0 } , T[12], R[12], C, D, I, J, S, * X, G=4;
+FILE * W;
+int main(int N,char ** Y) {
+ char P[] = "AlWuzEre 72 -1 1 1 1 1 1 1 1 1 1 1 -1 1 1 1 1 -1 1 1 1 -1 1 -1 -1 -1 1 -1 -1 1 1 1 1 -1 -1 1 -1 1 -1 1 -1 -1 1 1 -1 -1 -1 -1 -1 1 -1 1 1 -1 -1 -1 1 1 -1 -1 1 -1 1 -1 -1 -1 -1 -1 -1 1 -1 -1 -1 ";
+ strcpy(Q,P);
+ if(!(W = fopen(Y[N<2?0:1],"r"))) {
+ printf("Can't read\n"); exit(-1); }
+ fseek(W,0,SEEK_END);
+ Z = ftell(W);
+ fseek(W,0,SEEK_SET);
+ strcpy(Q+9, "%d");
+ while(fscanf(W,Q,&N) != 1) {
+ fseek(W,1,SEEK_CUR);
+ if(ftell(W) >= Z) {
+ printf("Bad input\n"); exit(-1); } }
+ X = (float *)malloc(N * (sizeof(int)>sizeof(float)?sizeof(int):sizeof(float)) * 2);
+ if(!X) { printf("No memory\n"); exit(-1); }
+ for(K = 0; K < N; K++) fscanf(W,"%f",X+K);
+ fclose(W);
+ initscr();
+ halfdelay(30);
+ noecho();
+ CH:
+ memset(R,0,12*sizeof(float));
+ if(M=='h') { T[1*4+0] = T[2*4+0] = T[0*4+1] = T[0*4+2] = !(T[0*5] = 1); T[1*4+2] = -(T[2*4+1] = .1045284632); T[2*5] = T[1*5] = .9945418726; for(M = 0; M < 3; M++) for(E = 0; E < 4; E++) for(K = 0; K < 3; K++) R[M*4+E] += H[K*4+E] * T[M*4+K]; memcpy(H,R,12*sizeof(float)); }
+ if(M=='j') { T[2*4+1] = T[0*4+1] = T[1*4+2] = T[1*4+0] = !(T[1*5] = 1); T[2*4+0] = -(T[0*4+2] = .1045284632); T[0*5] = T[2*5] = .9945418726; for(M = 0; M < 3; M++) for(E = 0; E < 4; E++) for(K = 0; K < 3; K++) R[M*4+E] += H[K*4+E] * T[M*4+K]; memcpy(H,R,12*sizeof(float)); }
+ if(M=='k') { T[1*4+2] = T[0*4+2] = T[2*4+1] = T[2*4+0] = !(T[2*5] = 1); T[1*4+0] = -(T[0*4+1] = .1045284632); T[0*5] = T[1*5] = .9945418726; for(M = 0; M < 3; M++) for(E = 0; E < 4; E++) for(K = 0; K < 3; K++) R[M*4+E] += H[K*4+E] * T[M*4+K]; memcpy(H,R,12*sizeof(float)); }
+ if(M=='y') { T[1*4+0] = T[2*4+0] = T[0*4+1] = T[0*4+2] = !(T[0*5] = 1); T[1*4+2] = -(T[2*4+1] = - .1045284632); T[2*5] = T[1*5] = .9945418726; for(M = 0; M < 3; M++) for(E = 0; E < 4; E++) for(K = 0; K < 3; K++) R[M*4+E] += H[K*4+E] * T[M*4+K]; memcpy(H,R,12*sizeof(float)); }
+ if(M=='u') { T[2*4+1] = T[0*4+1] = T[1*4+2] = T[1*4+0] = !(T[1*5] = 1); T[2*4+0] = -(T[0*4+2] = - .1045284632); T[0*5] = T[2*5] = .9945418726; for(M = 0; M < 3; M++) for(E = 0; E < 4; E++) for(K = 0; K < 3; K++) R[M*4+E] += H[K*4+E] * T[M*4+K]; memcpy(H,R,12*sizeof(float)); }
+ if(M=='i') { T[1*4+2] = T[0*4+2] = T[2*4+1] = T[2*4+0] = !(T[2*5] = 1); T[1*4+0] = -(T[0*4+1] = - .1045284632); T[0*5] = T[1*5] = .9945418726; for(M = 0; M < 3; M++) for(E = 0; E < 4; E++) for(K = 0; K < 3; K++) R[M*4+E] += H[K*4+E] * T[M*4+K]; memcpy(H,R,12*sizeof(float)); }
+ G += M=='a'?-.1:M=='z'?.1:0;
+ if(M=='q') { printf("%.9s\n",P); exit(0); }
+ memset(Q,0,3792);
+ erase();
+ for(K = 0; K < N; K++) {
+    C = 40 / ((X[K] * H[2*4]+ X[K+1] * H[2*4+1]+ X[K+2] * H[2*4+2])+G);
+ ((int *)(X+N))[K] = (int)((X[K] * H[0*4]+ X[K+1] * H[0*4+1]+ X[K+2] * H[0*4+2]) * C) + 40;
+ ((int *)(X+N))[K+1] = (int)((X[K] * H[1*4]+ X[K+1] * H[1*4+1]+ X[K+2] * H[1*4+2]) * C) + 24;
+ K+=2; }
+ for(B = 0; B < N; B++) {
+ C = ((int *)(X+N))[B++];
+ D = ((int *)(X+N))[B++];
+ E = ((int *)(X+N))[++B] - C;
+ M = ((int *)(X+N))[++B] - D;
+ B++;
+ S = (float)abs((abs(E)>abs(M))?E:M);
+ I=E/S;
+ J=M/S++;
+ for(K = 0; K < S; K++)
+ {
+  E = (int)(C+0.5);
+  M = (int)(D+0.5);
+  if(E>=0 && M>=0 && E<79 && M<48)
+  {
+   Q[E + M * 79] = 1;
+   mvaddch((M&1?M-1:M)/2,E,Q[E+(M+(M&1?-1:1))*79]?':':(M&1?'.':'`'));
+  }
+  C+=I;
+  D+=J;
+ }
+ }
+ move(0,0);
+ refresh();
+ M = getch();
+ halfdelay(M==ERR?1:30);
+ M = M==ERR?'u':M;
+ goto CH;
+}

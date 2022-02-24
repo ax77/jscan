@@ -1,0 +1,30 @@
+typedef struct int_list_pair int_list_pair; typedef struct int_list int_list; typedef struct int_list_iterator int_list_iterator; int_list *int_list_new(void); void int_list_free(int_list *s); int_list_pair *int_list_pair_new(int item); int int_list_size(const int_list *s); int int_list_insert(int_list *s, int item, int pos); int int_list_pop(int_list *s, int pos); int int_list_get(const int_list *s, int pos); void int_list_set(int_list *s, int item, int pos); int_list_iterator int_list_iterate(const int_list *s); int int_list_next(const int_list *s, int_list_iterator *iter); int int_list_get_at(const int_list *s, int_list_iterator iter); void int_list_set_at(int_list *s, int item, int_list_iterator iter); int int_list_insert_at(int_list *s, int item, int_list_iterator iter); int int_list_pop_at(int_list *s, int_list_iterator iter);
+struct int_list_pair { int car; int_list_pair *cdr; }; struct int_list { int len; int_list_pair *first; int_list_pair *last; }; struct int_list_iterator { int_list_pair *prev; int_list_pair *curr; }; int_list *int_list_new(void) { int_list *s; s = malloc(sizeof(struct int_list)); if (!s) return NULL; s->len = 0; s->first = NULL; s->last = NULL; return s; } void int_list_free(int_list *s) { int_list_pair *p, *temp; temp = NULL; for (p=s->first; p; ) { temp = p; p = p->cdr; free(temp); } free(s); } int_list_pair *int_list_pair_new(int item) { int_list_pair *p; p = malloc(sizeof(struct int_list_pair)); if (!p) return NULL; p->car = item; p->cdr = NULL; return p; } int int_list_size(const int_list *s) { return s->len; } int int_list_insert(int_list *s, int item, int pos) { int i; int_list_pair *newp, *p; newp = int_list_pair_new(item); if (!newp) return 0; if (!s->first) { s->first = s->last = newp; ++s->len; return 1; } if (pos < 0 || pos == s->len) { s->last->cdr = newp; s->last = newp; ++s->len; return 1; } if (pos == 0) { newp->cdr = s->first; s->first = newp; ++s->len; return 1; } for (p=s->first, i=0; i<pos-1 && p; ++i) p=p->cdr; if (!p) { free(newp); return 0; } newp->cdr = p->cdr; p->cdr = newp; ++s->len; if (!newp->cdr || p == s->last) { s->last = newp; } return 1; } int int_list_pop(int_list *s, int pos) { int_list_pair *p, *p2; int temp; int i; if (pos == 0) { p = s->first; s->first = p->cdr; temp = p->car; if (!p->cdr) s->last = NULL; free(p); --s->len; return temp; } if (pos < 0) { pos = s->len - 1; } for (p=s->first, i=0; i<pos-1 && p; ++i) p=p->cdr; temp = p->cdr->car; p2 = p->cdr; p->cdr = p2->cdr; if (!p->cdr) { s->last = p; } free(p2); --s->len; return temp; } int int_list_get(const int_list *s, int pos) { int i; int_list_pair *p; if (pos == 0) { return s->first->car; } if (pos < 0) { return s->last->car; } for (p=s->first, i=0; i<pos && p; ++i) p=p->cdr; return p->car; } void int_list_set(int_list *s, int item, int pos) { int i; int_list_pair *p; if (pos == 0) { s->first->car = item; } else if (pos < 0) { s->last->car = item; } else { for (p=s->first, i=0; i<pos && p; ++i) p=p->cdr; p->car = item; } } int_list_iterator int_list_iterate(const int_list *s) { int_list_iterator iter = {NULL, NULL}; return iter; } int int_list_next(const int_list *s, int_list_iterator *iter) { if (!iter->curr) { iter->curr = s->first; return 1; } if (!iter->curr->cdr) { return 0; } iter->prev = iter->curr; iter->curr = iter->curr->cdr; return 1; } int int_list_get_at(const int_list *s, int_list_iterator iter) { return iter.curr->car; } void int_list_set_at(int_list *s, int item, int_list_iterator iter) { iter.curr->car = item; } int int_list_insert_at(int_list *s, int item, int_list_iterator iter) { int_list_pair *newp; newp = int_list_pair_new(item); if (!newp) return 0; ++s->len; newp->cdr = iter.curr; if (!iter.prev) { s->first = newp; } else { iter.prev->cdr = newp; } return 1; } int int_list_pop_at(int_list *s, int_list_iterator iter) { int val; --s->len; if (!iter.prev) { s->first = iter.curr->cdr; } else { iter.prev->cdr = iter.curr->cdr; } if (s->last == iter.curr) s->last = iter.prev; val = iter.curr->car; free(iter.curr); return val; } struct int_list;
+void print_list(int_list *list)
+{
+ int_list_iterator i;
+ for (i = int_list_iterate(list); int_list_next(list, &i); ) {
+  printf("%d ", int_list_get_at(list, i));
+ }
+ printf("len: %d\n", int_list_size(list));
+}
+int main(void)
+{
+ int_list *list;
+ list = int_list_new();
+ int_list_insert(list, 20, 0);
+ int_list_insert(list, 40, 1);
+ int_list_insert(list, 30, 1);
+ int_list_insert(list, 50, -1);
+ int_list_insert(list, 10, 0);
+ print_list(list);
+ printf("list[3] is %d\n", int_list_get(list, 3));
+ printf("list[-1] is %d\n", int_list_get(list, -1));
+ printf("pop list[2]: %d\n", int_list_pop(list, 2));
+ print_list(list);
+ int_list_set(list, 30, 2);
+ int_list_set(list, 40, -1);
+ print_list(list);
+ int_list_free(list);
+ return 0;
+}

@@ -1,0 +1,321 @@
+typedef union {
+  float f;
+  int i;
+  char s[sizeof(float)];
+} ut;
+typedef struct {
+  float f;
+  int i;
+  char s[sizeof(float)];
+} st;
+typedef char* str;
+typedef char *fchar; struct fchar_struct { size_t len; size_t alloc; uint8_t flags; char vec[]; }; static inline size_t fchar_avail(const fchar v) { return (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->alloc - ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); } static inline size_t fchar_len(const fchar v) { return (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); } static inline void fchar_setlen(fchar v, const size_t newlen) { do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len = (newlen); } while (0); return; } static inline void fchar_inclen(fchar v, const size_t inc) { do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len += (inc); } while (0); return; } static inline size_t fchar_alloc(const fchar v) { return (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->alloc); } static inline void fchar_setalloc(fchar v, size_t newalloc) { do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->alloc = (newalloc); } while (0); return; } static inline void fchar_free(const fchar v) { do { ((v) == NULL) ? (void)(NULL) : free(((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))); } while (0); return; } fchar fchar_new(const size_t size) { struct fchar_struct *out = (struct fchar_struct *)calloc( 1, sizeof(struct fchar_struct) + sizeof(char) * size); if (out == NULL) { fprintf(stderr, "Out of memory!\n"); return NULL; } out->alloc = size; return (fchar)out->vec; } fchar fchar_newfrom(const char init[], const size_t initlen) { fchar out = fchar_new(((initlen) ? (initlen) : 8)); if (init == NULL) { return out; } for (size_t i = 0; i < initlen; i++) { out[i] = init[i]; } do { ((struct fchar_struct *)(((uint8_t *)((out))) - offsetof(struct fchar_struct, vec)))->len = (initlen); } while (0); return out; } fchar fchar_empty(void) { return fchar_new(8); } fchar fchar_dup(const fchar v) { size_t len = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); fchar out = fchar_new(len); for (size_t i = 0; i < len; i++) { out[i] = v[i]; } do { ((struct fchar_struct *)(((uint8_t *)((out))) - offsetof(struct fchar_struct, vec)))->len = ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len)); } while (0); return out; } fchar fchar_growzero(fchar v, size_t len) { if ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) >= len) { return v; } fchar out = fchar_new(len); for (size_t i = 0; i < (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); i++) { out[i] = v[i]; } do { ((struct fchar_struct *)(((uint8_t *)((out))) - offsetof(struct fchar_struct, vec)))->len = ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len)); } while (0); do { ((v) == NULL) ? (void)(NULL) : free(((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))); } while (0); return out; } fchar fchar_catlen(fchar v, const char *t, size_t len) { if ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->alloc - ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) < len) { v = fchar_growzero(v, (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) + len); } size_t last = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[last + i] = t[i]; } do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len += (len); } while (0); return v; } fchar fchar_push(fchar v, char value) { if ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->alloc - ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) == 0) { v = fchar_growzero(v, (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) * 2); } v[(((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len)] = value; do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len += (1); } while (0); return v; } char fchar_pop(fchar v) { if ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) == 0) { return (char){0}; } char out = v[(((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) - 1]; do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len = ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) - 1); } while (0); return out; } void fchar_range(fchar v, int start, int end) { size_t len = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); if (len == 0) return; if (start < 0) start = len + start; if (end < 0) end = len + end; if (start >= end) { do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len = (0); } while (0); return; } start--; end++; for (int i = 0; i < end - start; i++) { v[i] = v[start + i]; } do { ((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len = (end - start); } while (0); } void fchar_map(fchar v, char (*func)(char)) { size_t len = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[i] = func(v[i]); } return; } char fchar_fold(fchar v, char (*func)(char, char)) { size_t len = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); char out = v[0]; for (size_t i = 1; i < len; i++) { out = func(out, v[i]); } return out; } fchar fchar_filter(fchar v, int (*func)(char)) { fchar out = fchar_new(8); size_t len = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len); for (size_t i = 0; i < len; i++) { if (func(v[i])) { fchar_push(out, v[i]); } } return out; } void fchar_shsort(char array[], int (*cmp)(char, char), size_t len) { const int gaps[] = {701, 301, 132, 57, 23, 10, 4, 1}; int i, j, k; char tmp; for (k = 0; k < 8; k++) { for (i = gaps[k]; (size_t)i < len; i++) { for (j = i; j >= gaps[k] && cmp(array[j - gaps[k]], array[j]) > 0; j -= gaps[k]) { tmp = array[j]; array[j] = array[j - 1]; array[j - 1] = tmp; } } } } void fchar_qsort(char array[], int (*cmp)(char, char), int len) { if (len < 8) { fchar_shsort(array, cmp, len); return; } char pivot = array[len / 2], tmp; int left = 0, right = len - 1; while (left <= right) { for (; cmp(array[left], pivot) < 0; left++) { } for (; cmp(array[right], pivot) > 0; right--) { } if (left >= right) { break; } tmp = array[left]; array[left] = array[right]; array[right] = tmp; left++; right--; } fchar_qsort(array, cmp, left); fchar_qsort(array + left, cmp, len - left); } void fchar_sort(fchar v, int (*cmp)(char, char)) { if ((((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len) > 10) { fchar_qsort(v, cmp, (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len)); } else { fchar_shsort(v, cmp, (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len)); } } size_t fchar_bsearch(fchar v, int (*cmp)(char, char), char needle) { long int p = 0, u = (((struct fchar_struct *)(((uint8_t *)((v))) - offsetof(struct fchar_struct, vec)))->len), m, tmp; do { m = p + (u - p) / 2; tmp = cmp(v[m], needle); if (!tmp) { return m; } else if (tmp < 0) { p = m + 1; } else { u = m - 1; } } while (p <= u); return -1; }
+int fchar_cmp(const char a, const char b) { return (int)a - (int)b; }
+typedef int *fint; struct fint_struct { size_t len; size_t alloc; uint8_t flags; int vec[]; }; static inline size_t fint_avail(const fint v) { return (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->alloc - ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); } static inline size_t fint_len(const fint v) { return (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); } static inline void fint_setlen(fint v, const size_t newlen) { do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len = (newlen); } while (0); return; } static inline void fint_inclen(fint v, const size_t inc) { do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len += (inc); } while (0); return; } static inline size_t fint_alloc(const fint v) { return (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->alloc); } static inline void fint_setalloc(fint v, size_t newalloc) { do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->alloc = (newalloc); } while (0); return; } static inline void fint_free(const fint v) { do { ((v) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))); } while (0); return; } fint fint_new(const size_t size) { struct fint_struct *out = (struct fint_struct *)calloc( 1, sizeof(struct fint_struct) + sizeof(int) * size); if (out == NULL) { fprintf(stderr, "Out of memory!\n"); return NULL; } out->alloc = size; return (fint)out->vec; } fint fint_newfrom(const int init[], const size_t initlen) { fint out = fint_new(((initlen) ? (initlen) : 8)); if (init == NULL) { return out; } for (size_t i = 0; i < initlen; i++) { out[i] = init[i]; } do { ((struct fint_struct *)(((uint8_t *)((out))) - offsetof(struct fint_struct, vec)))->len = (initlen); } while (0); return out; } fint fint_empty(void) { return fint_new(8); } fint fint_dup(const fint v) { size_t len = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); fint out = fint_new(len); for (size_t i = 0; i < len; i++) { out[i] = v[i]; } do { ((struct fint_struct *)(((uint8_t *)((out))) - offsetof(struct fint_struct, vec)))->len = ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len)); } while (0); return out; } fint fint_growzero(fint v, size_t len) { if ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) >= len) { return v; } fint out = fint_new(len); for (size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); i++) { out[i] = v[i]; } do { ((struct fint_struct *)(((uint8_t *)((out))) - offsetof(struct fint_struct, vec)))->len = ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len)); } while (0); do { ((v) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))); } while (0); return out; } fint fint_catlen(fint v, const int *t, size_t len) { if ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->alloc - ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) < len) { v = fint_growzero(v, (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) + len); } size_t last = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[last + i] = t[i]; } do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len += (len); } while (0); return v; } fint fint_push(fint v, int value) { if ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->alloc - ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) == 0) { v = fint_growzero(v, (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) * 2); } v[(((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len)] = value; do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len += (1); } while (0); return v; } int fint_pop(fint v) { if ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) == 0) { return (int){0}; } int out = v[(((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) - 1]; do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len = ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) - 1); } while (0); return out; } void fint_range(fint v, int start, int end) { size_t len = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); if (len == 0) return; if (start < 0) start = len + start; if (end < 0) end = len + end; if (start >= end) { do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len = (0); } while (0); return; } start--; end++; for (int i = 0; i < end - start; i++) { v[i] = v[start + i]; } do { ((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len = (end - start); } while (0); } void fint_map(fint v, int (*func)(int)) { size_t len = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[i] = func(v[i]); } return; } int fint_fold(fint v, int (*func)(int, int)) { size_t len = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); int out = v[0]; for (size_t i = 1; i < len; i++) { out = func(out, v[i]); } return out; } fint fint_filter(fint v, int (*func)(int)) { fint out = fint_new(8); size_t len = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len); for (size_t i = 0; i < len; i++) { if (func(v[i])) { fint_push(out, v[i]); } } return out; } void fint_shsort(int array[], int (*cmp)(int, int), size_t len) { const int gaps[] = {701, 301, 132, 57, 23, 10, 4, 1}; int i, j, k; int tmp; for (k = 0; k < 8; k++) { for (i = gaps[k]; (size_t)i < len; i++) { for (j = i; j >= gaps[k] && cmp(array[j - gaps[k]], array[j]) > 0; j -= gaps[k]) { tmp = array[j]; array[j] = array[j - 1]; array[j - 1] = tmp; } } } } void fint_qsort(int array[], int (*cmp)(int, int), int len) { if (len < 8) { fint_shsort(array, cmp, len); return; } int pivot = array[len / 2], tmp; int left = 0, right = len - 1; while (left <= right) { for (; cmp(array[left], pivot) < 0; left++) { } for (; cmp(array[right], pivot) > 0; right--) { } if (left >= right) { break; } tmp = array[left]; array[left] = array[right]; array[right] = tmp; left++; right--; } fint_qsort(array, cmp, left); fint_qsort(array + left, cmp, len - left); } void fint_sort(fint v, int (*cmp)(int, int)) { if ((((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len) > 10) { fint_qsort(v, cmp, (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len)); } else { fint_shsort(v, cmp, (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len)); } } size_t fint_bsearch(fint v, int (*cmp)(int, int), int needle) { long int p = 0, u = (((struct fint_struct *)(((uint8_t *)((v))) - offsetof(struct fint_struct, vec)))->len), m, tmp; do { m = p + (u - p) / 2; tmp = cmp(v[m], needle); if (!tmp) { return m; } else if (tmp < 0) { p = m + 1; } else { u = m - 1; } } while (p <= u); return -1; }
+int fint_cmp(const int a, const int b) { return a - b; }
+typedef float *ffloat; struct ffloat_struct { size_t len; size_t alloc; uint8_t flags; float vec[]; }; static inline size_t ffloat_avail(const ffloat v) { return (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->alloc - ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); } static inline size_t ffloat_len(const ffloat v) { return (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); } static inline void ffloat_setlen(ffloat v, const size_t newlen) { do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len = (newlen); } while (0); return; } static inline void ffloat_inclen(ffloat v, const size_t inc) { do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len += (inc); } while (0); return; } static inline size_t ffloat_alloc(const ffloat v) { return (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->alloc); } static inline void ffloat_setalloc(ffloat v, size_t newalloc) { do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->alloc = (newalloc); } while (0); return; } static inline void ffloat_free(const ffloat v) { do { ((v) == NULL) ? (void)(NULL) : free(((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))); } while (0); return; } ffloat ffloat_new(const size_t size) { struct ffloat_struct *out = (struct ffloat_struct *)calloc( 1, sizeof(struct ffloat_struct) + sizeof(float) * size); if (out == NULL) { fprintf(stderr, "Out of memory!\n"); return NULL; } out->alloc = size; return (ffloat)out->vec; } ffloat ffloat_newfrom(const float init[], const size_t initlen) { ffloat out = ffloat_new(((initlen) ? (initlen) : 8)); if (init == NULL) { return out; } for (size_t i = 0; i < initlen; i++) { out[i] = init[i]; } do { ((struct ffloat_struct *)(((uint8_t *)((out))) - offsetof(struct ffloat_struct, vec)))->len = (initlen); } while (0); return out; } ffloat ffloat_empty(void) { return ffloat_new(8); } ffloat ffloat_dup(const ffloat v) { size_t len = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); ffloat out = ffloat_new(len); for (size_t i = 0; i < len; i++) { out[i] = v[i]; } do { ((struct ffloat_struct *)(((uint8_t *)((out))) - offsetof(struct ffloat_struct, vec)))->len = ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len)); } while (0); return out; } ffloat ffloat_growzero(ffloat v, size_t len) { if ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) >= len) { return v; } ffloat out = ffloat_new(len); for (size_t i = 0; i < (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); i++) { out[i] = v[i]; } do { ((struct ffloat_struct *)(((uint8_t *)((out))) - offsetof(struct ffloat_struct, vec)))->len = ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len)); } while (0); do { ((v) == NULL) ? (void)(NULL) : free(((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))); } while (0); return out; } ffloat ffloat_catlen(ffloat v, const float *t, size_t len) { if ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->alloc - ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) < len) { v = ffloat_growzero(v, (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) + len); } size_t last = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[last + i] = t[i]; } do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len += (len); } while (0); return v; } ffloat ffloat_push(ffloat v, float value) { if ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->alloc - ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) == 0) { v = ffloat_growzero(v, (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) * 2); } v[(((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len)] = value; do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len += (1); } while (0); return v; } float ffloat_pop(ffloat v) { if ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) == 0) { return (float){0}; } float out = v[(((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) - 1]; do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len = ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) - 1); } while (0); return out; } void ffloat_range(ffloat v, int start, int end) { size_t len = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); if (len == 0) return; if (start < 0) start = len + start; if (end < 0) end = len + end; if (start >= end) { do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len = (0); } while (0); return; } start--; end++; for (int i = 0; i < end - start; i++) { v[i] = v[start + i]; } do { ((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len = (end - start); } while (0); } void ffloat_map(ffloat v, float (*func)(float)) { size_t len = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[i] = func(v[i]); } return; } float ffloat_fold(ffloat v, float (*func)(float, float)) { size_t len = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); float out = v[0]; for (size_t i = 1; i < len; i++) { out = func(out, v[i]); } return out; } ffloat ffloat_filter(ffloat v, int (*func)(float)) { ffloat out = ffloat_new(8); size_t len = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len); for (size_t i = 0; i < len; i++) { if (func(v[i])) { ffloat_push(out, v[i]); } } return out; } void ffloat_shsort(float array[], int (*cmp)(float, float), size_t len) { const int gaps[] = {701, 301, 132, 57, 23, 10, 4, 1}; int i, j, k; float tmp; for (k = 0; k < 8; k++) { for (i = gaps[k]; (size_t)i < len; i++) { for (j = i; j >= gaps[k] && cmp(array[j - gaps[k]], array[j]) > 0; j -= gaps[k]) { tmp = array[j]; array[j] = array[j - 1]; array[j - 1] = tmp; } } } } void ffloat_qsort(float array[], int (*cmp)(float, float), int len) { if (len < 8) { ffloat_shsort(array, cmp, len); return; } float pivot = array[len / 2], tmp; int left = 0, right = len - 1; while (left <= right) { for (; cmp(array[left], pivot) < 0; left++) { } for (; cmp(array[right], pivot) > 0; right--) { } if (left >= right) { break; } tmp = array[left]; array[left] = array[right]; array[right] = tmp; left++; right--; } ffloat_qsort(array, cmp, left); ffloat_qsort(array + left, cmp, len - left); } void ffloat_sort(ffloat v, int (*cmp)(float, float)) { if ((((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len) > 10) { ffloat_qsort(v, cmp, (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len)); } else { ffloat_shsort(v, cmp, (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len)); } } size_t ffloat_bsearch(ffloat v, int (*cmp)(float, float), float needle) { long int p = 0, u = (((struct ffloat_struct *)(((uint8_t *)((v))) - offsetof(struct ffloat_struct, vec)))->len), m, tmp; do { m = p + (u - p) / 2; tmp = cmp(v[m], needle); if (!tmp) { return m; } else if (tmp < 0) { p = m + 1; } else { u = m - 1; } } while (p <= u); return -1; }
+int ffloat_cmp(const float a, const float b) {
+  if (a < b - 0.0001) {
+    return -1;
+  } else if (a > b - 0.0001 && a < b + 0.0001) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+typedef ut *fut; struct fut_struct { size_t len; size_t alloc; uint8_t flags; ut vec[]; }; static inline size_t fut_avail(const fut v) { return (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->alloc - ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); } static inline size_t fut_len(const fut v) { return (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); } static inline void fut_setlen(fut v, const size_t newlen) { do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len = (newlen); } while (0); return; } static inline void fut_inclen(fut v, const size_t inc) { do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len += (inc); } while (0); return; } static inline size_t fut_alloc(const fut v) { return (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->alloc); } static inline void fut_setalloc(fut v, size_t newalloc) { do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->alloc = (newalloc); } while (0); return; } static inline void fut_free(const fut v) { do { ((v) == NULL) ? (void)(NULL) : free(((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))); } while (0); return; } fut fut_new(const size_t size) { struct fut_struct *out = (struct fut_struct *)calloc( 1, sizeof(struct fut_struct) + sizeof(ut) * size); if (out == NULL) { fprintf(stderr, "Out of memory!\n"); return NULL; } out->alloc = size; return (fut)out->vec; } fut fut_newfrom(const ut init[], const size_t initlen) { fut out = fut_new(((initlen) ? (initlen) : 8)); if (init == NULL) { return out; } for (size_t i = 0; i < initlen; i++) { out[i] = init[i]; } do { ((struct fut_struct *)(((uint8_t *)((out))) - offsetof(struct fut_struct, vec)))->len = (initlen); } while (0); return out; } fut fut_empty(void) { return fut_new(8); } fut fut_dup(const fut v) { size_t len = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); fut out = fut_new(len); for (size_t i = 0; i < len; i++) { out[i] = v[i]; } do { ((struct fut_struct *)(((uint8_t *)((out))) - offsetof(struct fut_struct, vec)))->len = ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len)); } while (0); return out; } fut fut_growzero(fut v, size_t len) { if ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) >= len) { return v; } fut out = fut_new(len); for (size_t i = 0; i < (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); i++) { out[i] = v[i]; } do { ((struct fut_struct *)(((uint8_t *)((out))) - offsetof(struct fut_struct, vec)))->len = ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len)); } while (0); do { ((v) == NULL) ? (void)(NULL) : free(((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))); } while (0); return out; } fut fut_catlen(fut v, const ut *t, size_t len) { if ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->alloc - ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) < len) { v = fut_growzero(v, (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) + len); } size_t last = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[last + i] = t[i]; } do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len += (len); } while (0); return v; } fut fut_push(fut v, ut value) { if ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->alloc - ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) == 0) { v = fut_growzero(v, (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) * 2); } v[(((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len)] = value; do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len += (1); } while (0); return v; } ut fut_pop(fut v) { if ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) == 0) { return (ut){0}; } ut out = v[(((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) - 1]; do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len = ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) - 1); } while (0); return out; } void fut_range(fut v, int start, int end) { size_t len = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); if (len == 0) return; if (start < 0) start = len + start; if (end < 0) end = len + end; if (start >= end) { do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len = (0); } while (0); return; } start--; end++; for (int i = 0; i < end - start; i++) { v[i] = v[start + i]; } do { ((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len = (end - start); } while (0); } void fut_map(fut v, ut (*func)(ut)) { size_t len = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[i] = func(v[i]); } return; } ut fut_fold(fut v, ut (*func)(ut, ut)) { size_t len = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); ut out = v[0]; for (size_t i = 1; i < len; i++) { out = func(out, v[i]); } return out; } fut fut_filter(fut v, int (*func)(ut)) { fut out = fut_new(8); size_t len = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len); for (size_t i = 0; i < len; i++) { if (func(v[i])) { fut_push(out, v[i]); } } return out; } void fut_shsort(ut array[], int (*cmp)(ut, ut), size_t len) { const int gaps[] = {701, 301, 132, 57, 23, 10, 4, 1}; int i, j, k; ut tmp; for (k = 0; k < 8; k++) { for (i = gaps[k]; (size_t)i < len; i++) { for (j = i; j >= gaps[k] && cmp(array[j - gaps[k]], array[j]) > 0; j -= gaps[k]) { tmp = array[j]; array[j] = array[j - 1]; array[j - 1] = tmp; } } } } void fut_qsort(ut array[], int (*cmp)(ut, ut), int len) { if (len < 8) { fut_shsort(array, cmp, len); return; } ut pivot = array[len / 2], tmp; int left = 0, right = len - 1; while (left <= right) { for (; cmp(array[left], pivot) < 0; left++) { } for (; cmp(array[right], pivot) > 0; right--) { } if (left >= right) { break; } tmp = array[left]; array[left] = array[right]; array[right] = tmp; left++; right--; } fut_qsort(array, cmp, left); fut_qsort(array + left, cmp, len - left); } void fut_sort(fut v, int (*cmp)(ut, ut)) { if ((((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len) > 10) { fut_qsort(v, cmp, (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len)); } else { fut_shsort(v, cmp, (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len)); } } size_t fut_bsearch(fut v, int (*cmp)(ut, ut), ut needle) { long int p = 0, u = (((struct fut_struct *)(((uint8_t *)((v))) - offsetof(struct fut_struct, vec)))->len), m, tmp; do { m = p + (u - p) / 2; tmp = cmp(v[m], needle); if (!tmp) { return m; } else if (tmp < 0) { p = m + 1; } else { u = m - 1; } } while (p <= u); return -1; }
+int fut_cmp(const ut a, const ut b) { return memcmp(&a, &b, sizeof(ut)); }
+typedef st *fst; struct fst_struct { size_t len; size_t alloc; uint8_t flags; st vec[]; }; static inline size_t fst_avail(const fst v) { return (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->alloc - ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); } static inline size_t fst_len(const fst v) { return (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); } static inline void fst_setlen(fst v, const size_t newlen) { do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len = (newlen); } while (0); return; } static inline void fst_inclen(fst v, const size_t inc) { do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len += (inc); } while (0); return; } static inline size_t fst_alloc(const fst v) { return (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->alloc); } static inline void fst_setalloc(fst v, size_t newalloc) { do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->alloc = (newalloc); } while (0); return; } static inline void fst_free(const fst v) { do { ((v) == NULL) ? (void)(NULL) : free(((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))); } while (0); return; } fst fst_new(const size_t size) { struct fst_struct *out = (struct fst_struct *)calloc( 1, sizeof(struct fst_struct) + sizeof(st) * size); if (out == NULL) { fprintf(stderr, "Out of memory!\n"); return NULL; } out->alloc = size; return (fst)out->vec; } fst fst_newfrom(const st init[], const size_t initlen) { fst out = fst_new(((initlen) ? (initlen) : 8)); if (init == NULL) { return out; } for (size_t i = 0; i < initlen; i++) { out[i] = init[i]; } do { ((struct fst_struct *)(((uint8_t *)((out))) - offsetof(struct fst_struct, vec)))->len = (initlen); } while (0); return out; } fst fst_empty(void) { return fst_new(8); } fst fst_dup(const fst v) { size_t len = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); fst out = fst_new(len); for (size_t i = 0; i < len; i++) { out[i] = v[i]; } do { ((struct fst_struct *)(((uint8_t *)((out))) - offsetof(struct fst_struct, vec)))->len = ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len)); } while (0); return out; } fst fst_growzero(fst v, size_t len) { if ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) >= len) { return v; } fst out = fst_new(len); for (size_t i = 0; i < (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); i++) { out[i] = v[i]; } do { ((struct fst_struct *)(((uint8_t *)((out))) - offsetof(struct fst_struct, vec)))->len = ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len)); } while (0); do { ((v) == NULL) ? (void)(NULL) : free(((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))); } while (0); return out; } fst fst_catlen(fst v, const st *t, size_t len) { if ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->alloc - ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) < len) { v = fst_growzero(v, (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) + len); } size_t last = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[last + i] = t[i]; } do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len += (len); } while (0); return v; } fst fst_push(fst v, st value) { if ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->alloc - ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) == 0) { v = fst_growzero(v, (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) * 2); } v[(((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len)] = value; do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len += (1); } while (0); return v; } st fst_pop(fst v) { if ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) == 0) { return (st){0}; } st out = v[(((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) - 1]; do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len = ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) - 1); } while (0); return out; } void fst_range(fst v, int start, int end) { size_t len = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); if (len == 0) return; if (start < 0) start = len + start; if (end < 0) end = len + end; if (start >= end) { do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len = (0); } while (0); return; } start--; end++; for (int i = 0; i < end - start; i++) { v[i] = v[start + i]; } do { ((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len = (end - start); } while (0); } void fst_map(fst v, st (*func)(st)) { size_t len = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[i] = func(v[i]); } return; } st fst_fold(fst v, st (*func)(st, st)) { size_t len = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); st out = v[0]; for (size_t i = 1; i < len; i++) { out = func(out, v[i]); } return out; } fst fst_filter(fst v, int (*func)(st)) { fst out = fst_new(8); size_t len = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len); for (size_t i = 0; i < len; i++) { if (func(v[i])) { fst_push(out, v[i]); } } return out; } void fst_shsort(st array[], int (*cmp)(st, st), size_t len) { const int gaps[] = {701, 301, 132, 57, 23, 10, 4, 1}; int i, j, k; st tmp; for (k = 0; k < 8; k++) { for (i = gaps[k]; (size_t)i < len; i++) { for (j = i; j >= gaps[k] && cmp(array[j - gaps[k]], array[j]) > 0; j -= gaps[k]) { tmp = array[j]; array[j] = array[j - 1]; array[j - 1] = tmp; } } } } void fst_qsort(st array[], int (*cmp)(st, st), int len) { if (len < 8) { fst_shsort(array, cmp, len); return; } st pivot = array[len / 2], tmp; int left = 0, right = len - 1; while (left <= right) { for (; cmp(array[left], pivot) < 0; left++) { } for (; cmp(array[right], pivot) > 0; right--) { } if (left >= right) { break; } tmp = array[left]; array[left] = array[right]; array[right] = tmp; left++; right--; } fst_qsort(array, cmp, left); fst_qsort(array + left, cmp, len - left); } void fst_sort(fst v, int (*cmp)(st, st)) { if ((((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len) > 10) { fst_qsort(v, cmp, (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len)); } else { fst_shsort(v, cmp, (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len)); } } size_t fst_bsearch(fst v, int (*cmp)(st, st), st needle) { long int p = 0, u = (((struct fst_struct *)(((uint8_t *)((v))) - offsetof(struct fst_struct, vec)))->len), m, tmp; do { m = p + (u - p) / 2; tmp = cmp(v[m], needle); if (!tmp) { return m; } else if (tmp < 0) { p = m + 1; } else { u = m - 1; } } while (p <= u); return -1; }
+int fst_cmp(const st a, const st b) { return a.i - b.i; }
+typedef str *fstr; struct fstr_struct { size_t len; size_t alloc; uint8_t flags; str vec[]; }; static inline size_t fstr_avail(const fstr v) { return (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->alloc - ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); } static inline size_t fstr_len(const fstr v) { return (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); } static inline void fstr_setlen(fstr v, const size_t newlen) { do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len = (newlen); } while (0); return; } static inline void fstr_inclen(fstr v, const size_t inc) { do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len += (inc); } while (0); return; } static inline size_t fstr_alloc(const fstr v) { return (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->alloc); } static inline void fstr_setalloc(fstr v, size_t newalloc) { do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->alloc = (newalloc); } while (0); return; } static inline void fstr_free(const fstr v) { do { ((v) == NULL) ? (void)(NULL) : free(((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))); } while (0); return; } fstr fstr_new(const size_t size) { struct fstr_struct *out = (struct fstr_struct *)calloc( 1, sizeof(struct fstr_struct) + sizeof(str) * size); if (out == NULL) { fprintf(stderr, "Out of memory!\n"); return NULL; } out->alloc = size; return (fstr)out->vec; } fstr fstr_newfrom(const str init[], const size_t initlen) { fstr out = fstr_new(((initlen) ? (initlen) : 8)); if (init == NULL) { return out; } for (size_t i = 0; i < initlen; i++) { out[i] = init[i]; } do { ((struct fstr_struct *)(((uint8_t *)((out))) - offsetof(struct fstr_struct, vec)))->len = (initlen); } while (0); return out; } fstr fstr_empty(void) { return fstr_new(8); } fstr fstr_dup(const fstr v) { size_t len = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); fstr out = fstr_new(len); for (size_t i = 0; i < len; i++) { out[i] = v[i]; } do { ((struct fstr_struct *)(((uint8_t *)((out))) - offsetof(struct fstr_struct, vec)))->len = ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len)); } while (0); return out; } fstr fstr_growzero(fstr v, size_t len) { if ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) >= len) { return v; } fstr out = fstr_new(len); for (size_t i = 0; i < (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); i++) { out[i] = v[i]; } do { ((struct fstr_struct *)(((uint8_t *)((out))) - offsetof(struct fstr_struct, vec)))->len = ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len)); } while (0); do { ((v) == NULL) ? (void)(NULL) : free(((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))); } while (0); return out; } fstr fstr_catlen(fstr v, const str *t, size_t len) { if ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->alloc - ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) < len) { v = fstr_growzero(v, (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) + len); } size_t last = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[last + i] = t[i]; } do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len += (len); } while (0); return v; } fstr fstr_push(fstr v, str value) { if ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->alloc - ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) == 0) { v = fstr_growzero(v, (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) * 2); } v[(((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len)] = value; do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len += (1); } while (0); return v; } str fstr_pop(fstr v) { if ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) == 0) { return (str){0}; } str out = v[(((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) - 1]; do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len = ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) - 1); } while (0); return out; } void fstr_range(fstr v, int start, int end) { size_t len = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); if (len == 0) return; if (start < 0) start = len + start; if (end < 0) end = len + end; if (start >= end) { do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len = (0); } while (0); return; } start--; end++; for (int i = 0; i < end - start; i++) { v[i] = v[start + i]; } do { ((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len = (end - start); } while (0); } void fstr_map(fstr v, str (*func)(str)) { size_t len = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); for (size_t i = 0; i < len; i++) { v[i] = func(v[i]); } return; } str fstr_fold(fstr v, str (*func)(str, str)) { size_t len = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); str out = v[0]; for (size_t i = 1; i < len; i++) { out = func(out, v[i]); } return out; } fstr fstr_filter(fstr v, int (*func)(str)) { fstr out = fstr_new(8); size_t len = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len); for (size_t i = 0; i < len; i++) { if (func(v[i])) { fstr_push(out, v[i]); } } return out; } void fstr_shsort(str array[], int (*cmp)(str, str), size_t len) { const int gaps[] = {701, 301, 132, 57, 23, 10, 4, 1}; int i, j, k; str tmp; for (k = 0; k < 8; k++) { for (i = gaps[k]; (size_t)i < len; i++) { for (j = i; j >= gaps[k] && cmp(array[j - gaps[k]], array[j]) > 0; j -= gaps[k]) { tmp = array[j]; array[j] = array[j - 1]; array[j - 1] = tmp; } } } } void fstr_qsort(str array[], int (*cmp)(str, str), int len) { if (len < 8) { fstr_shsort(array, cmp, len); return; } str pivot = array[len / 2], tmp; int left = 0, right = len - 1; while (left <= right) { for (; cmp(array[left], pivot) < 0; left++) { } for (; cmp(array[right], pivot) > 0; right--) { } if (left >= right) { break; } tmp = array[left]; array[left] = array[right]; array[right] = tmp; left++; right--; } fstr_qsort(array, cmp, left); fstr_qsort(array + left, cmp, len - left); } void fstr_sort(fstr v, int (*cmp)(str, str)) { if ((((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len) > 10) { fstr_qsort(v, cmp, (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len)); } else { fstr_shsort(v, cmp, (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len)); } } size_t fstr_bsearch(fstr v, int (*cmp)(str, str), str needle) { long int p = 0, u = (((struct fstr_struct *)(((uint8_t *)((v))) - offsetof(struct fstr_struct, vec)))->len), m, tmp; do { m = p + (u - p) / 2; tmp = cmp(v[m], needle); if (!tmp) { return m; } else if (tmp < 0) { p = m + 1; } else { u = m - 1; } } while (p <= u); return -1; }
+int fstr_cmp(const str a, const str b) { return strcmp(a, b); }
+int sum(const int a, const int b) { return a + b; }
+int square(const int a) { return a * a; }
+int even(const int a) { return a % 2 == 0; }
+fint print_fint(fint a){
+  printf("{");
+  for(size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((a))) - offsetof(struct fint_struct, vec)))->len); i++){
+    printf("%i,",a[i]);
+  }
+  puts("}");
+  return a;
+}
+int main() {
+  struct fint_struct* ftest = malloc(sizeof(struct fint_struct));
+  if (((uint8_t*)ftest - (uint8_t*)((struct fint_struct *)(((uint8_t *)(ftest->vec)) - offsetof(struct fint_struct, vec)))) != 0) {
+    printf("FAILED: struct: %p, vec: %p, vectostruct: %p,%d\n", (void*)ftest,
+           (void*)&ftest->vec[0], (void*)((struct fint_struct *)(((uint8_t *)(ftest->vec)) - offsetof(struct fint_struct, vec))),
+           537);
+    printf(
+        "sizeof(struct fint_struct): %zu,sizeof(struct fat_ptr_struct): %zu\n",
+        sizeof(struct fint_struct), sizeof(struct fint_struct));
+    printf("ftest-fat_toStruct(int,ftest): %ld\n",
+           (uint8_t*)ftest -
+               ((uint8_t*)ftest->vec - offsetof(struct fint_struct, vec)));
+  } else {
+    printf("PASSED at toStruct\n");
+  }
+  free(ftest);
+  fchar fchar_arr = fchar_new(8);
+  fint fint_arr = fint_new(8);
+  ffloat ffloat_arr = ffloat_new(8);
+  fut fut_arr = fut_new(8);
+  fst fst_arr = fst_new(8);
+  fstr fstr_arr = fstr_new(8);
+  if (fint_len(fint_arr) != 0 || fint_alloc(fint_arr) != 8 ||
+      fint_avail(fint_arr) != 8 || ffloat_len(ffloat_arr) != 0 ||
+      ffloat_alloc(ffloat_arr) != 8 || ffloat_avail(ffloat_arr) != 8 ||
+      fut_len(fut_arr) != 0 || fut_alloc(fut_arr) != 8 ||
+      fut_avail(fut_arr) != 8 || fst_len(fst_arr) != 0 ||
+      fst_alloc(fst_arr) != 8 || fst_avail(fst_arr) != 8 ||
+      fchar_len(fchar_arr) != 0 || fchar_alloc(fchar_arr) != 8 ||
+      fchar_avail(fchar_arr) != 8 || fstr_len(fstr_arr) != 0 ||
+      fstr_alloc(fstr_arr) != 8 || fstr_avail(fstr_arr) != 8) {
+    printf("FAILED at new %d\n", 571);
+  } else {
+    printf("PASSED at new\n");
+  }
+  ut utmp;
+  st stmp;
+  for (int i = 0; i < 16; i++) {
+    fint_arr = fint_push((fint_arr), (i));
+    ffloat_arr = ffloat_push((ffloat_arr), ((float)i));
+    fchar_arr = fchar_push((fchar_arr), ('a' + i));
+    utmp.i = i;
+    fut_arr = fut_push((fut_arr), (utmp));
+    stmp.i = i;
+    stmp.f = (float)i;
+    stmp.s[0] = 'a' + i;
+    stmp.s[1] = '\0';
+    fst_arr = fst_push((fst_arr), (stmp));
+    fstr_arr = fstr_push((fstr_arr), (stmp.s));
+  }
+  int passed = 1;
+  for (int i = 0; i < 16; i++) {
+    if (fint_arr[i] != i || fchar_arr[i] != 'a' + i ||
+        ffloat_arr[i] != (float)i || fut_arr[i].i != i ||
+        (fstr_arr[i][0] != 'a' + 1 && fstr_arr[i][1] != '\0') ||
+        (fst_arr[i].i != i && fst_arr[i].f != (float)i &&
+         fst_arr[i].s[0] != 'a' + i && fst_arr[i].s[1] != '\0')) {
+      passed = 0;
+      printf("FAILED at push, %d\n", 603);
+      printf("%i: %i,%f,%i,%i,%f,%c\n", i, fint_arr[i], ffloat_arr[i],
+             fut_arr[i].i, fst_arr[i].i, fst_arr[i].f, fst_arr[i].s[0]);
+    }
+  }
+  if (passed) {
+    printf("PASSED at push\n");
+  } else
+    passed = 1;
+  fint duparr = fint_dup((fint_arr));
+  if ((((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len) != (((struct fint_struct *)(((uint8_t *)((fint_arr))) - offsetof(struct fint_struct, vec)))->len) ||
+      (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->alloc) != (((struct fint_struct *)(((uint8_t *)((fint_arr))) - offsetof(struct fint_struct, vec)))->alloc)) {
+    passed = 0;
+    printf("FAILED at dup, %d\n", 621);
+    printf("len: %zu, %zu\n", (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len), (((struct fint_struct *)(((uint8_t *)((fint_arr))) - offsetof(struct fint_struct, vec)))->len));
+    printf("alloc: %zu, %zu\n", (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->alloc),
+           (((struct fint_struct *)(((uint8_t *)((fint_arr))) - offsetof(struct fint_struct, vec)))->alloc));
+  }
+  for (size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((fint_arr))) - offsetof(struct fint_struct, vec)))->len); i++) {
+    if (duparr[i] != fint_arr[i]) {
+      passed = 0;
+      printf("FAILED at dup, %d\n", 629);
+    }
+  }
+  if (passed) {
+    printf("PASSED at dup\n");
+  } else
+    passed = 1;
+  fint_range((duparr), (1), (-1));
+  if ((((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len) != 16) {
+    printf("FAILED range at %d\n", 643);
+    printf("len: %zu\n", (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len));
+    passed = 0;
+  }
+  for (int i = 0; i < 16; i++) {
+    if (duparr[i] != i) {
+      printf("FAILED range at %d\n", 649);
+      passed = 0;
+    }
+  }
+  fint_range((duparr), (2), (-2));
+  if ((((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len) != 14) {
+    printf("FAILED range at %d\n", 656);
+    printf("len: %zu\n", (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len));
+    passed = 0;
+  }
+  for (size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len); i++) {
+    if (duparr[i] != (int)(i + 1)) {
+      printf("FAILED range at %d\n", 662);
+      printf("%zu,%i\n", i, duparr[i]);
+      passed = 0;
+    }
+  }
+  fint_range((duparr), (-2), (2));
+  if ((((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len) != 0) {
+    printf("FAILED range at %d\n", 669);
+    printf("len: %zu\n", (((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))->len));
+    passed = 0;
+  }
+  if (passed) {
+    printf("PASSED at range\n");
+  } else
+    passed = 1;
+  for (int i = 15; i >= 0; i--) {
+    if (fint_pop((fint_arr)) != i || ffloat_pop((ffloat_arr)) != (float)i ||
+        (utmp = fut_pop((fut_arr)), utmp.i != i) ||
+        (stmp = fst_pop((fst_arr)),
+         stmp.i != i || stmp.f != (float)i || stmp.s[0] != 'a' + i)) {
+      passed = 0;
+      printf("FAILED at pop, %d\n", 688);
+      printf("%i: %i,%f,%i,%i,%f,%c\n", i, fint_arr[i], ffloat_arr[i],
+             fut_arr[i].i, fst_arr[i].i, fst_arr[i].f, fst_arr[i].s[0]);
+    }
+  }
+  if (passed) {
+    printf("PASSED at pop\n");
+  } else
+    passed = 1;
+  fint newfrom2 = fint_newfrom((int[]){0}, 0);
+  if (fint_len(newfrom2) != 0 || fint_alloc(newfrom2) < 1) {
+    printf("FAILED newfrom, at %d\n", 705);
+    printf("len: %zu, alloc:%zu\n", fint_len(newfrom2), fint_alloc(newfrom2));
+    passed = 0;
+  }
+  fint newfrom = fint_newfrom((int[]){1, 2, 3}, 3);
+  if ((((struct fint_struct *)(((uint8_t *)((newfrom))) - offsetof(struct fint_struct, vec)))->len) != 3) {
+    printf("FAILED newfrom, at %d\n", 711);
+    passed = 0;
+  }
+  for (int i = 0; i < 3; i++) {
+    if (newfrom[i] != i + 1) {
+      passed = 0;
+      printf("FAILED newfrom, at %d\n", 717);
+    }
+  }
+  if (passed) {
+    printf("PASSED at newfrom\n");
+  } else
+    passed = 1;
+  fint map_test = fint_newfrom((int[]){0, 1, 2, 3, 4, 5}, 6);
+  fint_map((map_test), (square));
+  for (size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((map_test))) - offsetof(struct fint_struct, vec)))->len); i++) {
+    if (map_test[i] != (int)(i * i)) {
+      printf("FAILED at map, at %d\n", 735);
+      passed = 0;
+    }
+  }
+  if (passed) {
+    printf("PASSED at map\n");
+  } else
+    passed = 1;
+  if (fint_fold((map_test), (sum)) != 55) {
+    printf("FAILED at fold, at %i\n", 749);
+  } else {
+    printf("PASSED at fold\n");
+  }
+  fint filter = fint_filter((map_test), (even));
+  if ((((struct fint_struct *)(((uint8_t *)((filter))) - offsetof(struct fint_struct, vec)))->len) != 3) {
+    printf("FAILED at filter\n");
+  }
+  for (size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((filter))) - offsetof(struct fint_struct, vec)))->len); i++) {
+    if (filter[i] % 2 != 0) {
+      printf("FAILED at filter\n");
+      passed = 0;
+    }
+  }
+  if (passed) {
+    printf("PASSED at filter\n");
+  } else
+    passed = 1;
+  fint sort_int = fint_empty();
+  fchar sort_char = fchar_empty();
+  ffloat sort_float = ffloat_empty();
+  fut sort_ut = fut_empty();
+  fst sort_st = fst_empty();
+  fstr sort_str = fstr_empty();
+  for (int i = 55; i >= 0; i--) {
+    sort_int = fint_push((sort_int), (i));
+    sort_char = fchar_push((sort_char), (i));
+    sort_float = ffloat_push((sort_float), ((float)i));
+    utmp.i = i;
+    sort_ut = fut_push((sort_ut), (utmp));
+    stmp.i = i;
+    stmp.f = (float)i;
+    memset(stmp.s, '\0', 4);
+    stmp.s[0] = i;
+    sort_st = fst_push((sort_st), (stmp));
+    sort_str = fstr_push((sort_str), (fchar_newfrom(stmp.s,2)));
+  }
+  fint_sort((sort_int), (fint_cmp));
+  fchar_sort((sort_char), (fchar_cmp));
+  ffloat_sort((sort_float), (ffloat_cmp));
+  fut_sort((sort_ut), (fut_cmp));
+  fst_sort((sort_st), (fst_cmp));
+  fstr_sort((sort_str), (fstr_cmp));
+  for (size_t i = 0; i < (((struct fint_struct *)(((uint8_t *)((sort_int))) - offsetof(struct fint_struct, vec)))->len); i++) {
+    if (0 != (fint_cmp(sort_int[i], (int)i)) ||
+        0 != (fchar_cmp(sort_char[i], (char)i)) ||
+        0 != (ffloat_cmp(sort_float[i], (float)i)) ||
+        0 != (utmp.i = i, fut_cmp(sort_ut[i], utmp)) ||
+        0 != (stmp.i = (int)i, stmp.f = (float)i, memset(stmp.s, '\0', 4),
+              stmp.s[0] = (int)i, fst_cmp(sort_st[i], stmp)) ||
+        0 != (fstr_cmp(sort_str[i], stmp.s))) {
+      printf("{%d, %i ,%f},{%d, %i ,%f}\n", stmp.i, stmp.s[0], stmp.f,
+             sort_st[i].i, sort_st[i].s[0], sort_st[i].f);
+      printf("FAILED at sort, at %d\n", 815);
+      passed = 0;
+    }
+  }
+  if (passed) {
+    printf("PASSED at sort\n");
+  } else
+    passed = 1;
+  int tmp;
+  if ((tmp = fint_bsearch((sort_int), (fint_cmp), (0))) != 0) {
+    printf("FAILED at bsearch, at %d\n", 829);
+    printf("%d", tmp);
+    passed = 0;
+  }
+  if ((tmp = fint_bsearch((sort_int), (fint_cmp), (55))) != 55) {
+    printf("FAILED at bsearch, at %d\n", 834);
+    printf("%d", tmp);
+    passed = 0;
+  }
+  if ((tmp = fint_bsearch((sort_int), (fint_cmp), (666))) != -1) {
+    printf("FAILED at bsearch, at %d\n", 839);
+    printf("%d", tmp);
+    passed = 0;
+  }
+  if ((tmp = fint_bsearch((sort_int), (fint_cmp), (-666))) != -1) {
+    printf("FAILED at bsearch, at %d\n", 844);
+    printf("%d", tmp);
+    passed = 0;
+  }
+  if (passed) {
+    printf("PASSED at bsearch\n");
+  } else
+    passed = 1;
+  do { ((NULL) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((NULL))) - offsetof(struct fint_struct, vec)))); } while (0);
+  fint_free(newfrom2);
+  do { ((sort_int) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((sort_int))) - offsetof(struct fint_struct, vec)))); } while (0);
+  do { ((sort_char) == NULL) ? (void)(NULL) : free(((struct fchar_struct *)(((uint8_t *)((sort_char))) - offsetof(struct fchar_struct, vec)))); } while (0);
+  do { ((sort_float) == NULL) ? (void)(NULL) : free(((struct ffloat_struct *)(((uint8_t *)((sort_float))) - offsetof(struct ffloat_struct, vec)))); } while (0);
+  do { ((sort_ut) == NULL) ? (void)(NULL) : free(((struct fut_struct *)(((uint8_t *)((sort_ut))) - offsetof(struct fut_struct, vec)))); } while (0);
+  do { ((sort_st) == NULL) ? (void)(NULL) : free(((struct fst_struct *)(((uint8_t *)((sort_st))) - offsetof(struct fst_struct, vec)))); } while (0);
+  for(int i = 0; i < (int) (((struct fstr_struct *)(((uint8_t *)((sort_str))) - offsetof(struct fstr_struct, vec)))->len);i++){
+    do { ((sort_str[i]) == NULL) ? (void)(NULL) : free(((struct fchar_struct *)(((uint8_t *)((sort_str[i]))) - offsetof(struct fchar_struct, vec)))); } while (0);
+  }
+  do { ((sort_str) == NULL) ? (void)(NULL) : free(((struct fstr_struct *)(((uint8_t *)((sort_str))) - offsetof(struct fstr_struct, vec)))); } while (0);
+  do { ((filter) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((filter))) - offsetof(struct fint_struct, vec)))); } while (0);
+  do { ((map_test) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((map_test))) - offsetof(struct fint_struct, vec)))); } while (0);
+  do { ((newfrom) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((newfrom))) - offsetof(struct fint_struct, vec)))); } while (0);
+  do { ((duparr) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((duparr))) - offsetof(struct fint_struct, vec)))); } while (0);
+  do { ((fchar_arr) == NULL) ? (void)(NULL) : free(((struct fchar_struct *)(((uint8_t *)((fchar_arr))) - offsetof(struct fchar_struct, vec)))); } while (0);
+  do { ((fint_arr) == NULL) ? (void)(NULL) : free(((struct fint_struct *)(((uint8_t *)((fint_arr))) - offsetof(struct fint_struct, vec)))); } while (0);
+  do { ((ffloat_arr) == NULL) ? (void)(NULL) : free(((struct ffloat_struct *)(((uint8_t *)((ffloat_arr))) - offsetof(struct ffloat_struct, vec)))); } while (0);
+  do { ((fut_arr) == NULL) ? (void)(NULL) : free(((struct fut_struct *)(((uint8_t *)((fut_arr))) - offsetof(struct fut_struct, vec)))); } while (0);
+  do { ((fst_arr) == NULL) ? (void)(NULL) : free(((struct fst_struct *)(((uint8_t *)((fst_arr))) - offsetof(struct fst_struct, vec)))); } while (0);
+  do { ((fstr_arr) == NULL) ? (void)(NULL) : free(((struct fstr_struct *)(((uint8_t *)((fstr_arr))) - offsetof(struct fstr_struct, vec)))); } while (0);
+  return 0;
+}

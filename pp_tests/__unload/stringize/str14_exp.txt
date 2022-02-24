@@ -1,0 +1,18 @@
+static char *test1 = "mergetest(x, y)";
+static char *test2 = "mergetest( x, y)";
+static char *test3 = "prefix xy";
+static char *test4 = "prefix xy";
+static char *test5 = "xy";
+static char *test6 = "prefix xy";
+static char *test7 = "=xy";
+static char *test8 = "= xy";
+static char *test10 = "=x";
+static char *test11 = "= x";
+static char *test20 = "=0";
+static char *test21 = "= 0";
+static char *test22 = "==";
+static char *test23 = "= =";
+static char *test30 = "=0";
+static char *test31 = "= 0";
+static char *test32 = "==";
+static char *test33 = "= =";

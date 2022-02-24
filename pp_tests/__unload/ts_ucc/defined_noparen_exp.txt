@@ -1,0 +1,6 @@
+char a;
+extern char a;
+main()
+{
+ return a;
+}

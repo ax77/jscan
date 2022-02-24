@@ -1,0 +1,76 @@
+typedef struct mynode {
+ struct mynode *sll_link_next;
+ int id;
+} mynode;
+void printnode(const mynode *n, const char *note);
+typedef struct { mynode *first; mynode *last; size_t n; } mylist; void mysll_lclear (mylist *list); void mysll_lnclear (mynode *node); size_t mysll_lsize (const mylist *list); void mysll_lpushback(mylist *list, mynode *node); mynode *mysll_lpopfront(mylist *list); void mysll_lfree (mylist *list);
+typedef struct { mylist *list; mynode *prev; mynode *current; mynode *next; } myiter; void mysll_istart(myiter *iter, mylist *list); mynode *mysll_iget (myiter *iter); void mysll_inext (myiter *iter); bool mysll_iisend(const myiter *iter); mynode *mysll_ipop (myiter *iter);
+typedef mylist mypool; void mysll_pclear (mypool *pool); mynode *mysll_pget (mypool *pool); mynode *mysll_pgetm (mypool *pool, bool *isnew); void mysll_preturn(mypool *pool, mynode *node); void mysll_pfree (mypool *pool);
+void mysll_lclear(mylist *list) { assert(list != NULL); list->first = NULL; list->last = NULL; list->n = 0; } void mysll_lnclear(mynode *node) { assert(node != NULL); do { node->sll_link_next = NULL; } while (0);; } size_t mysll_lsize(const mylist *list) { assert(list != NULL); return list->n; } void mysll_lpushback(mylist *list, mynode *node) { assert(list != NULL); if (list->n == 0) { list->first = node; list->last = node; list->n = 1; } else { list->last->sll_link_next = node; list->last = node; ++list->n; } do { node->sll_link_next = NULL; } while (0);; } mynode *mysll_lpopfront(mylist *list) { assert(list != NULL); if (list->n == 0) { return NULL; } mynode *node = list->first; list->first = node->sll_link_next; --list->n; if (list->first == NULL) { list->last = NULL; } do { node->sll_link_next = NULL; } while (0);; return node; } void mysll_lfree(mylist *list) { while (mysll_lsize(list) > 0) { mynode * node = mysll_lpopfront(list); free(node); } };
+void mysll_istart(myiter *iter, mylist *list) { assert(iter != NULL); assert(list != NULL); iter->list = list; iter->prev = NULL; iter->current = list->first; if (iter->current != NULL) { iter->next = iter->current->sll_link_next; } } mynode *mysll_iget(myiter *iter) { assert(iter != NULL); return iter->current; } void mysll_inext(myiter *iter) { assert(iter != NULL); if (iter->current != NULL) { iter->prev = iter->current; } iter->current = iter->next; if (iter->current != NULL) { iter->next = iter->current->sll_link_next; } } bool mysll_iisend(const myiter *iter) { assert(iter != NULL); return iter->list->last == iter->prev && iter->current == NULL && iter->next == NULL; } mynode *mysll_ipop(myiter *iter) { assert(iter != NULL); mynode *node = iter->current; if (node != NULL) { if (iter->current == iter->list->first) { iter->list->first = iter->next; } if (iter->current == iter->list->last) { iter->list->last = iter->prev; } do { node->sll_link_next = NULL; } while (0);; iter->current = NULL; --iter->list->n; } if (iter->prev != NULL) { iter->prev->sll_link_next = iter->next; } return node; };
+void mysll_pclear(mypool *pool) { mysll_lclear((mylist*)pool); } mynode *mysll_pget(mypool *pool) { assert(pool != NULL); mynode *ret = mysll_lpopfront((mylist*)pool); if (ret == NULL) { ret = calloc(1, sizeof(mynode)); } return ret; } mynode *mysll_pgetm(mypool *pool, bool *isnew) { assert(pool != NULL); assert(isnew != NULL); mynode *ret = mysll_lpopfront((mylist*)pool); *isnew = false; if (ret == NULL) { ret = malloc(sizeof(mynode)); *isnew = true; } return ret; } void mysll_preturn(mypool *pool, mynode *node) { assert(pool != NULL); assert(node != NULL); mysll_lpushback((mylist*)pool, node); } void mysll_pfree(mypool *pool) { assert(pool != NULL); mysll_lfree((mylist*)pool); };
+void printnode(const mynode *n, const char *note) {
+ if (n == NULL) {
+  printf("NULL node\n");
+  return;
+ }
+ if (n->id != 0) {
+  printf("node with id %d%s\n", n->id, note);
+ }
+ else {
+  printf("uninitialized node%s\n", note);
+ }
+}
+int main(void) {
+ mypool pool = {0};
+ mylist list = {0};
+ printf("-\ngetting items from the pool, pool is empty so they will be created with uninitialized ids (=0 because of calloc)\n");
+ for (size_t i=1; i<=10; ++i) {
+  mynode *node = mysll_pget(&pool);
+  printnode(node, "");
+  node->id = i;
+  mysll_lpushback(&list, node);
+ }
+ printf("-\niterating over the list, and removing items with id 1,4,5,10 and returning them to the pool\n");
+ for (myiter iter={ .list=(&list), .prev=NULL, .current=(&list)->first!=NULL?(&list)->first:NULL, .next=(&list)->first!=NULL?(&list)->first->sll_link_next:NULL }; !mysll_iisend(&iter); mysll_inext(&iter)) {
+  mynode *node = mysll_iget(&iter);
+  if (node->id == 1 || node->id == 5 || node->id == 6 || node->id == 10) {
+   printnode(node, " - this node will be removed from the list");
+   mysll_ipop(&iter);
+   mysll_preturn(&pool, node);
+  }
+  else {
+   printnode(node, "");
+  }
+ }
+ printf("-\nprinting the list again\n");
+ for (myiter iter={ .list=(&list), .prev=NULL, .current=(&list)->first!=NULL?(&list)->first:NULL, .next=(&list)->first!=NULL?(&list)->first->sll_link_next:NULL }; !mysll_iisend(&iter); mysll_inext(&iter)) {
+  mynode *node = mysll_iget(&iter);
+  printnode(node, "");
+ }
+ printf("-\nremoving and returning the first three list items to the pool\n");
+ for (size_t i=0; i<3; ++i) {
+  mynode *node = mysll_lpopfront(&list);
+  printnode(node, "");
+  mysll_preturn(&pool, node);
+ }
+ printf("-\nprinting the list again\n");
+ for (myiter iter={ .list=(&list), .prev=NULL, .current=(&list)->first!=NULL?(&list)->first:NULL, .next=(&list)->first!=NULL?(&list)->first->sll_link_next:NULL }; !mysll_iisend(&iter); mysll_inext(&iter)) {
+  mynode *node = mysll_iget(&iter);
+  printnode(node, "");
+ }
+ printf("-\ngetting items from the pool again and putting them at the end of the list, this time some will be recycled\n");
+ for (size_t i=0; i<10; ++i) {
+  mynode *node = mysll_pget(&pool);
+  printnode(node, "");
+  mysll_lpushback(&list, node);
+ }
+ printf("-\nprinting the list again\n");
+ for (myiter iter={ .list=(&list), .prev=NULL, .current=(&list)->first!=NULL?(&list)->first:NULL, .next=(&list)->first!=NULL?(&list)->first->sll_link_next:NULL }; !mysll_iisend(&iter); mysll_inext(&iter)) {
+  mynode *node = mysll_iget(&iter);
+  printnode(node, "");
+ }
+ mysll_pfree(&pool);
+ mysll_lfree(&list);
+ return 0;
+}

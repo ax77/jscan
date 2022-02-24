@@ -1,0 +1,38 @@
+int a[30][3],b[30],c[30],d[30],e[30],f[30],g[30],i,j=0,k,l=0;
+main(){m();n();{ printf("Your score is %d\n",j);exit(0);};}m(){int o;srandom(getpid());do{for(o=0;
+o<30;e[o++]=3){a[o][0]=a[o][1]=a[o][2]=-1;c[o]=d[o]=g[o]=0;
+b[o]=30*2;}r(0);s();}while(s());t();}s(){int o,p;for(o=0;o<30;o++){
+if(a[o][2]<a[o][1]){p=a[o][2];a[o][2]=a[o][1];a[o][1]=p;}if(a[o][1]<a[o][0]){p=a[o][1];a[o][1]=a[o][0];a[o][0]=p;}if(a[o][2]<a[o][1]){p=a[o][2];a[o][2]=a[o][1];a[o][1]=p;}if(a[o][0]==-1)return(1);
+}return(0);}t(){int o,p;for(o=0;o<30;o+=8){do{p=random()%30;}while(c[p]||d[p]); c[p]=1;do{p=random()%30;}while(c[p]||d[p]); d[p]=1;}w(random()%30,0);for(o=0;
+o<3;o++){do{p=random()%30;}while(c[p]||d[p]||f[p]||!b[p]);f[p]=1;}do{k=random()%30;}
+while((c[k])||(d[k])||(b[k]==0));}w(o,d)int o,d;{int x;b[o]=d;for(x=0;
+x<3;x++)if(b[a[o][x]]>d)w(a[o][x],d+1);}int r(x)int x;{int y,t=0,u;
+while(e[x]){u=3;(e[x])--;do{y=random()%30;if(t++>1000)return(0);if(t%100==0)u--;}
+while((y==x)||(e[y]<=0)||(y==a[x][2])||(y==a[x][1])||(e[y]<u));(e[y])--;
+a[x][e[x]]=y;a[y][e[y]]=x;if(!r(y)){a[x][e[x]]=a[y][e[y]]=-1;(e[y])++;
+(e[x])++;}else t=0;}return(1);}n(){int r,n;char v;do{r=random()%30;}
+while(c[r]||d[r]||(b[r]<3)||d[a[r][0]]||d[a[r][1]]||d[a[r][2]]||
+c[a[r][0]]||c[a[r][1]]||c[a[r][2]]);while(1){printf("You are in room %d\n",r);
+if(f[r]){i++;printf("You found an arrow\n");j+=20;f[r]=0;}if(b[r]==0){
+printf("Wumpus meat\n");j-=100;{ printf("Your score is %d\n",j);exit(0);};}if(d[r]){printf("You fell in a pit\n");j-=50;
+{ printf("Your score is %d\n",j);exit(0);};}if(r==k){if(i){i--;l++;j-=20;printf("You are missing an arrow!\n");
+}if(l==3){printf("You catch the robber and recover all 3 arrows!\n");
+i=3;j+=200;k=-1;}else{printf("The robber scurries away\n");do{k=random()%30;}
+while((c[k])||(d[k])||(b[k]==0)||(k==r));}}if(c[r]){c[r]=0;c[random()%30]=1;r=random()%30;
+printf("The bats pick you up and drop you in room %d\n",r);j-=10;}else{
+if(b[r]<3)printf("You smell a wumpus\n");
+if(d[a[r][0]]||d[a[r][1]]||d[a[r][2]])printf("You feel a breeze\n");
+if(c[a[r][0]]||c[a[r][1]]||c[a[r][2]])printf("You hear a rustling sound\n");
+printf("Passageways to room %d, %d, and %d\n",a[r][0],a[r][1],a[r][2]);
+if(!g[r]){j+=10;g[r]=1;}do{v=getchar();if(v=='s')q(r);if(v=='l')break;
+if(v=='i')printf("You have %d arrow%c\n",i,i-1?'s':' ');if(v=='q'){ printf("Your score is %d\n",j);exit(0);};}
+while(!isdigit(v));if(isdigit(v)){n=v-'0';v=getchar();if(isdigit(v))n=n*10+v-'0';
+if((a[r][0]==n)||(a[r][1]==n)||(a[r][2]==n))r=n;}}}}q(r)int r;{int z,n;
+char v;if(i==0){printf("You have no arrows\n");return;}i--;
+printf("Shoot into which rooms?  ");for(z=0;z<4;z++){j-=20*z;do{v=getchar();
+if((v=='\n')&&(i>0)){j-=50;printf("You have %d arrows\n",i);return;}}while(!isdigit(v));
+n=v-'0';v=getchar();if(isdigit(v))n=10*n+v-'0';if((a[r][0]==n)||(a[r][1]==n)||(a[r][2]
+==n)){r=n;if(b[r]==0){printf("You have killed the Wumpus!\n");j+=500+i*100;
+{ printf("Your score is %d\n",j);exit(0);};}}else if(random()%3==1){printf("The arrow bounces back and kills you\n");
+j-=100;{ printf("Your score is %d\n",j);exit(0);};}else{for(n=0;n<30;n++)b[n]=2*30;w(random()%30,0);j-=100;}if(v=='\n'){j-=50;
+printf("You have %d arrows\n",i);return;}}}

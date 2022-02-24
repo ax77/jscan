@@ -1,0 +1,5 @@
+int
+main() {
+ puts("hmm");
+ printf ("some " "text" "stuff\n");
+}

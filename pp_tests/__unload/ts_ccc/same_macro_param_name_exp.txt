@@ -1,0 +1,4 @@
+int __test() {
+    int a = 33;
+    return a;
+}

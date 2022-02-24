@@ -1,0 +1,2 @@
+char * PLANET_name[] = { "Mercury", "Venus", "Earth", };
+int PLANET_radius[] = { 2439, 6051, 6378, };

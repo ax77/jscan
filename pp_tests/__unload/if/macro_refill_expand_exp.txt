@@ -1,0 +1,8 @@
+int printf(const char *, ...);
+int main(void)
+{
+ printf("%s\n", "hi" "ho");
+ printf("%s\n", "Hello");
+ printf("hello: "); printf("%s\n", "to you");
+ return 0;
+}

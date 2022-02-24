@@ -1,0 +1,18 @@
+extern unsigned errors;
+extern unsigned main_terminated;
+extern void fail( unsigned line );
+unsigned errors;
+unsigned main_terminated;
+void fail( unsigned line )
+{
+    ++errors;
+    printf( "failure on line %u\n", line );
+    if( main_terminated || errors > 5 ) {
+        abort();
+    }
+}
+char *p = "x ## y";
+int main() {
+    if( strcmp( p, "x ## y" ) ) fail(14);
+    if( ! errors ) { puts( "PASS " "" ); fflush( stdout ); } main_terminated = 1; return( errors != 0 );;
+}

@@ -1,0 +1,3 @@
+macro call:
+arguments: 1 2
+changed_x

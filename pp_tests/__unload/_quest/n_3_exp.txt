@@ -1,0 +1,9 @@
+main( void)
+{
+    int abcd = 4;
+    fputs( "started\n", stderr);
+    assert( strcmp( "abc de", "abc de") == 0);
+    assert( abcd == 4);
+    fputs( "success\n", stderr);
+    return 0;
+}

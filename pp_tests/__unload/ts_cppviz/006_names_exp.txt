@@ -1,0 +1,1 @@
+const char * PLANET_element_name[] = { "MERCURY", "VENUS", "EARTH", };

@@ -1,0 +1,5 @@
+        int letter_a = 0; int letter_b = 0; int letter_c = 0; int letter_A = 0; int letter_B = 0; int letter_C = 0;;
+        letter_a = 2;
+        letter_c = 3;
+        letter_B = 5;
+    }

@@ -1,0 +1,36 @@
+extern unsigned errors;
+extern unsigned main_terminated;
+extern void fail( unsigned line );
+unsigned errors;
+unsigned main_terminated;
+void fail( unsigned line )
+{
+    ++errors;
+    printf( "failure on line %u\n", line );
+    if( main_terminated || errors > 5 ) {
+        abort();
+    }
+}
+enum {
+    A7 = 1,
+};
+int a[] = {
+    0xaa0e+A2, 0xaa10,
+    0xaa0e+A7, 0xaa0f,
+    0xaa0e+A16 (1,2),0xaa11,
+};
+char *b[] = {
+    "0xaa0e+A7", "0xaa0e+0xaa0e+A7",
+    "0xaa0e+A7", "0xaa0e+A7",
+    "0xaa0e+A7", "0xaa0e+A7",
+};
+int main() {
+    int i;
+    for( i = 0; i < (sizeof(a)/sizeof(a[0])); i+=2 ) {
+ if( a[i] != a[i+1] ) (fail(37));
+    }
+    for( i = 0; i < (sizeof(b)/sizeof(b[0])); i+=2 ) {
+ if( strcmp( b[i], b[i+1] ) != 0 ) (fail(40));
+    }
+    if( ! errors ) { puts( "PASS " "" ); fflush( stdout ); } main_terminated = 1; return( errors != 0 );;
+}

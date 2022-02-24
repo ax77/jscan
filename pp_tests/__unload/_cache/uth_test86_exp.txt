@@ -1,0 +1,261 @@
+typedef struct el {
+    int id;
+    struct el *next, *prev;
+} el;
+int main(int argc, char *argv[])
+{
+    int i;
+    int count;
+    el els[10], *e;
+    el *head = NULL;
+    el *zeroptr = NULL;
+    for(i=0; i<10; i++) {
+        els[i].id=(int)'a'+i;
+    }
+    printf("CDL appends\n");
+    do { if (head) { (&els[0])->prev = (head)->prev; (&els[0])->next = (head); (head)->prev = (&els[0]); (&els[0])->prev->next = (&els[0]); } else { (&els[0])->prev = (&els[0]); (&els[0])->next = (&els[0]); (head) = (&els[0]); } } while (0);
+    do { if (head) { (&els[1])->prev = (head)->prev; (&els[1])->next = (head); (head)->prev = (&els[1]); (&els[1])->prev->next = (&els[1]); } else { (&els[1])->prev = (&els[1]); (&els[1])->next = (&els[1]); (head) = (&els[1]); } } while (0);
+    do { if (head) { (&els[2])->prev = (head)->prev; (&els[2])->next = (head); (head)->prev = (&els[2]); (&els[2])->prev->next = (&els[2]); } else { (&els[2])->prev = (&els[2]); (&els[2])->next = (&els[2]); (head) = (&els[2]); } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    do { (count) = 0; for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) { ++(count); } } while (0);
+    printf("count = %d\n", count);
+    printf("Test CDL_PREPEND_ELEM %c with elt NULL\n", els[3].id);
+    do { if (zeroptr) { assert((head) != NULL); assert((&els[3]) != NULL); (&els[3])->next = (zeroptr); (&els[3])->prev = (zeroptr)->prev; (zeroptr)->prev = (&els[3]); (&els[3])->prev->next = (&els[3]); if ((head) == (zeroptr)) { (head) = (&els[3]); } } else { do { if (head) { (&els[3])->prev = (head)->prev; (&els[3])->next = (head); (head)->prev = (&els[3]); (&els[3])->prev->next = (&els[3]); } else { (&els[3])->prev = (&els[3]); (&els[3])->next = (&els[3]); (head) = (&els[3]); } } while (0); } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test CDL_PREPEND_ELEM %c before item %c\n", els[4].id, els[1].id);
+    do { if (&els[1]) { assert((head) != NULL); assert((&els[4]) != NULL); (&els[4])->next = (&els[1]); (&els[4])->prev = (&els[1])->prev; (&els[1])->prev = (&els[4]); (&els[4])->prev->next = (&els[4]); if ((head) == (&els[1])) { (head) = (&els[4]); } } else { do { if (head) { (&els[4])->prev = (head)->prev; (&els[4])->next = (head); (head)->prev = (&els[4]); (&els[4])->prev->next = (&els[4]); } else { (&els[4])->prev = (&els[4]); (&els[4])->next = (&els[4]); (head) = (&els[4]); } } while (0); } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test CDL_APPEND_ELEM %c with elt NULL\n", els[5].id);
+    do { if (zeroptr) { assert((head) != NULL); assert((&els[5]) != NULL); (&els[5])->next = (zeroptr)->next; (&els[5])->prev = (zeroptr); (zeroptr)->next = (&els[5]); (&els[5])->next->prev = (&els[5]); } else { do { if (head) { (&els[5])->prev = (head)->prev; (&els[5])->next = (head); (head)->prev = (&els[5]); (&els[5])->prev->next = (&els[5]); } else { (&els[5])->prev = (&els[5]); (&els[5])->next = (&els[5]); } (head) = (&els[5]); } while (0); } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test CDL_APPEND_ELEM %c after item %c\n", els[6].id, els[1].id);
+    do { if (&els[1]) { assert((head) != NULL); assert((&els[6]) != NULL); (&els[6])->next = (&els[1])->next; (&els[6])->prev = (&els[1]); (&els[1])->next = (&els[6]); (&els[6])->next->prev = (&els[6]); } else { do { if (head) { (&els[6])->prev = (head)->prev; (&els[6])->next = (head); (head)->prev = (&els[6]); (&els[6])->prev->next = (&els[6]); } else { (&els[6])->prev = (&els[6]); (&els[6])->next = (&els[6]); } (head) = (&els[6]); } while (0); } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    do { (count) = 0; for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) { ++(count); } } while (0);
+    printf("count = %d\n", count);
+    printf("advancing head pointer\n");
+    head = head->next;
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    for(i=0,e=head; e && i<20; i++,e=e->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    for(i=0,e=head; e && i<10; i++,e=e->prev) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (b)\n");
+    do { if (((head)==(&els[1])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[1])->next->prev = (&els[1])->prev; (&els[1])->prev->next = (&els[1])->next; if ((&els[1]) == (head)) (head)=(&els[1])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (a)\n");
+    do { if (((head)==(&els[0])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[0])->next->prev = (&els[0])->prev; (&els[0])->prev->next = (&els[0])->next; if ((&els[0]) == (head)) (head)=(&els[0])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (c)\n");
+    do { if (((head)==(&els[2])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[2])->next->prev = (&els[2])->prev; (&els[2])->prev->next = (&els[2])->next; if ((&els[2]) == (head)) (head)=(&els[2])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (g)\n");
+    do { if (((head)==(&els[6])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[6])->next->prev = (&els[6])->prev; (&els[6])->prev->next = (&els[6])->next; if ((&els[6]) == (head)) (head)=(&els[6])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (e)\n");
+    do { if (((head)==(&els[4])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[4])->next->prev = (&els[4])->prev; (&els[4])->prev->next = (&els[4])->next; if ((&els[4]) == (head)) (head)=(&els[4])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (d)\n");
+    do { if (((head)==(&els[3])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[3])->next->prev = (&els[3])->prev; (&els[3])->prev->next = (&els[3])->next; if ((&els[3]) == (head)) (head)=(&els[3])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("deleting (f)\n");
+    do { if (((head)==(&els[5])) && ((head)->next == (head))) { (head) = NULL; } else { (&els[5])->next->prev = (&els[5])->prev; (&els[5])->prev->next = (&els[5])->next; if ((&els[5]) == (head)) (head)=(&els[5])->next; } } while (0);
+    for ((e)=(head);e;(e)=(((e)->next==(head)) ? NULL : (e)->next)) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("DL appends\n");
+    do { if (head) { (&els[0])->prev = (head)->prev; (head)->prev->next = (&els[0]); (head)->prev = (&els[0]); (&els[0])->next = NULL; } else { (head)=(&els[0]); (head)->prev = (head); (head)->next = NULL; } } while (0);
+    do { if (head) { (&els[1])->prev = (head)->prev; (head)->prev->next = (&els[1]); (head)->prev = (&els[1]); (&els[1])->next = NULL; } else { (head)=(&els[1]); (head)->prev = (head); (head)->next = NULL; } } while (0);
+    do { if (head) { (&els[2])->prev = (head)->prev; (head)->prev->next = (&els[2]); (head)->prev = (&els[2]); (&els[2])->next = NULL; } else { (head)=(&els[2]); (head)->prev = (head); (head)->next = NULL; } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    do { (count) = 0; for ((e) = (head); e; (e) = (e)->next) { ++(count); } } while (0);
+    printf("count = %d\n", count);
+    printf("Test DL_PREPEND_ELEM %c with elt NULL\n", els[3].id);
+    do { if (zeroptr) { assert((head) != NULL); assert((&els[3]) != NULL); (&els[3])->next = (zeroptr); (&els[3])->prev = (zeroptr)->prev; (zeroptr)->prev = (&els[3]); if ((head) == (zeroptr)) { (head) = (&els[3]); } else { (&els[3])->prev->next = (&els[3]); } } else { do { if (head) { (&els[3])->prev = (head)->prev; (head)->prev->next = (&els[3]); (head)->prev = (&els[3]); (&els[3])->next = NULL; } else { (head)=(&els[3]); (head)->prev = (head); (head)->next = NULL; } } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test DL_PREPEND_ELEM %c before item %c\n", els[4].id, els[1].id);
+    do { if (&els[1]) { assert((head) != NULL); assert((&els[4]) != NULL); (&els[4])->next = (&els[1]); (&els[4])->prev = (&els[1])->prev; (&els[1])->prev = (&els[4]); if ((head) == (&els[1])) { (head) = (&els[4]); } else { (&els[4])->prev->next = (&els[4]); } } else { do { if (head) { (&els[4])->prev = (head)->prev; (head)->prev->next = (&els[4]); (head)->prev = (&els[4]); (&els[4])->next = NULL; } else { (head)=(&els[4]); (head)->prev = (head); (head)->next = NULL; } } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test DL_APPEND_ELEM %c with elt NULL\n", els[5].id);
+    do { if (zeroptr) { assert((head) != NULL); assert((&els[5]) != NULL); (&els[5])->next = (zeroptr)->next; (&els[5])->prev = (zeroptr); (zeroptr)->next = (&els[5]); if ((&els[5])->next) { (&els[5])->next->prev = (&els[5]); } else { (head)->prev = (&els[5]); } } else { do { (&els[5])->next = (head); if (head) { (&els[5])->prev = (head)->prev; (head)->prev = (&els[5]); } else { (&els[5])->prev = (&els[5]); } (head) = (&els[5]); } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test DL_APPEND_ELEM %c after item %c\n", els[6].id, els[1].id);
+    do { if (&els[1]) { assert((head) != NULL); assert((&els[6]) != NULL); (&els[6])->next = (&els[1])->next; (&els[6])->prev = (&els[1]); (&els[1])->next = (&els[6]); if ((&els[6])->next) { (&els[6])->next->prev = (&els[6]); } else { (head)->prev = (&els[6]); } } else { do { (&els[6])->next = (head); if (head) { (&els[6])->prev = (head)->prev; (head)->prev = (&els[6]); } else { (&els[6])->prev = (&els[6]); } (head) = (&els[6]); } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    do { (count) = 0; for ((e) = (head); e; (e) = (e)->next) { ++(count); } } while (0);
+    printf("count = %d\n", count);
+    printf("deleting (b)\n");
+    do { assert((head) != NULL); assert((&els[1])->prev != NULL); if ((&els[1])->prev == (&els[1])) { (head)=NULL; } else if ((&els[1])==(head)) { (&els[1])->next->prev = (&els[1])->prev; (head) = (&els[1])->next; } else { (&els[1])->prev->next = (&els[1])->next; if ((&els[1])->next) { (&els[1])->next->prev = (&els[1])->prev; } else { (head)->prev = (&els[1])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (a)\n");
+    do { assert((head) != NULL); assert((&els[0])->prev != NULL); if ((&els[0])->prev == (&els[0])) { (head)=NULL; } else if ((&els[0])==(head)) { (&els[0])->next->prev = (&els[0])->prev; (head) = (&els[0])->next; } else { (&els[0])->prev->next = (&els[0])->next; if ((&els[0])->next) { (&els[0])->next->prev = (&els[0])->prev; } else { (head)->prev = (&els[0])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (c)\n");
+    do { assert((head) != NULL); assert((&els[2])->prev != NULL); if ((&els[2])->prev == (&els[2])) { (head)=NULL; } else if ((&els[2])==(head)) { (&els[2])->next->prev = (&els[2])->prev; (head) = (&els[2])->next; } else { (&els[2])->prev->next = (&els[2])->next; if ((&els[2])->next) { (&els[2])->next->prev = (&els[2])->prev; } else { (head)->prev = (&els[2])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (g)\n");
+    do { assert((head) != NULL); assert((&els[6])->prev != NULL); if ((&els[6])->prev == (&els[6])) { (head)=NULL; } else if ((&els[6])==(head)) { (&els[6])->next->prev = (&els[6])->prev; (head) = (&els[6])->next; } else { (&els[6])->prev->next = (&els[6])->next; if ((&els[6])->next) { (&els[6])->next->prev = (&els[6])->prev; } else { (head)->prev = (&els[6])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (e)\n");
+    do { assert((head) != NULL); assert((&els[4])->prev != NULL); if ((&els[4])->prev == (&els[4])) { (head)=NULL; } else if ((&els[4])==(head)) { (&els[4])->next->prev = (&els[4])->prev; (head) = (&els[4])->next; } else { (&els[4])->prev->next = (&els[4])->next; if ((&els[4])->next) { (&els[4])->next->prev = (&els[4])->prev; } else { (head)->prev = (&els[4])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (d)\n");
+    do { assert((head) != NULL); assert((&els[3])->prev != NULL); if ((&els[3])->prev == (&els[3])) { (head)=NULL; } else if ((&els[3])==(head)) { (&els[3])->next->prev = (&els[3])->prev; (head) = (&els[3])->next; } else { (&els[3])->prev->next = (&els[3])->next; if ((&els[3])->next) { (&els[3])->next->prev = (&els[3])->prev; } else { (head)->prev = (&els[3])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("deleting (f)\n");
+    do { assert((head) != NULL); assert((&els[5])->prev != NULL); if ((&els[5])->prev == (&els[5])) { (head)=NULL; } else if ((&els[5])==(head)) { (&els[5])->next->prev = (&els[5])->prev; (head) = (&els[5])->next; } else { (&els[5])->prev->next = (&els[5])->next; if ((&els[5])->next) { (&els[5])->next->prev = (&els[5])->prev; } else { (head)->prev = (&els[5])->prev; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("LL appends\n");
+    do { __typeof(head) _tmp; (&els[0])->next=NULL; if (head) { _tmp = (head); while (_tmp->next) { _tmp = _tmp->next; } _tmp->next=(&els[0]); } else { (head)=(&els[0]); } } while (0);
+    do { __typeof(head) _tmp; (&els[1])->next=NULL; if (head) { _tmp = (head); while (_tmp->next) { _tmp = _tmp->next; } _tmp->next=(&els[1]); } else { (head)=(&els[1]); } } while (0);
+    do { __typeof(head) _tmp; (&els[2])->next=NULL; if (head) { _tmp = (head); while (_tmp->next) { _tmp = _tmp->next; } _tmp->next=(&els[2]); } else { (head)=(&els[2]); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    do { (count) = 0; for ((e) = (head); e; (e) = (e)->next) { ++(count); } } while (0);
+    printf("count = %d\n", count);
+    printf("Test LL_PREPEND_ELEM %c with elt NULL\n", els[3].id);
+    do { if (zeroptr) { __typeof(head) _tmp; assert((head) != NULL); assert((&els[3]) != NULL); (&els[3])->next = (zeroptr); if ((head) == (zeroptr)) { (head) = (&els[3]); } else { _tmp = (head); while (_tmp->next && (_tmp->next != (zeroptr))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[3]); } } } else { do { __typeof(head) _tmp; (&els[3])->next=NULL; if (head) { _tmp = (head); while (_tmp->next) { _tmp = _tmp->next; } _tmp->next=(&els[3]); } else { (head)=(&els[3]); } } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test LL_PREPEND_ELEM %c before item %c\n", els[4].id, els[1].id);
+    do { if (&els[1]) { __typeof(head) _tmp; assert((head) != NULL); assert((&els[4]) != NULL); (&els[4])->next = (&els[1]); if ((head) == (&els[1])) { (head) = (&els[4]); } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[1]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[4]); } } } else { do { __typeof(head) _tmp; (&els[4])->next=NULL; if (head) { _tmp = (head); while (_tmp->next) { _tmp = _tmp->next; } _tmp->next=(&els[4]); } else { (head)=(&els[4]); } } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test LL_APPEND_ELEM %c with elt NULL\n", els[5].id);
+    do { if (zeroptr) { assert((head) != NULL); assert((&els[5]) != NULL); (&els[5])->next = (zeroptr)->next; (zeroptr)->next = (&els[5]); } else { do { (&els[5])->next = (head); (head) = (&els[5]); } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("Test LL_APPEND_ELEM %c after item %c\n", els[6].id, els[1].id);
+    do { if (&els[1]) { assert((head) != NULL); assert((&els[6]) != NULL); (&els[6])->next = (&els[1])->next; (&els[1])->next = (&els[6]); } else { do { (&els[6])->next = (head); (head) = (&els[6]); } while (0); } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    do { (count) = 0; for ((e) = (head); e; (e) = (e)->next) { ++(count); } } while (0);
+    printf("count = %d\n", count);
+    printf("deleting (b)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[1])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[1]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[1])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (a)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[0])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[0]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[0])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (c)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[2])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[2]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[2])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (g)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[6])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[6]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[6])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (e)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[4])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[4]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[4])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    printf("deleting (d)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[3])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[3]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[3])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("deleting (f)\n");
+    do { __typeof(head) _tmp; if ((head) == (&els[5])) { (head)=(head)->next; } else { _tmp = (head); while (_tmp->next && (_tmp->next != (&els[5]))) { _tmp = _tmp->next; } if (_tmp->next) { _tmp->next = (&els[5])->next; } } } while (0);
+    for ((e) = (head); e; (e) = (e)->next) {
+        printf("%c ", e->id);
+    }
+    printf("\n");
+    return 0;
+}

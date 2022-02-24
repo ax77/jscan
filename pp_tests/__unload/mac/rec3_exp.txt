@@ -1,0 +1,5 @@
+int test = 0;
+int x = test;
+int y = x;
+int z = y;
+AGAIN

@@ -1,0 +1,5 @@
+A
+{ int x = 42; } { int x = 42; }
+B
+ # include <file.h>
+EMPTY # include <file.h>

@@ -1,0 +1,2 @@
+File with DOS-style carriage-return endings
+yes

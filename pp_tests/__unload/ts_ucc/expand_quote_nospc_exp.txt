@@ -1,0 +1,4 @@
+s="ab" "cd" "ef";
+s="ab""cd" "ef";
+s="ab" L"ef";
+s="ab"L"ef";

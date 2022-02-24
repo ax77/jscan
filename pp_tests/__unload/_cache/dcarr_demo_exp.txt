@@ -1,0 +1,44 @@
+typedef struct intarray_t { int *els; unsigned int cap; unsigned int off; unsigned int len; } intarray_t;
+int int_cmp(const void *a, const void *b) {
+    return *(const int *)a - *(const int *)b;
+}
+void dumparray(intarray_t arr) {
+ int i;
+ printf("Printing array (length=%d, capacity=%d, offset=%d)\n",
+        ((arr).len), arr.cap, arr.off);
+ for (i=0; i<((arr).len); i++)
+  printf(" %d", ((arr).els[((((arr)).off + ((i))) & (((arr)).cap - 1))]));
+ printf("\n");
+}
+int main() {
+ int i;
+ intarray_t arr;
+ printf("Initializing array.\n");
+ do{ (arr).els = NULL; (arr).cap = (arr).off = (arr).len = 0; }while(0);
+ printf("Pushing odd numbers and unshifting even numbers 0 to 14.\n");
+ for (i = 0; i < 15; i++) {
+  if (i % 2) do{ do{ if (((arr)).len + (1) > ((arr)).cap) { unsigned int _cap = ((arr)).cap; do{ ((arr)).cap = ((arr)).cap >= 8 ? ((arr)).cap << 1 : 8; }while(((arr)).len + (1) > ((arr)).cap); ((arr)).els = (int *)realloc(((arr)).els, ((arr)).cap * sizeof(int)); if (!((arr)).els) exit(-1); if (((arr)).off + ((arr)).len > _cap) { memmove(&(((arr)).els[((arr)).off + ((arr)).cap - _cap]), &(((arr)).els[((arr)).off]), sizeof(int) * (((arr)).cap - _cap)); memset(&(((arr)).els[((arr)).off]), 0, sizeof(int) * (((arr)).cap - _cap)); ((arr)).off += ((arr)).cap - _cap; } } }while(0); (arr).els[((((arr)).off + ((arr).len++)) & (((arr)).cap - 1))] = (i); }while(0);
+  else do{ do{ if (((arr)).len + (1) > ((arr)).cap) { unsigned int _cap = ((arr)).cap; do{ ((arr)).cap = ((arr)).cap >= 8 ? ((arr)).cap << 1 : 8; }while(((arr)).len + (1) > ((arr)).cap); ((arr)).els = (int *)realloc(((arr)).els, ((arr)).cap * sizeof(int)); if (!((arr)).els) exit(-1); if (((arr)).off + ((arr)).len > _cap) { memmove(&(((arr)).els[((arr)).off + ((arr)).cap - _cap]), &(((arr)).els[((arr)).off]), sizeof(int) * (((arr)).cap - _cap)); memset(&(((arr)).els[((arr)).off]), 0, sizeof(int) * (((arr)).cap - _cap)); ((arr)).off += ((arr)).cap - _cap; } } }while(0); (arr).off = ((((arr)).off + ((arr).cap - 1)) & (((arr)).cap - 1)); (arr).els[(arr).off] = (i); (arr).len++; }while(0);
+ }
+ printf("Inserting 100 at position 9.\n");
+ do{ do{ if (((arr)).len + (1) > ((arr)).cap) { unsigned int _cap = ((arr)).cap; do{ ((arr)).cap = ((arr)).cap >= 8 ? ((arr)).cap << 1 : 8; }while(((arr)).len + (1) > ((arr)).cap); ((arr)).els = (int *)realloc(((arr)).els, ((arr)).cap * sizeof(int)); if (!((arr)).els) exit(-1); if (((arr)).off + ((arr)).len > _cap) { memmove(&(((arr)).els[((arr)).off + ((arr)).cap - _cap]), &(((arr)).els[((arr)).off]), sizeof(int) * (((arr)).cap - _cap)); memset(&(((arr)).els[((arr)).off]), 0, sizeof(int) * (((arr)).cap - _cap)); ((arr)).off += ((arr)).cap - _cap; } } }while(0); if ((9) < (arr).len) { if ((((arr).off + (9)) & ((arr).cap - 1)) > (arr).off && (arr).off != 0) { memmove(&((arr).els[(arr).off-1]), &((arr).els[(arr).off]), sizeof(int) * ((((arr).off + (9)) & ((arr).cap - 1)) - (arr).off)); (arr).off--; } else { memmove(&((arr).els[(((arr).off + (9)) & ((arr).cap - 1))+1]), &((arr).els[(((arr).off + (9)) & ((arr).cap - 1))]), sizeof(int) * ((arr).len - 9)); } } (arr).len++; (((arr)).els[(((((arr))).off + (((9)))) & ((((arr))).cap - 1))]) = (100); }while(0);
+ dumparray(arr);
+ printf("Sorting.\n");
+ do{ if ((arr).off + (arr).len > (arr).cap) { memmove(&((arr).els[(arr).off + (arr).len - (arr).cap]), &((arr).els[(arr).off]), sizeof(int) * ((arr).cap - (arr).off)); (arr).off = 0; } qsort(&((arr).els[(arr).off]), (arr).len, sizeof(int), (int_cmp)); }while(0);
+ dumparray(arr);
+ while(((arr).len) > 0) {
+  if (((arr).len) % 3) {
+   do{ (i) = (arr).els[(arr).off]; (arr).off = ((((arr)).off + (1)) & (((arr)).cap - 1)); (arr).len--; do{ if (((arr)).len << 2 <= ((arr)).cap && ((arr)).cap > 8) { unsigned int _cap = ((arr)).cap; do{ ((arr)).cap = ((arr)).cap >> 1; }while(((arr)).len << 2 <= ((arr)).cap && ((arr)).cap > 8); if (((arr)).off >= ((arr)).cap) { memcpy(&(((arr)).els[0]), &(((arr)).els[((arr)).off]), sizeof(int) * ((arr)).len); ((arr)).off = 0; } else if (((arr)).off + ((arr)).len >= _cap) { memmove(&(((arr)).els[((arr)).off + ((arr)).cap - _cap]), &(((arr)).els[((arr)).off]), sizeof(int) * (((arr)).cap - _cap)); ((arr)).off += ((arr)).cap - _cap; } else if (((arr)).off + ((arr)).len > ((arr)).cap) { memcpy(&(((arr)).els[0]), &(((arr)).els[((arr)).cap]), sizeof(int) * (((arr)).off + ((arr)).len - ((arr)).cap)); } ((arr)).els = (int *)realloc(((arr)).els, ((arr)).cap * sizeof(int)); } }while(0); }while(0);
+   printf("Shift %d. ", i);
+  } else {
+   do{ (i) = (arr).els[((((arr)).off + (--(arr).len)) & (((arr)).cap - 1))]; do{ if (((arr)).len << 2 <= ((arr)).cap && ((arr)).cap > 8) { unsigned int _cap = ((arr)).cap; do{ ((arr)).cap = ((arr)).cap >> 1; }while(((arr)).len << 2 <= ((arr)).cap && ((arr)).cap > 8); if (((arr)).off >= ((arr)).cap) { memcpy(&(((arr)).els[0]), &(((arr)).els[((arr)).off]), sizeof(int) * ((arr)).len); ((arr)).off = 0; } else if (((arr)).off + ((arr)).len >= _cap) { memmove(&(((arr)).els[((arr)).off + ((arr)).cap - _cap]), &(((arr)).els[((arr)).off]), sizeof(int) * (((arr)).cap - _cap)); ((arr)).off += ((arr)).cap - _cap; } else if (((arr)).off + ((arr)).len > ((arr)).cap) { memcpy(&(((arr)).els[0]), &(((arr)).els[((arr)).cap]), sizeof(int) * (((arr)).off + ((arr)).len - ((arr)).cap)); } ((arr)).els = (int *)realloc(((arr)).els, ((arr)).cap * sizeof(int)); } }while(0); }while(0);
+   printf("Pop %d. ", i);
+  }
+  if (((arr).len) % 4 == 0) {
+   printf("\n");
+   dumparray(arr);
+  }
+ }
+ do{ free((arr).els); }while(0);
+ return 0;
+}

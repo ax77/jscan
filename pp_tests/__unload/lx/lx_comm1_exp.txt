@@ -1,0 +1,18 @@
+int a =1;
+int b =1;
+int c=a /b;
+char s0[]="\t\\t\"a\"+\"b\"=\"c\"\\;\\\n\n";
+char *str = "a\"/*b\"\\\\";
+char c = '"', d = '\'';
+int foo (int a, int b) {
+ int f = a /b;
+ int g = a/ b;
+}
+int main( int argc, char **argv ) {
+ char str0[]="/*  ML in string */";
+ char str1[]="" "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" ;
+ char str3[]="//";
+ char str4[]="/**/";
+ char str5[]="\n\\\n\\\n\\";
+ return (0);
+}

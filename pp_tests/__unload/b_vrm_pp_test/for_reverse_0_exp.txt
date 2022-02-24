@@ -1,0 +1,14 @@
+       
+       
+       
+       
+       
+       
+int main()
+{
+    int k{0};
+    k += 3; k += 1; k += 2; k += 2; k += 1; k += 3; k += 0; k += 4;
+    k += 0; k += 0;
+    TEST_ASSERT(k == 16);
+    return 0;
+}

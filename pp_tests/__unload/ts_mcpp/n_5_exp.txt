@@ -1,0 +1,8 @@
+main( void)
+{
+    int abcde = 5;
+    fputs( "started\n", stderr);
+    assert( abcde == 5);
+    fputs( "success\n", stderr);
+    return 0;
+}

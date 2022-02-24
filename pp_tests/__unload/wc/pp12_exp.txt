@@ -1,0 +1,26 @@
+extern unsigned errors;
+extern unsigned main_terminated;
+extern void fail( unsigned line );
+unsigned errors;
+unsigned main_terminated;
+void fail( unsigned line )
+{
+    ++errors;
+    printf( "failure on line %u\n", line );
+    if( main_terminated || errors > 5 ) {
+        abort();
+    }
+}
+wchar_t *p = L"abcdefgh";
+wchar_t *q = L"0123456789";
+int main()
+{
+    int i;
+    for( i = 0; i < 8; ++i ) {
+ if( p[i] != ( 'a' + i ) ) fail(14);
+    }
+    for( i = 0; i < 10; ++i ) {
+ if( q[i] != ( '0' + i ) ) fail(17);
+    }
+    if( ! errors ) { puts( "PASS " "" ); fflush( stdout ); } main_terminated = 1; return( errors != 0 );;
+}

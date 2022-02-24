@@ -1,0 +1,3 @@
+cpp_overload1(1);
+cpp_overload2(1, 2);
+cpp_overload3(1, 2, 3);

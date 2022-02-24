@@ -1,0 +1,5 @@
+  namespace style
+{
+  class TextColor { public: WColor foreground; WColor background; TextColor(WDrawContext &dc_, const style::Spec &spec_) : foreground(dc_, spec_.get<ascii_string>( "foreground" )) , background(dc_, spec_.get<ascii_string>( "background" )) {} };
+  class Label { public: int horizontal_padding; int vertical_padding; WFont font; Label(WDrawContext &dc_, const style::Spec &spec_) : horizontal_padding(spec_.get<int>( "horizontal_padding" )) , vertical_padding(spec_.get<int>( "vertical_padding" )) , font(dc_, spec_.get<ascii_string>( "font" )) {} };
+}

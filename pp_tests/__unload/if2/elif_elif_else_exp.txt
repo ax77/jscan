@@ -1,0 +1,36 @@
+    keep part 4 of 0-0-0
+    delete part 4 of 0-0-1
+    keep part 4 of 0-0-?
+--------------------------
+    keep part 4 of 0-1-0
+    delete part 4 of 0-1-1
+    delete part 4 of 0-1-?
+--------------------------
+    keep part 4 of 0-?-0
+    delete part 4 of 0-?-1
+    keep part 4 of 0-?-?
+==========================
+    delete part 4 of 1-0-0
+    delete part 4 of 1-0-1
+    delete part 4 of 1-0-?
+--------------------------
+    delete part 4 of 1-1-0
+    delete part 4 of 1-1-1
+    delete part 4 of 1-1-?
+--------------------------
+    delete part 4 of 1-?-0
+    delete part 4 of 1-?-1
+    delete part 4 of 1-?-?
+==========================
+    keep part 4 of ?-0-0
+    delete part 4 of ?-0-1
+    keep part 4 of ?-0-?
+--------------------------
+    delete part 4 of ?-1-0
+    delete part 4 of ?-1-1
+    delete part 4 of ?-1-?
+--------------------------
+    keep part 4 of ?-?-0
+    delete part 4 of ?-?-1
+    keep part 4 of ?-?-?
+==========================

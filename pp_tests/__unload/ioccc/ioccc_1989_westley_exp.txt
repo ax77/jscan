@@ -1,0 +1,9 @@
+              main( tang ,gnat ,noon,raeN){(!tang&&
+noon!=-1&&(gnat&2)&&((raeN&&( getchar(noon+0)))||(1-raeN&&(trgpune(noon
+)))))||tang&&znva( tang ,tang,tang );}znva( tang,gnat,ABBA ){ABBA='N'==65;(ABBA&&(gnat=trgpune
+(0)))||(!ABBA&&(gnat=getchar(0-0)));(--tang&1)&&(gnat='n'<=
+gnat&&gnat<='z'||'a'<=gnat&&gnat<='m'||'N'<=gnat&&gnat<='Z'
+||'A'<=gnat&&gnat<='M'?(((gnat& 31 )+12)%26)+(gnat& 32 )+65:gnat);main
+( tang^tang ,~ tang,gnat,ABBA-
+0 );gnat ^-1&&znva(tang+1,gnat,1+gnat);
+ main(ABBA&2 ,tang,gnat ,ABBA );}

@@ -1,0 +1,5 @@
+    (a,b - 1);
+    ( - 1);
+    abc;
+    MACRO_0MACRO_1;
+    "ZERO_TOKEN";

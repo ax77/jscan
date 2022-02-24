@@ -1,0 +1,2 @@
+ONE_ARG: 1
+MULTI_ARG: 1, 2

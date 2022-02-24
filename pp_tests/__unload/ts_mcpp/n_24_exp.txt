@@ -1,0 +1,11 @@
+main( void)
+{
+    fputs( "started\n", stderr);
+    assert( strcmp( "a+b", "a+b") == 0);
+    assert( strcmp( "ab + cd", "ab + cd") == 0);
+    assert( strcmp( "'\"' + \"' \\\"\"", "'\"' + \"' \\\"\"") == 0);
+    assert( strcmp( "\"abc\"", "\"abc\"") == 0);
+    assert( strcmp( "x-y", "x-y") == 0);
+    fputs( "success\n", stderr);
+    return 0;
+}

@@ -1,0 +1,7 @@
+typedef enum _e_PLANET { PLANET_MERCURY, PLANET_VENUS, PLANET_EARTH, } PLANET;
+int main() {
+    for (PLANET x = (PLANET) 0; x < (0 + 1 + 1 + 1); x = (PLANET) (((int) x) + 1)) {
+        printf("%d\n", (int) x);
+    }
+    return 0;
+}

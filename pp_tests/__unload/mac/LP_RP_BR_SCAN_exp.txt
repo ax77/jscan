@@ -1,0 +1,12 @@
+verse ( )
+re ( )
+re ( )
+verse ( )
+fn { verse ( ); re ( ); re ( ); verse ( ); }
+fn { re ( ); verse ( ); verse ( ); re ( ); }
+fn { verse ( ); re ( ); re ( ); verse ( ); }
+fn { re ( ); verse ( ); verse ( ); re ( ); }
+fn { verse ( ); re ( ); re ( ); verse ( ); }
+fn { re ( ); verse ( ); verse ( ); re ( ); }
+fn { verse ( ); re ( ); re ( ); verse ( ); }
+fn { re ( ); verse ( ); verse ( ); re ( ); }

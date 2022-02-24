@@ -1,0 +1,8 @@
+main( void)
+{
+    int DEFINED = 1;
+    fputs( "started\n", stderr);
+    assert( DEFINED == 1);
+    fputs( "success\n", stderr);
+    return 0;
+}

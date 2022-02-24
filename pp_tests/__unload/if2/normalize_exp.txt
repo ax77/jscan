@@ -1,0 +1,6 @@
+Line above should become #ifndef C
+Line above should become #ifndef D
+Line above should become #ifndef F, not #ifdefF
+Whatever
+Line above should become #ifndef H
+Line above should become #ifndef I

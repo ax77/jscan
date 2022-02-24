@@ -1,0 +1,8 @@
+(f)(int i)
+{
+ return i - 1;
+}
+main()
+{
+ return (f)(2);
+}

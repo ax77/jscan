@@ -1,0 +1,9 @@
+int
+foo() {
+ return 128;
+}
+int main(){
+  do { puts("ke ke ke") ; } while (0);
+  printf("%d\n", (1+2) * ((4 - 32) * foo()));
+  printf("%s\n", "'c'");
+}

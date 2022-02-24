@@ -1,0 +1,2 @@
+fprintf (stderr, "%s(%d): " "Too many balloons %u" "\n", FILE, 6, 42);
+fprintf (stderr, "%s(%d): " "Attention!" "\n", FILE, 7, );

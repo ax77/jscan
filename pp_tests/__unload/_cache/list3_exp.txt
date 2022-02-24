@@ -1,0 +1,76 @@
+typedef struct C_NODE_TD {
+    struct C_NODE_TD* next;
+    struct C_NODE_TD* prev;
+} C_NODE;
+typedef struct S_NODE_TD {
+    struct S_NODE_TD* next;
+} S_NODE;
+typedef C_NODE C_LIST;
+typedef S_NODE S_LIST;
+S_LIST LIST_OF_FRUITS;
+typedef struct fruit {
+    S_NODE list_member;
+    unsigned char amount;
+    unsigned char color;
+    char* name;
+} fruit_td;
+int compare(S_NODE *act_node, int value);
+int main () {
+    unsigned int len;
+    unsigned int in_list, empty;
+    fruit_td alma, korte, fuge, barack, szilva;
+    S_NODE* act_node;
+    S_NODE *node;
+    fuge.amount = 12;
+    fuge.color = 5;
+    fuge.name = "fuge";
+    printf("Fuge->color: %x\t%x\n",((fruit_td*)(&(fuge.list_member) - (unsigned char)&(((fruit_td*)0)->list_member)))->color,fuge.color);
+    alma.amount = 5;
+    alma.color = 1;
+    alma.name = "alma";
+    printf("Alma->color: %x\t%x\n",((fruit_td*)(&(alma.list_member) - (unsigned char)&(((fruit_td*)0)->list_member)))->color,alma.color);
+    barack.amount = 4;
+    barack.color = 3;
+    barack.name = "barack";
+    printf("Barack->color: %x\t%x\n",((fruit_td*)(&(barack.list_member) - (unsigned char)&(((fruit_td*)0)->list_member)))->color,barack.color);
+    szilva.amount = 10;
+    szilva.color = 8;
+    szilva.name = "szilva";
+    printf("Szilva->color: %x\t%x\n",((fruit_td*)(&(szilva.list_member) - (unsigned char)&(((fruit_td*)0)->list_member)))->color,szilva.color);
+    printf("FUGE: %x\n",(unsigned int)&fuge.list_member);
+    printf("ALMA: %x\n",(unsigned int)&alma.list_member);
+    printf("BARCK: %x\n",(unsigned int)&barack.list_member);
+    printf("SZILVA: %x\n",(unsigned int)&szilva.list_member);
+    (&LIST_OF_FRUITS)->next = 0;
+    do{ if(!((&LIST_OF_FRUITS)->next)) { (empty) = 0; } else { (empty) = 1; }} while(0);
+    printf("EMPTY LIST: %d\n", empty);
+    do { S_NODE* act_node; if(!((&LIST_OF_FRUITS)->next)) { do { if(!((((&LIST_OF_FRUITS)))->next)) { (((&LIST_OF_FRUITS)))->next = (((&(fuge.list_member)))); (((&(fuge.list_member))))->next = 0; } else { (((&(fuge.list_member))))->next = (((&LIST_OF_FRUITS)))->next; (((&LIST_OF_FRUITS)))->next = (((&(fuge.list_member)))); } } while(0); } else { for(act_node = (&LIST_OF_FRUITS); (compare(act_node->next,(fuge.color)) == -1) && (act_node->next != 0); act_node = act_node->next); do { if(!((act_node)->next)) { (act_node)->next = ((&(fuge.list_member))); ((&(fuge.list_member)))->next = 0; } else { ((&(fuge.list_member)))->next = (act_node)->next; (act_node)->next = ((&(fuge.list_member))); } } while(0); } } while(0);
+    do { S_NODE* act_node; if(!((&LIST_OF_FRUITS)->next)) { do { if(!((((&LIST_OF_FRUITS)))->next)) { (((&LIST_OF_FRUITS)))->next = (((&(alma.list_member)))); (((&(alma.list_member))))->next = 0; } else { (((&(alma.list_member))))->next = (((&LIST_OF_FRUITS)))->next; (((&LIST_OF_FRUITS)))->next = (((&(alma.list_member)))); } } while(0); } else { for(act_node = (&LIST_OF_FRUITS); (compare(act_node->next,(alma.color)) == -1) && (act_node->next != 0); act_node = act_node->next); do { if(!((act_node)->next)) { (act_node)->next = ((&(alma.list_member))); ((&(alma.list_member)))->next = 0; } else { ((&(alma.list_member)))->next = (act_node)->next; (act_node)->next = ((&(alma.list_member))); } } while(0); } } while(0);
+    do { S_NODE* act_node; if(!((&LIST_OF_FRUITS)->next)) { do { if(!((((&LIST_OF_FRUITS)))->next)) { (((&LIST_OF_FRUITS)))->next = (((&(szilva.list_member)))); (((&(szilva.list_member))))->next = 0; } else { (((&(szilva.list_member))))->next = (((&LIST_OF_FRUITS)))->next; (((&LIST_OF_FRUITS)))->next = (((&(szilva.list_member)))); } } while(0); } else { for(act_node = (&LIST_OF_FRUITS); (compare(act_node->next,(szilva.color)) == -1) && (act_node->next != 0); act_node = act_node->next); do { if(!((act_node)->next)) { (act_node)->next = ((&(szilva.list_member))); ((&(szilva.list_member)))->next = 0; } else { ((&(szilva.list_member)))->next = (act_node)->next; (act_node)->next = ((&(szilva.list_member))); } } while(0); } } while(0);
+    do { S_NODE* act_node; if(!((&LIST_OF_FRUITS)->next)) { do { if(!((((&LIST_OF_FRUITS)))->next)) { (((&LIST_OF_FRUITS)))->next = (((&(barack.list_member)))); (((&(barack.list_member))))->next = 0; } else { (((&(barack.list_member))))->next = (((&LIST_OF_FRUITS)))->next; (((&LIST_OF_FRUITS)))->next = (((&(barack.list_member)))); } } while(0); } else { for(act_node = (&LIST_OF_FRUITS); (compare(act_node->next,(barack.color)) == -1) && (act_node->next != 0); act_node = act_node->next); do { if(!((act_node)->next)) { (act_node)->next = ((&(barack.list_member))); ((&(barack.list_member)))->next = 0; } else { ((&(barack.list_member)))->next = (act_node)->next; (act_node)->next = ((&(barack.list_member))); } } while(0); } } while(0);
+    printf("COLOR_MYSELF: %d\t%d",((fruit_td*)((&LIST_OF_FRUITS)->next - (unsigned char)&(((fruit_td*)0)->color)))->color,alma.color);
+    for((act_node) = (&LIST_OF_FRUITS)->next; (act_node) != 0; (act_node) = (act_node)->next) {
+        printf("COLOR: %d\n",((fruit_td*)(act_node - (unsigned char)&(((fruit_td*)0)->list_member)))->color);
+    }
+    do { unsigned int i; for(i = 0, (act_node) = (&LIST_OF_FRUITS)->next; (i != 1) && ((act_node) != 0); i++, (act_node) = (act_node)->next); } while(0);
+    printf("FIND_NODE_BY_INDEX: %x\n", *act_node);
+    do { S_NODE* act_node; for(act_node = (&LIST_OF_FRUITS); act_node->next != (&(alma.list_member)); act_node = act_node->next); act_node->next = act_node->next->next; } while(0);
+    (&LIST_OF_FRUITS)->next = (&LIST_OF_FRUITS)->next->next;
+    for((act_node) = (&LIST_OF_FRUITS)->next; (act_node) != 0; (act_node) = (act_node)->next) {
+        printf("FOR_EACH_S_2: %x\n",act_node);
+    }
+    getchar();
+    return 0;
+}
+int compare(S_NODE *act_node, int value) {
+    if (!act_node) {
+        return 2;
+    }
+    if (value < ((fruit_td*)(act_node - (unsigned char)&(((fruit_td*)0)->list_member)))->color) {
+        return 1;
+    } else if (value == ((fruit_td*)(act_node - (unsigned char)&(((fruit_td*)0)->list_member)))->color) {
+        return 0;
+    } else {
+        return -1;
+    }
+}

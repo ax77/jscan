@@ -1,0 +1,2 @@
+void A1_(void);
+void A2(void);

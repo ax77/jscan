@@ -1,0 +1,10 @@
+int puts(const char *);
+int foo_func(void) {
+ return puts("foo5");
+}
+int test(void) {
+ return puts("hello") + puts("hello" ", world");
+}
+int main(void) {
+ return foo_func() + test();
+}

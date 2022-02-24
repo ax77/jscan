@@ -1,0 +1,3 @@
+42
+expandB+expandA()+expandB+A(Barg)
+expandA()+expandB+A(Aarg)

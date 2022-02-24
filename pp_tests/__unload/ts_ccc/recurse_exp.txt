@@ -1,0 +1,6 @@
+int plus(int a, int b) {
+    return a + b;
+}
+int __test() {
+    return 2 * 3 + plus(2, 3);
+}

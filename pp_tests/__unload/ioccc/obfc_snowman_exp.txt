@@ -1,0 +1,24 @@
+                       typedef a
+        ; a m, v[6] ,
+         H;a main(
+                       ){char o[]={033,91,0},D[]=
+                      "*Oo", t[]="^~#",Q[ ]=
+                    "13747516",s[]=".x+*";printf( "%s""2"
+                     "J%s0;0H%s0"
+                       ";37;40"
+                      "m",o,o, o
+                    );; while(v[!!m]
+                  <22)printf( "%s""%dm%39s\n" ,
+                 o,0 [v]++>19?42:',',""
+                );; while(0 [v]++<'~') printf( "%s"
+               "%d;%dH%s44m%c",o,rand()%21,rand()
+               %39,o,s[rand()%(sizeof s-1)]);; for(;;){1 [v]=1
+              -v[1],srand(v),printf( "%s""0;0""H" "%s"
+              "0;2;%dm",o,o,' ');; for(m=0
+              ;m>>4<1;++m){printf( "%s""%d;%d""H",o
+    , m+2,20-m );;;for(H=0;H<1+(m
+               <<1);H++){4 [v]=!H|H==m<<1 ,
+                2 [v]=!(rand()&05),v[3]=H>m*5/
+                 3,5 [v]=D[rand()%(sizeof D-1)];; if(4 [v]|v[2]){printf( "%s""%d;%d;3%cm"
+                    "%c",o,v[4]?','
+:'*',3 [v]?2:1+(v[1]^(1&rand())),Q[rand()%(sizeof Q-1)],v[5]);;}else printf( "%s""42;32;%dm%c",o,1+3 [v],t[rand()%(sizeof t-1)]);; printf( "%s""0m",o );;} }while(m<19)printf( "%s""%d;19""H" "%s""33;2;7m  #\n",o,1+ ++m,o );; sleep(m>=-H );;}}

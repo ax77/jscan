@@ -1,0 +1,8 @@
+static char *
+(foo)() {
+ return "hello";
+}
+int
+main() {
+ puts(foo ());
+}

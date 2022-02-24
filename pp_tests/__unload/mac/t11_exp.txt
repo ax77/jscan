@@ -1,0 +1,4 @@
+ unsigned long int __dev_t;
+int main(void) {
+ return 0;
+}

@@ -1,0 +1,6 @@
+main( void)
+{
+    fputs( "started\n", stderr);
+    fputs( "success\n", stderr);
+    return 0;
+}

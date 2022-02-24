@@ -1,0 +1,5 @@
+printf("x" "1" "= %d, x" "2" "= %s", x1, x2);
+fputs("strncmp(\"abc\\0d?\", \"abc\", '\\4', \"\\u1234\") == 0" ": @\n", s);
+             "vers2.hpp"
+"hello";
+"hello" ", world"

@@ -1,0 +1,17 @@
+a
+Func (a, b)
+Func (Func (a, b), c)
+Func (Func (Func (a, b), c), d)
+int Func_(int a, float b);
+a
+Func_ (a, b)
+Func_ (Func_ (a, b), c)
+Func_ (Func_ (Func_ (a, b), c), d)
+a
+ab
+abc
+abcd
+a
+ab
+abc
+abcd

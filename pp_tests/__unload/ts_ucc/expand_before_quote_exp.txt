@@ -1,0 +1,4 @@
+main()
+{
+ int b = parse_int(rest+1, ((void *)0)'\0');
+}

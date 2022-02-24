@@ -1,0 +1,3 @@
+__attribute__((unused)) int i;
+__attribute__((unused)) int32_t __j_1;
+f(__attribute__((unused)))int32_t.__j_1;

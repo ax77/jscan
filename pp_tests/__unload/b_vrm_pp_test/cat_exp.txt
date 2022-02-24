@@ -1,0 +1,13 @@
+       
+       
+       
+       
+       
+int main()
+{
+    TEST_ASSERT(std::string{""} == "");
+    TEST_ASSERT(15 == 15);
+    TEST_ASSERT(1515 == 1515);
+    TEST_ASSERT(151515 == 151515);
+    return 0;
+}

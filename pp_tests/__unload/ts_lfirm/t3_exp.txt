@@ -1,0 +1,6 @@
+bar
+bar
+bar
+(fool)
+(fool
+)

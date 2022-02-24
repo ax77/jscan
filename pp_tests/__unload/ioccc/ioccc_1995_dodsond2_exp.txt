@@ -1,0 +1,29 @@
+int r[27] ={0,(1<<0)
+,2,1 ,3,(1<<2),5,0,1,4,5,
+0,1,4,5,0,1,4,5,0,1,4,5,0,1,4,5}, u[6]={-1
+,7,49,-49,-7,1},q[343],x,y,d,l=342,a,b
+,j='#';int main(){srand(time(0));for(x
+=0;x<343;x++)q[x]=0;x=rand()%343;while(l){d
+=r[rand()%27];if(((x%7==(x+u[d])%7)+(x/0x31
+==(x+u[d] )/0x31)+
+(((x/7)%7 )==(((x+
+u[d])/7)% 7))==(1<<1))&&(x+u[d]>=0)&&(x+u[d]<343)){if(!q[x
++u[d]]){q[x]+=(1<<d);x+=u[d];q[x]+=(1<<5-d);l--;}else if(rand()<rand()/0x7){do{x=rand()%0x157;}
+while(!q[x]);}}}x=294+rand()%0x31;initscr()
+;noecho( );crmode
+();clear ( );
+refresh( );while(
+x>0){move((1<<0),60);printw("Level %d",(
+x/0x31)+(1<<0)); q[x]|=(1<<(1<<3));for(y=(x/
+0x31)*0x31;y<((1<<0)+x/0x31)*0x31;y++)if
+(q[y]&(1<<(1<<3))){a=(1<<0)+(3*((y/7)%7));b=
+(1<<0)+(3* (y% 7));
+mvaddch( (1<<1)+((y
+%7)*3),(1<<1)+(((y
+/7)%7)*3 ),' ');mvaddch(b+0,a+0,(q[y]&0)?0:j);mvaddch(b+3,a+0,(q[y]&0)?0:j);mvaddch(b+0,a+3,(q[y]&0)?0:j);mvaddch(b+3,a+3,(q[y]&0)?0:j);mvaddch(b+0,a+(1<<0),(q[y]&(1<<0))?' ':j);mvaddch(b+0,a+(1<<1),(q[y]&(1<<0))?' ':j);mvaddch(b+(1<<0),a+3,(q[y]&(1<<1))?' ':j);mvaddch(b+(1<<1),a+3,(q[y]&(1<<1))?' ':j);mvaddch(b+(1<<1),a+(1<<0),(q[y]&4)?'U':' ');mvaddch(b+(1<<1),a+(1<<1),(q[y]&(1<<3))?'D':' ');mvaddch(b+(1<<0),a+0,(q[y]&(1<<4))?' ':j);mvaddch(b+(1<<1),a+0,(q[y]&(1<<4))?' ':j);mvaddch(b+3,a+(1<<0),(q[y]&(1<<5))?' ':j);mvaddch(b+3,a+(1<<1),(q[y]&(1<<5))?' ':j);}
+ mvaddch((1<<1)+((x%7
+  )*3),(1<<1) +(((x/7)%
+   7)*3),'@') ;refresh()
+    ;switch(getchar()){case 'k':if(q[x]&(1<<0))x--;break;case 'j':if(q[x]&(1<<5))x++;break;case 'l':if(q[x]&(1<<1))x+=(1<<3)-(1<<0);break;case 'h':if(q[x]&(1<<4))x-=7;break;case 'u':if(q[x]&4)(x+=49, clear());break;case 'd':if(q[x]&8)(x-=49,clear ());break;case 'q':x=-1;break;}}clear();refresh
+( ); nocrmode ();echo();endwin();if(!
+x)printf ("You Escaped!\n");exit(0);}

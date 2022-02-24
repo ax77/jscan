@@ -1,0 +1,4 @@
+int __test() {
+    int len2 = printf("%s\n", "hello""foo" "bob");
+    return len1 + len2 + EOF;
+}

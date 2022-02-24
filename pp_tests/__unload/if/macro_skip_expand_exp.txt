@@ -1,0 +1,9 @@
+int printf(const char *, ...);
+int square(int x) {
+ return x * x;
+}
+int main(void) {
+ return printf("square=%d, %d, %d\n", square(2), square
+  (2),
+  2);
+}

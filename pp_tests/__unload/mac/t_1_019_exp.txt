@@ -1,0 +1,7 @@
+macro_2 par par ()
+macro_2 par ()
+macro_2 ()
+macro_2 par par ()
+macro_2 par ()
+macro_2 ()
+macro_2 ()

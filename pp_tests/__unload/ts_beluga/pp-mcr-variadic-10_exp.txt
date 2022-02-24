@@ -1,0 +1,8 @@
+void one_or_two(int a, int b) { printf("%s seeing a=%d and b=%d\n", __func__, a, b); }
+static inline int one_or_two_default_arg_1(void) { return 5; }
+int main (void) {
+  one_or_two(6, one_or_two_default_arg_1());
+  one_or_two(6, 0);
+  void (*func_pointer)(int, int) = one_or_two;
+  func_pointer(3, 4);
+}

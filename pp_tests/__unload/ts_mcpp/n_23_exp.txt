@@ -1,0 +1,9 @@
+main( void)
+{
+    int xy = 1;
+    fputs( "started\n", stderr);
+    assert( xy == 1);
+    assert( .12e+2 == 12.0);
+    fputs( "success\n", stderr);
+    return 0;
+}

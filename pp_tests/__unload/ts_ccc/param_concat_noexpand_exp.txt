@@ -1,0 +1,6 @@
+int bool_bool = 33;
+int __test() {
+    int *x = &bool_bool;
+    int y = sizeof("bool");
+    return *x + y;
+}

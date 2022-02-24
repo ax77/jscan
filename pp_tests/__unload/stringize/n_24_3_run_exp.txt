@@ -1,0 +1,6 @@
+int main( void)
+{
+    assert( strcmp( "'\"' + \"' \\\"\"", "'\"' + \"' \\\"\"") == 0);
+    assert( strcmp( "\"abc\"", "\"abc\"") == 0);
+    return 0;
+}

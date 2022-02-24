@@ -1,0 +1,81 @@
+fd_set I;struct sockaddr_in il;struct hostent*LI; struct timeval
+IL,l;char L[9],_[1<<9]
+   ;void ___(int __
+   ){_[__--]=+0;if(
+   ++__)___(--__);_
+   [__]='=';}double
+   o,oo=+0,Oo=+0.2;
+   long O,OO=0,oO=1
+   ,ii,iI,Ii,Ll,lL,
+   II=sizeof(il),Il
+   ,ll,LL=0,i=0,li,
+   lI;int main(int iL,char *Li[]){ initscr();cbreak
+   ();noecho();nonl
+   ();___(lI=COLS/4);
+   _[0]='[';_[lI-1]
+   =']';for(O=II;O--;)((char*)(&il))[+O]=((char*)(&_))[+lI];il.
+   sin_port=htons((
+   unsigned long)( PORT&0xffff));lL
+   =l_;if(iL=!--iL)
+   {il. sin_addr . s_addr=0;bind(lL,(struct sockaddr*)&il
+   ,II);listen(lL,5
+   );lL=accept(lL,(struct sockaddr*)&il,&
+   II);}else{oO-=2;
+   LI=gethostbyname
+   (Li[1]);for(iI=LI->h_length;iI--;)((char*)(&(il. sin_addr)))[iI]=((char*)((*LI). h_addr_list[0]))[iI];(*(&il)).
+   sin_family=(&(* LI))->h_addrtype
+   ;connect(lL,(struct sockaddr*)&il,II);
+   }ii=Ii=(o=COLS*0.5
+   )-lI/2;iI=((LINES%2)?LINES:LINES-1)-1;O
+   =li=((LINES%2)?LINES:LINES-1)*0.5;while
+   (_){mvaddch(+OO,
+   oo,' ');mvprintw(iI,ii?ii-1:ii,"%s%s ",ii?" ":"",_);mvprintw(Il-=Il,Ii?Ii-1:Ii,"%s%s ",Ii?" ":"",_);
+   mvprintw(li-1,Il
+   ,"%d\n\n%d",i,LL
+   );mvhline(li,+0,
+   '-',COLS);mvaddch(
+   O,o,'*');move(li
+   ,Il);refresh(); timeout(+SPEED);
+   gettimeofday(&IL
+   ,+0);Ll=getch();
+   timeout(0);while
+   (getch()!=ERR); if(Ll=='q'&&iL) write(lL,_+1,1);
+   if(ii>(ll=0)&&Ll
+   ==','){write(lL,
+   _,-(--Il));}else
+   if(Ll=='.'&&ii+ lI<COLS){write(lL,
+   _+lI,++Il);}else
+   if(iL||!Il)write
+   (lL,_+lI-1,4-3);
+   gettimeofday(&l,
+   0);II=((II=IL.tv_sec+(l.tv_usec-=IL.tv_usec)-l.tv_sec+( l.tv_sec-=IL.tv_sec)
+   )<0)?1+II-l.tv_sec
+   +1e6+(--l.tv_sec):
+   II;usleep((II+= l.tv_sec*1e6-SPEED
+   *1e3)<0?-II:+0);
+   if(Ll=='q'&&!iL)
+   break;FD_ZERO(&I
+   );FD_SET(lL,&I);
+   memset(&*&IL,ll,
+   sizeof(l));if(( Ll=select(lL+1,&
+   I,0,0,&IL)));{if
+   (read(lL,&L,ll+1
+   )){if(!*L){ll++;
+   }else if(*L==ll[
+   _]){ll--; }else if(*(&(*L))==1[_
+   ]){break;}}else{
+   break;}}oo=(o+=Oo)-Oo;
+   OO=(O+=oO)-oO;if(o<0){
+   o*=-1;Oo*=-1;}if
+   (o>COLS){o=COLS+COLS-o
+   ;Oo*=-1;}if(o>=(
+   Ii+=ll)&&O<1&&oO
+   <0&&o<Ii+lI){O=2
+   ;oO=~--oO;Oo+=ll
+   *4e-1;}if(O<0){O
+   =iI;LL++;}if(o>=
+   (ii+=Il)&&O>iI-1
+&&oO>0&&o<ii+lI){O=iI-
+2;oO=~--oO;Oo+=Il*4e-1
+;}if(+O>+iI){O-=O;i++;
+}}endwin();return(0);}

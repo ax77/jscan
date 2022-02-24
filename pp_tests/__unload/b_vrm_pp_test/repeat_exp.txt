@@ -1,0 +1,18 @@
+       
+       
+       
+       
+       
+int main()
+{
+    using namespace std::literals;
+    auto sinc1 = "0" ;
+    TEST_ASSERT_OP(sinc1, ==, "0"s);
+    auto sdec1 = "0" ;
+    TEST_ASSERT_OP(sdec1, ==, "0"s);
+    auto sinc5 = "0" "1" "2" "3" "4" ;
+    TEST_ASSERT_OP(sinc5, ==, "01234"s);
+    auto sdec5 = "4" "3" "2" "1" "0" ;
+    TEST_ASSERT_OP(sdec5, ==, "43210"s);
+    return 0;
+}

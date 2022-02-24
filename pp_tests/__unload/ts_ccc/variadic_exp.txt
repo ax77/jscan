@@ -1,0 +1,3 @@
+int __test() {
+    return fprintf (stdout, "yolo %s %d\n", "hello", 0x3333);
+}

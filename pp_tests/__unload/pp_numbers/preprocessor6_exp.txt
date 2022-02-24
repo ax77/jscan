@@ -1,0 +1,1 @@
+static char __vendorstr_003d[] __attribute__((section(".devinit"))) = "Lockheed Martin-Marietta Corp";

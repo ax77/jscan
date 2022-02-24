@@ -1,0 +1,40 @@
+int main(int argc, char** argv)
+{
+    int nerrs = 0;
+    if (VAL__BADUB != dat_gl_ndr[DAT__UB].bad.UB) { testi = VAL__BADUB; printf("VAL__BADUB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UB].bad.UB)); nerrs++; };
+    if (VAL__BADB != dat_gl_ndr[DAT__B].bad.B) { testi = VAL__BADB; printf("VAL__BADB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__B].bad.B)); nerrs++; };
+    if (VAL__BADUW != dat_gl_ndr[DAT__UW].bad.UW) { testi = VAL__BADUW; printf("VAL__BADUW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UW].bad.UW)); nerrs++; };
+    if (VAL__BADW != dat_gl_ndr[DAT__W].bad.W) { testi = VAL__BADW; printf("VAL__BADW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__W].bad.W)); nerrs++; };
+    if (VAL__BADI != dat_gl_ndr[DAT__I].bad.I) { testi = VAL__BADI; printf("VAL__BADI" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__I].bad.I)); nerrs++; };
+    if (VAL__BADR != dat_gl_ndr[DAT__R].bad.R) { testf = VAL__BADR; printf("VAL__BADR" ": %s", tohex("f", (byte*)&testf)); printf(" != %s\n", tohex("f", (byte*)&dat_gl_ndr[DAT__R].bad.R)); nerrs++; };
+    if (VAL__BADD != dat_gl_ndr[DAT__D].bad.D) { testd = VAL__BADD; printf("VAL__BADD" ": %s", tohex("d", (byte*)&testd)); printf(" != %s\n", tohex("d", (byte*)&dat_gl_ndr[DAT__D].bad.D)); nerrs++; };
+    if (NUM__MAXUB != dat_gl_ndr[DAT__UB].max.UB) { testi = NUM__MAXUB; printf("NUM__MAXUB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UB].max.UB)); nerrs++; };
+    if (NUM__MAXB != dat_gl_ndr[DAT__B].max.B) { testi = NUM__MAXB; printf("NUM__MAXB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__B].max.B)); nerrs++; };
+    if (NUM__MAXUW != dat_gl_ndr[DAT__UW].max.UW) { testi = NUM__MAXUW; printf("NUM__MAXUW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UW].max.UW)); nerrs++; };
+    if (NUM__MAXW != dat_gl_ndr[DAT__W].max.W) { testi = NUM__MAXW; printf("NUM__MAXW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__W].max.W)); nerrs++; };
+    if (NUM__MAXI != dat_gl_ndr[DAT__I].max.I) { testi = NUM__MAXI; printf("NUM__MAXI" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__I].max.I)); nerrs++; };
+    if (NUM__MAXR != dat_gl_ndr[DAT__R].max.R) { testf = NUM__MAXR; printf("NUM__MAXR" ": %s", tohex("f", (byte*)&testf)); printf(" != %s\n", tohex("f", (byte*)&dat_gl_ndr[DAT__R].max.R)); nerrs++; };
+    if (NUM__MAXD != dat_gl_ndr[DAT__D].max.D) { testd = NUM__MAXD; printf("NUM__MAXD" ": %s", tohex("d", (byte*)&testd)); printf(" != %s\n", tohex("d", (byte*)&dat_gl_ndr[DAT__D].max.D)); nerrs++; };
+    if (NUM__MINUB != dat_gl_ndr[DAT__UB].min.UB) { testi = NUM__MINUB; printf("NUM__MINUB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UB].min.UB)); nerrs++; };
+    if (NUM__MINB != dat_gl_ndr[DAT__B].min.B) { testi = NUM__MINB; printf("NUM__MINB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__B].min.B)); nerrs++; };
+    if (NUM__MINUW != dat_gl_ndr[DAT__UW].min.UW) { testi = NUM__MINUW; printf("NUM__MINUW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UW].min.UW)); nerrs++; };
+    if (NUM__MINW != dat_gl_ndr[DAT__W].min.W) { testi = NUM__MINW; printf("NUM__MINW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__W].min.W)); nerrs++; };
+    if (NUM__MINI != dat_gl_ndr[DAT__I].min.I) { testi = NUM__MINI; printf("NUM__MINI" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__I].min.I)); nerrs++; };
+    if (NUM__MINR != dat_gl_ndr[DAT__R].min.R) { testf = NUM__MINR; printf("NUM__MINR" ": %s", tohex("f", (byte*)&testf)); printf(" != %s\n", tohex("f", (byte*)&dat_gl_ndr[DAT__R].min.R)); nerrs++; };
+    if (NUM__MIND != dat_gl_ndr[DAT__D].min.D) { testd = NUM__MIND; printf("NUM__MIND" ": %s", tohex("d", (byte*)&testd)); printf(" != %s\n", tohex("d", (byte*)&dat_gl_ndr[DAT__D].min.D)); nerrs++; };
+    if (VAL__NBUB != dat_gl_ndr[DAT__UB].length) { testi = VAL__NBUB; printf("VAL__NBUB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UB].length)); nerrs++; };
+    if (VAL__NBB != dat_gl_ndr[DAT__B].length) { testi = VAL__NBB; printf("VAL__NBB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__B].length)); nerrs++; };
+    if (VAL__NBUW != dat_gl_ndr[DAT__UW].length) { testi = VAL__NBUW; printf("VAL__NBUW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UW].length)); nerrs++; };
+    if (VAL__NBW != dat_gl_ndr[DAT__W].length) { testi = VAL__NBW; printf("VAL__NBW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__W].length)); nerrs++; };
+    if (VAL__NBI != dat_gl_ndr[DAT__I].length) { testi = VAL__NBI; printf("VAL__NBI" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__I].length)); nerrs++; };
+    if (VAL__NBR != dat_gl_ndr[DAT__R].length) { testi = VAL__NBR; printf("VAL__NBR" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__R].length)); nerrs++; };
+    if (VAL__NBD != dat_gl_ndr[DAT__D].length) { testi = VAL__NBD; printf("VAL__NBD" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__D].length)); nerrs++; };
+    if (VAL__SZUB != dat_gl_ndr[DAT__UB].txtsize) { testi = VAL__SZUB; printf("VAL__SZUB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UB].txtsize)); nerrs++; };
+    if (VAL__SZB != dat_gl_ndr[DAT__B].txtsize) { testi = VAL__SZB; printf("VAL__SZB" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__B].txtsize)); nerrs++; };
+    if (VAL__SZUW != dat_gl_ndr[DAT__UW].txtsize) { testi = VAL__SZUW; printf("VAL__SZUW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__UW].txtsize)); nerrs++; };
+    if (VAL__SZW != dat_gl_ndr[DAT__W].txtsize) { testi = VAL__SZW; printf("VAL__SZW" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__W].txtsize)); nerrs++; };
+    if (VAL__SZI != dat_gl_ndr[DAT__I].txtsize) { testi = VAL__SZI; printf("VAL__SZI" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__I].txtsize)); nerrs++; };
+    if (VAL__SZR != dat_gl_ndr[DAT__R].txtsize) { testi = VAL__SZR; printf("VAL__SZR" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__R].txtsize)); nerrs++; };
+    if (VAL__SZD != dat_gl_ndr[DAT__D].txtsize) { testi = VAL__SZD; printf("VAL__SZD" ": %s", tohex("i", (byte*)&testi)); printf(" != %s\n", tohex("i", (byte*)&dat_gl_ndr[DAT__D].txtsize)); nerrs++; };
+    exit(nerrs);
+}

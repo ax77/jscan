@@ -1,0 +1,29 @@
+extern unsigned errors;
+extern unsigned main_terminated;
+extern void fail( unsigned line );
+unsigned errors;
+unsigned main_terminated;
+void fail( unsigned line )
+{
+    ++errors;
+    printf( "failure on line %u\n", line );
+    if( main_terminated || errors > 5 ) {
+        abort();
+    }
+}
+void recursive_parm( int v )
+{
+    if( v != 1 && v != 2 ) fail(5);
+}
+int recursive_var;
+int main()
+{
+    int s = 1;
+    ( recursive_parm(s) );
+    s = 2;
+    ( recursive_parm(s) );
+    if( ( recursive_var ) != 0 ) fail(23);
+    ++( recursive_var );
+    if( ( recursive_var ) != 1 ) fail(25);
+    if( ! errors ) { puts( "PASS " "" ); fflush( stdout ); } main_terminated = 1; return( errors != 0 );;
+}

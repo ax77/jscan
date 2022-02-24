@@ -1,0 +1,7 @@
+typedef union ssint32_t{ int32_t value; uint8_t string[sizeof(int32_t)];} sint32_t;
+typedef union ssint64_t{ int64_t value; uint8_t string[sizeof(int64_t)];} sint64_t;
+typedef union ssint16_t{ int16_t value; uint8_t string[sizeof(int16_t)];} sint16_t;
+int main(){
+    int32_t val = 50;
+    uint8_t a[] = {((sint32_t)(int32_t)(5 +sizeof("val2")+5 +sizeof("val1")+9)).string[0], ((sint32_t)(int32_t)(5 +sizeof("val2")+5 +sizeof("val1")+9)).string[1], ((sint32_t)(int32_t)(5 +sizeof("val2")+5 +sizeof("val1")+9)).string[2], ((sint32_t)(int32_t)(5 +sizeof("val2")+5 +sizeof("val1")+9)).string[3], '\x12', "val1"[0], "val1"[1], "val1"[2], "val1"[3], '\x0', ((sint64_t)(int64_t)100).string[0], ((sint64_t)(int64_t)100).string[1], ((sint64_t)(int64_t)100).string[2], ((sint64_t)(int64_t)100).string[3], ((sint64_t)(int64_t)100).string[4], ((sint64_t)(int64_t)100).string[5], ((sint64_t)(int64_t)100).string[6], ((sint64_t)(int64_t)100).string[7], '\x10', "val2"[0], "val2"[1], "val2"[2], "val2"[3], '\x0', ((sint32_t)(int32_t)val).string[0], ((sint32_t)(int32_t)val).string[1], ((sint32_t)(int32_t)val).string[2], ((sint32_t)(int32_t)val).string[3], '\x0'};
+}

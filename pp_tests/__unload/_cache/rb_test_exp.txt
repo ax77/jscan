@@ -1,0 +1,331 @@
+static bool verbose = false;
+static bool tree_print = false;
+static bool forward_print = false;
+static bool reverse_print = false;
+typedef struct node_s node_t;
+struct node_s {
+    uint32_t magic;
+    struct { node_t *rbn_left; node_t *rbn_right; bool rbn_red; } link;
+    long key;
+};
+static int
+nodeCmp(node_t *aA, node_t *aB) {
+    int rVal;
+    assert(aA->magic == 0x9823af7e);
+    assert(aB->magic == 0x9823af7e);
+    rVal = (aA->key > aB->key) - (aA->key < aB->key);
+    if (rVal == 0) {
+ rVal = (((uintptr_t) aA) > ((uintptr_t) aB))
+   - (((uintptr_t) aA) < ((uintptr_t) aB));
+    }
+    return rVal;
+}
+typedef struct { node_t *rbt_root; node_t rbt_nil; } tree_t;
+static void tree_new(tree_t *rbtree) { do { (rbtree)->rbt_root = &(rbtree)->rbt_nil; do { do { ((&(rbtree)->rbt_nil))->link.rbn_left = &(rbtree)->rbt_nil; } while (0); do { ((&(rbtree)->rbt_nil))->link.rbn_right = &(rbtree)->rbt_nil; } while (0); do { ((&(rbtree)->rbt_nil))->link.rbn_red = true; } while (0); } while (0); do { (&(rbtree)->rbt_nil)->link.rbn_red = false; } while (0); } while (0); } static node_t * tree_first(tree_t *rbtree) { node_t *ret; do { (ret) = (rbtree->rbt_root); if ((ret) != &(rbtree)->rbt_nil) { for (; (((ret))->link.rbn_left) != &(rbtree)->rbt_nil; (ret) = (((ret))->link.rbn_left)) { } } } while (0); if (ret == &rbtree->rbt_nil) { ret = NULL; } return (ret); } static node_t * tree_last(tree_t *rbtree) { node_t *ret; do { (ret) = (rbtree->rbt_root); if ((ret) != &(rbtree)->rbt_nil) { for (; (((ret))->link.rbn_right) != &(rbtree)->rbt_nil; (ret) = (((ret))->link.rbn_right)) { } } } while (0); if (ret == &rbtree->rbt_nil) { ret = NULL; } return (ret); } static node_t * tree_next(tree_t *rbtree, node_t *node) { node_t *ret; if (((node)->link.rbn_right) != &rbtree->rbt_nil) { do { (ret) = (((node)->link.rbn_right)); if ((ret) != &(rbtree)->rbt_nil) { for (; (((ret))->link.rbn_left) != &(rbtree)->rbt_nil; (ret) = (((ret))->link.rbn_left)) { } } } while (0); } else { node_t *tnode = rbtree->rbt_root; assert(tnode != &rbtree->rbt_nil); ret = &rbtree->rbt_nil; while (true) { int cmp = (nodeCmp)(node, tnode); if (cmp < 0) { ret = tnode; tnode = ((tnode)->link.rbn_left); } else if (cmp > 0) { tnode = ((tnode)->link.rbn_right); } else { break; } assert(tnode != &rbtree->rbt_nil); } } if (ret == &rbtree->rbt_nil) { ret = (NULL); } return (ret); } static node_t * tree_prev(tree_t *rbtree, node_t *node) { node_t *ret; if (((node)->link.rbn_left) != &rbtree->rbt_nil) { do { (ret) = (((node)->link.rbn_left)); if ((ret) != &(rbtree)->rbt_nil) { for (; (((ret))->link.rbn_right) != &(rbtree)->rbt_nil; (ret) = (((ret))->link.rbn_right)) { } } } while (0); } else { node_t *tnode = rbtree->rbt_root; assert(tnode != &rbtree->rbt_nil); ret = &rbtree->rbt_nil; while (true) { int cmp = (nodeCmp)(node, tnode); if (cmp < 0) { tnode = ((tnode)->link.rbn_left); } else if (cmp > 0) { ret = tnode; tnode = ((tnode)->link.rbn_right); } else { break; } assert(tnode != &rbtree->rbt_nil); } } if (ret == &rbtree->rbt_nil) { ret = (NULL); } return (ret); } static node_t * tree_search(tree_t *rbtree, node_t *key) { node_t *ret; int cmp; ret = rbtree->rbt_root; while (ret != &rbtree->rbt_nil && (cmp = (nodeCmp)(key, ret)) != 0) { if (cmp < 0) { ret = ((ret)->link.rbn_left); } else { ret = ((ret)->link.rbn_right); } } if (ret == &rbtree->rbt_nil) { ret = (NULL); } return (ret); } static node_t * tree_nsearch(tree_t *rbtree, node_t *key) { node_t *ret; node_t *tnode = rbtree->rbt_root; ret = &rbtree->rbt_nil; while (tnode != &rbtree->rbt_nil) { int cmp = (nodeCmp)(key, tnode); if (cmp < 0) { ret = tnode; tnode = ((tnode)->link.rbn_left); } else if (cmp > 0) { tnode = ((tnode)->link.rbn_right); } else { ret = tnode; break; } } if (ret == &rbtree->rbt_nil) { ret = (NULL); } return (ret); } static node_t * tree_psearch(tree_t *rbtree, node_t *key) { node_t *ret; node_t *tnode = rbtree->rbt_root; ret = &rbtree->rbt_nil; while (tnode != &rbtree->rbt_nil) { int cmp = (nodeCmp)(key, tnode); if (cmp < 0) { tnode = ((tnode)->link.rbn_left); } else if (cmp > 0) { ret = tnode; tnode = ((tnode)->link.rbn_right); } else { ret = tnode; break; } } if (ret == &rbtree->rbt_nil) { ret = (NULL); } return (ret); } static void tree_insert(tree_t *rbtree, node_t *node) { struct { node_t *node; int cmp; } path[sizeof(void *) << 4], *pathp; do { do { ((node))->link.rbn_left = &(rbtree)->rbt_nil; } while (0); do { ((node))->link.rbn_right = &(rbtree)->rbt_nil; } while (0); do { ((node))->link.rbn_red = true; } while (0); } while (0); path->node = rbtree->rbt_root; for (pathp = path; pathp->node != &rbtree->rbt_nil; pathp++) { int cmp = pathp->cmp = nodeCmp(node, pathp->node); assert(cmp != 0); if (cmp < 0) { pathp[1].node = ((pathp->node)->link.rbn_left); } else { pathp[1].node = ((pathp->node)->link.rbn_right); } } pathp->node = node; for (pathp--; (uintptr_t)pathp >= (uintptr_t)path; pathp--) { node_t *cnode = pathp->node; if (pathp->cmp < 0) { node_t *left = pathp[1].node; do { (cnode)->link.rbn_left = left; } while (0); if (((left)->link.rbn_red)) { node_t *leftleft = ((left)->link.rbn_left); if (((leftleft)->link.rbn_red)) { node_t *tnode; do { (leftleft)->link.rbn_red = false; } while (0); do { (tnode) = (((cnode))->link.rbn_left); do { ((cnode))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (cnode); } while (0); } while (0); cnode = tnode; } } else { return; } } else { node_t *right = pathp[1].node; do { (cnode)->link.rbn_right = right; } while (0); if (((right)->link.rbn_red)) { node_t *left = ((cnode)->link.rbn_left); if (((left)->link.rbn_red)) { do { (left)->link.rbn_red = false; } while (0); do { (right)->link.rbn_red = false; } while (0); do { (cnode)->link.rbn_red = true; } while (0); } else { node_t *tnode; bool tred = ((cnode)->link.rbn_red); do { (tnode) = (((cnode))->link.rbn_right); do { ((cnode))->link.rbn_right = (((tnode))->link.rbn_left); } while (0); do { ((tnode))->link.rbn_left = (cnode); } while (0); } while (0); do { (tnode)->link.rbn_red = (tred); } while (0); do { (cnode)->link.rbn_red = true; } while (0); cnode = tnode; } } else { return; } } pathp->node = cnode; } rbtree->rbt_root = path->node; do { (rbtree->rbt_root)->link.rbn_red = false; } while (0); } static void tree_remove(tree_t *rbtree, node_t *node) { struct { node_t *node; int cmp; } *pathp, *nodep, path[sizeof(void *) << 4]; nodep = NULL; path->node = rbtree->rbt_root; for (pathp = path; pathp->node != &rbtree->rbt_nil; pathp++) { int cmp = pathp->cmp = nodeCmp(node, pathp->node); if (cmp < 0) { pathp[1].node = ((pathp->node)->link.rbn_left); } else { pathp[1].node = ((pathp->node)->link.rbn_right); if (cmp == 0) { pathp->cmp = 1; nodep = pathp; for (pathp++; pathp->node != &rbtree->rbt_nil; pathp++) { pathp->cmp = -1; pathp[1].node = ((pathp->node)->link.rbn_left); } break; } } } assert(nodep->node == node); pathp--; if (pathp->node != node) { bool tred = ((pathp->node)->link.rbn_red); do { (pathp->node)->link.rbn_red = (((node)->link.rbn_red)); } while (0); do { (pathp->node)->link.rbn_left = ((node)->link.rbn_left); } while (0); do { (pathp->node)->link.rbn_right = ((node)->link.rbn_right); } while (0); do { (node)->link.rbn_red = (tred); } while (0); nodep->node = pathp->node; pathp->node = node; if (nodep == path) { rbtree->rbt_root = nodep->node; } else { if (nodep[-1].cmp < 0) { do { (nodep[-1].node)->link.rbn_left = nodep->node; } while (0); } else { do { (nodep[-1].node)->link.rbn_right = nodep->node; } while (0); } } } else { node_t *left = ((node)->link.rbn_left); if (left != &rbtree->rbt_nil) { assert(((node)->link.rbn_red) == false); assert(((left)->link.rbn_red)); do { (left)->link.rbn_red = false; } while (0); if (pathp == path) { rbtree->rbt_root = left; } else { if (pathp[-1].cmp < 0) { do { (pathp[-1].node)->link.rbn_left = left; } while (0); } else { do { (pathp[-1].node)->link.rbn_right = left; } while (0); } } return; } else if (pathp == path) { rbtree->rbt_root = &rbtree->rbt_nil; return; } } if (((pathp->node)->link.rbn_red)) { assert(pathp[-1].cmp < 0); do { (pathp[-1].node)->link.rbn_left = &rbtree->rbt_nil; } while (0); return; } pathp->node = &rbtree->rbt_nil; for (pathp--; (uintptr_t)pathp >= (uintptr_t)path; pathp--) { assert(pathp->cmp != 0); if (pathp->cmp < 0) { do { (pathp->node)->link.rbn_left = pathp[1].node; } while (0); assert(((pathp[1].node)->link.rbn_red) == false); if (((pathp->node)->link.rbn_red)) { node_t *right = ((pathp->node)->link.rbn_right); node_t *rightleft = ((right)->link.rbn_left); node_t *tnode; if (((rightleft)->link.rbn_red)) { do { (pathp->node)->link.rbn_red = false; } while (0); do { (tnode) = (((right))->link.rbn_left); do { ((right))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (right); } while (0); } while (0); do { (pathp->node)->link.rbn_right = tnode; } while (0); do { (tnode) = (((pathp->node))->link.rbn_right); do { ((pathp->node))->link.rbn_right = (((tnode))->link.rbn_left); } while (0); do { ((tnode))->link.rbn_left = (pathp->node); } while (0); } while (0); } else { do { (tnode) = (((pathp->node))->link.rbn_right); do { ((pathp->node))->link.rbn_right = (((tnode))->link.rbn_left); } while (0); do { ((tnode))->link.rbn_left = (pathp->node); } while (0); } while (0); } assert((uintptr_t)pathp > (uintptr_t)path); if (pathp[-1].cmp < 0) { do { (pathp[-1].node)->link.rbn_left = tnode; } while (0); } else { do { (pathp[-1].node)->link.rbn_right = tnode; } while (0); } return; } else { node_t *right = ((pathp->node)->link.rbn_right); node_t *rightleft = ((right)->link.rbn_left); if (((rightleft)->link.rbn_red)) { node_t *tnode; do { (rightleft)->link.rbn_red = false; } while (0); do { (tnode) = (((right))->link.rbn_left); do { ((right))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (right); } while (0); } while (0); do { (pathp->node)->link.rbn_right = tnode; } while (0); do { (tnode) = (((pathp->node))->link.rbn_right); do { ((pathp->node))->link.rbn_right = (((tnode))->link.rbn_left); } while (0); do { ((tnode))->link.rbn_left = (pathp->node); } while (0); } while (0); if (pathp == path) { rbtree->rbt_root = tnode; } else { if (pathp[-1].cmp < 0) { do { (pathp[-1].node)->link.rbn_left = tnode; } while (0); } else { do { (pathp[-1].node)->link.rbn_right = tnode; } while (0); } } return; } else { node_t *tnode; do { (pathp->node)->link.rbn_red = true; } while (0); do { (tnode) = (((pathp->node))->link.rbn_right); do { ((pathp->node))->link.rbn_right = (((tnode))->link.rbn_left); } while (0); do { ((tnode))->link.rbn_left = (pathp->node); } while (0); } while (0); pathp->node = tnode; } } } else { node_t *left; do { (pathp->node)->link.rbn_right = pathp[1].node; } while (0); left = ((pathp->node)->link.rbn_left); if (((left)->link.rbn_red)) { node_t *tnode; node_t *leftright = ((left)->link.rbn_right); node_t *leftrightleft = ((leftright)->link.rbn_left); if (((leftrightleft)->link.rbn_red)) { node_t *unode; do { (leftrightleft)->link.rbn_red = false; } while (0); do { (unode) = (((pathp->node))->link.rbn_left); do { ((pathp->node))->link.rbn_left = (((unode))->link.rbn_right); } while (0); do { ((unode))->link.rbn_right = (pathp->node); } while (0); } while (0); do { (tnode) = (((pathp->node))->link.rbn_left); do { ((pathp->node))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (pathp->node); } while (0); } while (0); do { (unode)->link.rbn_right = tnode; } while (0); do { (tnode) = (((unode))->link.rbn_right); do { ((unode))->link.rbn_right = (((tnode))->link.rbn_left); } while (0); do { ((tnode))->link.rbn_left = (unode); } while (0); } while (0); } else { assert(leftright != &rbtree->rbt_nil); do { (leftright)->link.rbn_red = true; } while (0); do { (tnode) = (((pathp->node))->link.rbn_left); do { ((pathp->node))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (pathp->node); } while (0); } while (0); do { (tnode)->link.rbn_red = false; } while (0); } if (pathp == path) { rbtree->rbt_root = tnode; } else { if (pathp[-1].cmp < 0) { do { (pathp[-1].node)->link.rbn_left = tnode; } while (0); } else { do { (pathp[-1].node)->link.rbn_right = tnode; } while (0); } } return; } else if (((pathp->node)->link.rbn_red)) { node_t *leftleft = ((left)->link.rbn_left); if (((leftleft)->link.rbn_red)) { node_t *tnode; do { (pathp->node)->link.rbn_red = false; } while (0); do { (left)->link.rbn_red = true; } while (0); do { (leftleft)->link.rbn_red = false; } while (0); do { (tnode) = (((pathp->node))->link.rbn_left); do { ((pathp->node))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (pathp->node); } while (0); } while (0); assert((uintptr_t)pathp > (uintptr_t)path); if (pathp[-1].cmp < 0) { do { (pathp[-1].node)->link.rbn_left = tnode; } while (0); } else { do { (pathp[-1].node)->link.rbn_right = tnode; } while (0); } return; } else { do { (left)->link.rbn_red = true; } while (0); do { (pathp->node)->link.rbn_red = false; } while (0); return; } } else { node_t *leftleft = ((left)->link.rbn_left); if (((leftleft)->link.rbn_red)) { node_t *tnode; do { (leftleft)->link.rbn_red = false; } while (0); do { (tnode) = (((pathp->node))->link.rbn_left); do { ((pathp->node))->link.rbn_left = (((tnode))->link.rbn_right); } while (0); do { ((tnode))->link.rbn_right = (pathp->node); } while (0); } while (0); if (pathp == path) { rbtree->rbt_root = tnode; } else { if (pathp[-1].cmp < 0) { do { (pathp[-1].node)->link.rbn_left = tnode; } while (0); } else { do { (pathp[-1].node)->link.rbn_right = tnode; } while (0); } } return; } else { do { (left)->link.rbn_red = true; } while (0); } } } } rbtree->rbt_root = path->node; assert(((rbtree->rbt_root)->link.rbn_red) == false); } static node_t * tree_iter_recurse(tree_t *rbtree, node_t *node, node_t *(*cb)(tree_t *, node_t *, void *), void *arg) { if (node == &rbtree->rbt_nil) { return (&rbtree->rbt_nil); } else { node_t *ret; if ((ret = tree_iter_recurse(rbtree, ((node)->link.rbn_left), cb, arg)) != &rbtree->rbt_nil || (ret = cb(rbtree, node, arg)) != NULL) { return (ret); } return (tree_iter_recurse(rbtree, ((node)->link.rbn_right), cb, arg)); } } static node_t * tree_iter_start(tree_t *rbtree, node_t *start, node_t *node, node_t *(*cb)(tree_t *, node_t *, void *), void *arg) { int cmp = nodeCmp(start, node); if (cmp < 0) { node_t *ret; if ((ret = tree_iter_start(rbtree, start, ((node)->link.rbn_left), cb, arg)) != &rbtree->rbt_nil || (ret = cb(rbtree, node, arg)) != NULL) { return (ret); } return (tree_iter_recurse(rbtree, ((node)->link.rbn_right), cb, arg)); } else if (cmp > 0) { return (tree_iter_start(rbtree, start, ((node)->link.rbn_right), cb, arg)); } else { node_t *ret; if ((ret = cb(rbtree, node, arg)) != NULL) { return (ret); } return (tree_iter_recurse(rbtree, ((node)->link.rbn_right), cb, arg)); } } static node_t * tree_iter(tree_t *rbtree, node_t *start, node_t *(*cb)( tree_t *, node_t *, void *), void *arg) { node_t *ret; if (start != NULL) { ret = tree_iter_start(rbtree, start, rbtree->rbt_root, cb, arg); } else { ret = tree_iter_recurse(rbtree, rbtree->rbt_root, cb, arg); } if (ret == &rbtree->rbt_nil) { ret = NULL; } return (ret); } static node_t * tree_reverse_iter_recurse(tree_t *rbtree, node_t *node, node_t *(*cb)(tree_t *, node_t *, void *), void *arg) { if (node == &rbtree->rbt_nil) { return (&rbtree->rbt_nil); } else { node_t *ret; if ((ret = tree_reverse_iter_recurse(rbtree, ((node)->link.rbn_right), cb, arg)) != &rbtree->rbt_nil || (ret = cb(rbtree, node, arg)) != NULL) { return (ret); } return (tree_reverse_iter_recurse(rbtree, ((node)->link.rbn_left), cb, arg)); } } static node_t * tree_reverse_iter_start(tree_t *rbtree, node_t *start, node_t *node, node_t *(*cb)(tree_t *, node_t *, void *), void *arg) { int cmp = nodeCmp(start, node); if (cmp > 0) { node_t *ret; if ((ret = tree_reverse_iter_start(rbtree, start, ((node)->link.rbn_right), cb, arg)) != &rbtree->rbt_nil || (ret = cb(rbtree, node, arg)) != NULL) { return (ret); } return (tree_reverse_iter_recurse(rbtree, ((node)->link.rbn_left), cb, arg)); } else if (cmp < 0) { return (tree_reverse_iter_start(rbtree, start, ((node)->link.rbn_left), cb, arg)); } else { node_t *ret; if ((ret = cb(rbtree, node, arg)) != NULL) { return (ret); } return (tree_reverse_iter_recurse(rbtree, ((node)->link.rbn_left), cb, arg)); } } static node_t * tree_reverse_iter(tree_t *rbtree, node_t *start, node_t *(*cb)(tree_t *, node_t *, void *), void *arg) { node_t *ret; if (start != NULL) { ret = tree_reverse_iter_start(rbtree, start, rbtree->rbt_root, cb, arg); } else { ret = tree_reverse_iter_recurse(rbtree, rbtree->rbt_root, cb, arg); } if (ret == &rbtree->rbt_nil) { ret = NULL; } return (ret); };
+static unsigned
+treeRecurse(node_t *aNode, unsigned aBlackHeight, unsigned aBlackDepth,
+  node_t *aNil) {
+    unsigned rVal = 0;
+    node_t *leftNode = ((aNode)->link.rbn_left);
+    node_t *rightNode = ((aNode)->link.rbn_right);
+    if (((aNode)->link.rbn_red) == false) {
+ aBlackDepth++;
+    }
+    if (((aNode)->link.rbn_red)) {
+ node_t *tNode = ((leftNode)->link.rbn_left);
+ assert(((leftNode)->link.rbn_red) == false);
+ tNode = ((leftNode)->link.rbn_right);
+ assert(((leftNode)->link.rbn_red) == false);
+    }
+    if (aNode == aNil) {
+ if (tree_print) {
+     fprintf(stderr, ".");
+ }
+ return rVal;
+    }
+    assert(aNode->magic == 0x9823af7e);
+    if (tree_print) {
+ fprintf(stderr, "%ld%c", aNode->key,
+   ((aNode)->link.rbn_red) ? 'r' : 'b');
+    }
+    if (leftNode != aNil) {
+ if (tree_print) {
+     fprintf(stderr, "[");
+ }
+ rVal += treeRecurse(leftNode, aBlackHeight, aBlackDepth, aNil);
+ if (tree_print) {
+     fprintf(stderr, "]");
+ }
+    } else {
+ rVal += (aBlackDepth != aBlackHeight);
+ if (tree_print) {
+     fprintf(stderr, ".");
+ }
+    }
+    if (rightNode != aNil) {
+ if (tree_print) {
+     fprintf(stderr, "<");
+ }
+ rVal += treeRecurse(rightNode, aBlackHeight, aBlackDepth, aNil);
+ if (tree_print) {
+     fprintf(stderr, ">");
+ }
+    } else {
+ rVal += (aBlackDepth != aBlackHeight);
+ if (tree_print) {
+     fprintf(stderr, ".");
+ }
+    }
+    return rVal;
+}
+static node_t *
+treeIterateCb(tree_t *aTree, node_t *aNode, void *data) {
+    unsigned *i = (unsigned *)data;
+    node_t *sNode;
+    assert(aNode->magic == 0x9823af7e);
+    if (forward_print) {
+ if (*i != 0) {
+     fprintf(stderr, "-->");
+ }
+ fprintf(stderr, "%ld", aNode->key);
+    }
+    sNode = tree_search(aTree, aNode);
+    assert(sNode == aNode);
+    sNode = tree_nsearch(aTree, aNode);
+    assert(sNode == aNode);
+    sNode = tree_psearch(aTree, aNode);
+    assert(sNode == aNode);
+    (*i)++;
+    return NULL;
+}
+static unsigned
+treeIterate(tree_t *aTree) {
+    unsigned i;
+    i = 0;
+    tree_iter(aTree, NULL, treeIterateCb, (void *)&i);
+    return i;
+}
+static node_t *
+treeReverseIterateCb(tree_t *aTree, node_t *aNode, void *data) {
+    unsigned *i = (unsigned *)data;
+    node_t *sNode;
+    assert(aNode->magic == 0x9823af7e);
+    if (reverse_print) {
+ if (*i != 0) {
+     fprintf(stderr, "<--");
+ }
+ fprintf(stderr, "%ld", aNode->key);
+    }
+    sNode = tree_search(aTree, aNode);
+    assert(sNode == aNode);
+    sNode = tree_nsearch(aTree, aNode);
+    assert(sNode == aNode);
+    sNode = tree_psearch(aTree, aNode);
+    assert(sNode == aNode);
+    (*i)++;
+    return NULL;
+}
+static unsigned
+treeIterateReverse(tree_t *aTree) {
+    unsigned i;
+    i = 0;
+    tree_reverse_iter(aTree, NULL, treeReverseIterateCb, (void *)&i);
+    return i;
+}
+static void
+nodeRemove(tree_t *aTree, node_t *aNode, unsigned aNNodes) {
+    node_t *sNode;
+    unsigned blackHeight, imbalances;
+    if (verbose) {
+ fprintf(stderr, "rb_remove(%3ld)", aNode->key);
+    }
+    tree_remove(aTree, aNode);
+    sNode = tree_nsearch(aTree, aNode);
+    assert(sNode == NULL || sNode->key >= aNode->key);
+    sNode = tree_psearch(aTree, aNode);
+    assert(sNode == NULL || sNode->key <= aNode->key);
+    aNode->magic = 0;
+    if (tree_print) {
+ fprintf(stderr, "\n\t   tree: ");
+    }
+    do { node_t *rbp_bh_t; for (rbp_bh_t = (aTree)->rbt_root, (blackHeight) = 0; rbp_bh_t != &(aTree)->rbt_nil; rbp_bh_t = ((rbp_bh_t)->link.rbn_left)) { if (((rbp_bh_t)->link.rbn_red) == false) { (blackHeight)++; } } } while (0);
+    imbalances = treeRecurse(aTree->rbt_root, blackHeight, 0,
+      &(aTree->rbt_nil));
+    if (imbalances != 0) {
+ fprintf(stderr, "\nTree imbalance\n");
+ abort();
+    }
+    if (forward_print) {
+ fprintf(stderr, "\n\tforward: ");
+    }
+    assert(aNNodes - 1 == treeIterate(aTree));
+    if (reverse_print) {
+ fprintf(stderr, "\n\treverse: ");
+    }
+    assert(aNNodes - 1 == treeIterateReverse(aTree));
+    if (verbose) {
+ fprintf(stderr, "\n");
+    }
+}
+static node_t *
+removeIterateCb(tree_t *aTree, node_t *aNode, void *data) {
+    unsigned *nNodes = (unsigned *)data;
+    node_t *ret = tree_next(aTree, aNode);
+    nodeRemove(aTree, aNode, *nNodes);
+    return ret;
+}
+static node_t *
+removeReverseIterateCb(tree_t *aTree, node_t *aNode, void *data) {
+    unsigned *nNodes = (unsigned *)data;
+    node_t *ret = tree_prev(aTree, aNode);
+    nodeRemove(aTree, aNode, *nNodes);
+    return ret;
+}
+int
+main(void) {
+    tree_t tree;
+    long set[200];
+    node_t nodes[200], key, *sNode, *nodeA;
+    unsigned i, j, k, blackHeight, imbalances;
+    fprintf(stderr, "Test begin\n");
+    tree_new(&tree);
+    fprintf(stderr, "Empty tree:\n");
+    nodeA = tree_first(&tree);
+    if (nodeA == NULL) {
+ fprintf(stderr, "rb_first() --> nil\n");
+    } else {
+ fprintf(stderr, "rb_first() --> %ld\n", nodeA->key);
+    }
+    nodeA = tree_last(&tree);
+    if (nodeA == NULL) {
+ fprintf(stderr, "rb_last() --> nil\n");
+    } else {
+ fprintf(stderr, "rb_last() --> %ld\n", nodeA->key);
+    }
+    key.key = 0;
+    key.magic = 0x9823af7e;
+    nodeA = tree_search(&tree, &key);
+    if (nodeA == NULL) {
+ fprintf(stderr, "rb_search(0) --> nil\n");
+    } else {
+ fprintf(stderr, "rb_search(0) --> %ld\n", nodeA->key);
+    }
+    key.key = 0;
+    key.magic = 0x9823af7e;
+    nodeA = tree_nsearch(&tree, &key);
+    if (nodeA == NULL) {
+ fprintf(stderr, "rb_nsearch(0) --> nil\n");
+    } else {
+ fprintf(stderr, "rb_nsearch(0) --> %ld\n", nodeA->key);
+    }
+    key.key = 0;
+    key.magic = 0x9823af7e;
+    nodeA = tree_psearch(&tree, &key);
+    if (nodeA == NULL) {
+ fprintf(stderr, "rb_psearch(0) --> nil\n");
+    } else {
+ fprintf(stderr, "rb_psearch(0) --> %ld\n", nodeA->key);
+    }
+    srandom(42);
+    for (i = 0; i < 200; i++) {
+ if (i == 0) {
+     for (j = 0; j < 200; j++) {
+  set[j] = j;
+     }
+ } else if (i == 1) {
+     for (j = 0; j < 200; j++) {
+  set[j] = 200 - j - 1;
+     }
+ } else {
+     for (j = 0; j < 200; j++) {
+  set[j] = (long) (((double) 200)
+    * ((double) random() / ((double)RAND_MAX)));
+     }
+ }
+ fprintf(stderr, "Tree %u\n", i);
+ for (j = 1; j <= 200; j++) {
+     if (verbose) {
+  fprintf(stderr, "Tree %u, %u node%s\n",
+    i, j, j != 1 ? "s" : "");
+     }
+     tree_new(&tree);
+     tree.rbt_nil.magic = 0;
+     for (k = 0; k < j; k++) {
+  nodes[k].magic = 0x9823af7e;
+  nodes[k].key = set[k];
+     }
+     for (k = 0; k < j; k++) {
+  if (verbose) {
+      fprintf(stderr, "rb_insert(%3ld)", nodes[k].key);
+  }
+  tree_insert(&tree, &nodes[k]);
+  if (tree_print) {
+      fprintf(stderr, "\n\t   tree: ");
+  }
+  do { node_t *rbp_bh_t; for (rbp_bh_t = (&tree)->rbt_root, (blackHeight) = 0; rbp_bh_t != &(&tree)->rbt_nil; rbp_bh_t = ((rbp_bh_t)->link.rbn_left)) { if (((rbp_bh_t)->link.rbn_red) == false) { (blackHeight)++; } } } while (0);
+  imbalances = treeRecurse(tree.rbt_root, blackHeight, 0,
+    &(tree.rbt_nil));
+  if (imbalances != 0) {
+      fprintf(stderr, "\nTree imbalance\n");
+      abort();
+  }
+  if (forward_print) {
+      fprintf(stderr, "\n\tforward: ");
+  }
+  assert(k + 1 == treeIterate(&tree));
+  if (reverse_print) {
+      fprintf(stderr, "\n\treverse: ");
+  }
+  assert(k + 1 == treeIterateReverse(&tree));
+  if (verbose) {
+      fprintf(stderr, "\n");
+  }
+  sNode = tree_first(&tree);
+  assert(sNode != NULL);
+  sNode = tree_last(&tree);
+  assert(sNode != NULL);
+  sNode = tree_next(&tree, &nodes[k]);
+  sNode = tree_prev(&tree, &nodes[k]);
+     }
+     switch (i % 4) {
+  case 0: {
+      for (k = 0; k < j; k++) {
+   nodeRemove(&tree, &nodes[k], j - k);
+      }
+      break;
+  } case 1: {
+      for (k = j; k > 0; k--) {
+   nodeRemove(&tree, &nodes[k-1], k);
+      }
+      break;
+  } case 2: {
+      node_t *start;
+      unsigned nNodes = j;
+      start = NULL;
+      do {
+   start = tree_iter(&tree, start, removeIterateCb,
+     (void *)&nNodes);
+   nNodes--;
+      } while (start != NULL);
+      assert(nNodes == 0);
+      break;
+  } case 3: {
+      node_t *start;
+      unsigned nNodes = j;
+      start = NULL;
+      do {
+   start = tree_reverse_iter(&tree, start,
+     removeReverseIterateCb, (void *)&nNodes);
+   nNodes--;
+      } while (start != NULL);
+      assert(nNodes == 0);
+      break;
+  } default: {
+      assert(false);
+  }
+     }
+ }
+    }
+    fprintf(stderr, "Test end\n");
+    return 0;
+}

@@ -1,0 +1,78 @@
+static const unsigned int PRIMELESSP2[] = {
+    3,7,13,31,61,127,251,509,1021,2039,4093,8191,16381,32749,65521,131071,
+    262139,524287,1048573,2097143,4194301,8388593,16777213,33554393,67108859,
+    134217689,268435399,536870909,1073741789,2147483647};
+typedef struct { int len; int size; float *items;} floatvec;static floatvec *floatvec_init(int size){ floatvec *vect = malloc(sizeof(floatvec)); vect->len = 0; if(size<1) size = 1; vect->size = size; vect->items = (float *) malloc(sizeof(float)*vect->size); return vect;}static void floatvec_free(floatvec *vect){ free(vect->items); free(vect);}static void floatvec_endadd(floatvec *vect, float stru){ if(vect->len==vect->size){ vect->size *= 2; vect->items = (float *) realloc(vect->items,sizeof(float)*vect->size); } vect->items[vect->len] = stru; vect->len += 1;}static float floatvec_endpop(floatvec *vect){ assert(vect->len>0); vect->len -= 1; return vect->items[vect->len];}static float floatvec_endtop(floatvec *vect){ assert(vect->len>0); return vect->items[vect->len - 1];}static void floatvec_add(floatvec *vect, int p, float stru){ assert(p>=0 && p<=vect->len); if(vect->len==vect->size){ vect->size *= 2; vect->items = (float *) realloc(vect->items,sizeof(float)*vect->size); } for(int i=vect->len-1; p<=i; i--){ vect->items[i+1] = vect->items[i]; } vect->len += 1; vect->items[p] = stru;}static float floatvec_pop(floatvec *vect, int p){ assert(p>=0 && p<vect->len); float ret = vect->items[p]; vect->len -= 1; for(int i=p; i<vect->len; i++){ vect->items[i] = vect->items[i+1]; } return ret;}static inline int floatvec_len(floatvec *vect){ return vect->len;}static float floatvec_item(floatvec *vect, int p){ assert(p>=0 && p<vect->len); return vect->items[p];}
+typedef struct { int len; int size; int *items;} intheap;static intheap *intheap_init(int size){ intheap *heap = malloc(sizeof(intheap)); heap->len = 0; if(size<1) size = 1; heap->size = size; heap->items = malloc(sizeof(int)*heap->size); return heap;}static void intheap_free(intheap *heap){ free(heap->items); free(heap);}static int intheap_peek(intheap *heap){ assert(heap->len>0); return heap->items[0];}static int intheap_poll(intheap *heap){ assert(heap->len>0); int ret = heap->items[0]; heap->len -= 1; heap->items[0] = heap->items[heap->len]; int i = 0; int c = 2*i+1; while(c<heap->len){ int A,B; if(c+1<heap->len){ A = heap->items[c+1]; B = heap->items[c]; if(A<B) c = c+1; } A = heap->items[i]; B = heap->items[c]; if(A<B) break; heap->items[i] = B; heap->items[c] = A; i = c; c = 2*i+1; } return ret;}static void intheap_add(intheap *heap, int val){ if(heap->len==heap->size){ heap->size *= 2; heap->items = realloc(heap->items,sizeof(int)*heap->size); } heap->items[heap->len] = val; heap->len += 1; int i = heap->len-1; int p = (i-1)/2; while(1){ if(i<=0) break; int A,B; A = heap->items[i]; B = heap->items[p]; if(!(A<B)) break; heap->items[i] = B; heap->items[p] = A; i = p; p = (i-1)/2; }}static inline int intheap_len(intheap *heap){ return heap->len;}
+typedef struct loloctable_node loloctable_node;struct loloctable_node { loloctable_node *next; unsigned long long key; char val;};typedef struct { int n_modifications; int len; int sizei; loloctable_node **slots;} loloctable;loloctable *loloctable_init(){ loloctable *htable = malloc(sizeof(loloctable)); htable->n_modifications = 0; htable->len = 0; htable->sizei = 0; htable->slots = malloc(sizeof(loloctable_node *)*PRIMELESSP2[htable->sizei]); for(int i=0;i<PRIMELESSP2[htable->sizei];i++) htable->slots[i] = NULL; return htable;}void loloctable_free(loloctable *htable){ for(int i=0;i<PRIMELESSP2[htable->sizei];i++){ loloctable_node *ptr = htable->slots[i]; while(ptr!=NULL){ loloctable_node *ptrc = ptr; ptr = ptr->next; free(ptrc); } } free(htable->slots); free(htable);}void loloctable_add(loloctable *htable, unsigned long long key, char val){ unsigned long long A = key; unsigned int hash = ((unsigned int)((A>>32)^(A))); unsigned int slot = hash%PRIMELESSP2[htable->sizei]; loloctable_node *ptr = htable->slots[slot]; while(ptr!=NULL){ loloctable_node *ptrc = ptr; ptr = ptr->next; unsigned long long B = ptrc->key; if(A==B){ ptrc->val = val; return; } } htable->n_modifications += 1; htable->len += 1; if(htable->len>=PRIMELESSP2[htable->sizei]/2){ loloctable_node **neo_slots = malloc(sizeof(loloctable_node *)*PRIMELESSP2[htable->sizei+1]); for(int i=0;i<PRIMELESSP2[htable->sizei+1];i++) neo_slots[i] = NULL; for(int i=0;i<PRIMELESSP2[htable->sizei];i++){ loloctable_node *ptr = htable->slots[i]; while(ptr!=NULL){ loloctable_node *ptrc = ptr; ptr = ptr->next; unsigned long long A = ptrc->key; unsigned int hash = ((unsigned int)((A>>32)^(A))); unsigned int cslot = hash%PRIMELESSP2[htable->sizei+1]; ptrc->next = neo_slots[cslot]; neo_slots[cslot] = ptrc; } } free(htable->slots); htable->slots = neo_slots; htable->sizei += 1; slot = hash%PRIMELESSP2[htable->sizei]; } loloctable_node *node = malloc(sizeof(loloctable_node)); node->key = key; node->val = val; node->next = htable->slots[slot]; htable->slots[slot] = node;}int loloctable_has(loloctable *htable, unsigned long long key){ unsigned long long A = key; unsigned int hash = ((unsigned int)((A>>32)^(A))); unsigned int slot = hash%PRIMELESSP2[htable->sizei]; loloctable_node *ptr = htable->slots[slot]; while(ptr!=NULL){ loloctable_node *ptrc = ptr; ptr = ptr->next; unsigned long long B = ptrc->key; if(A==B) return 1; } return 0;}char loloctable_get(loloctable *htable, unsigned long long key){ unsigned long long A = key; unsigned int hash = ((unsigned int)((A>>32)^(A))); unsigned int slot = hash%PRIMELESSP2[htable->sizei]; loloctable_node *ptr = htable->slots[slot]; while(ptr!=NULL){ loloctable_node *ptrc = ptr; ptr = ptr->next; unsigned long long B = ptrc->key; if(A==B){ return ptrc->val; } } assert(!"Key exists."); char dummy; memset(&dummy,0,sizeof(char)); return dummy;}char loloctable_pop(loloctable *htable, unsigned long long key){ unsigned long long A = key; unsigned int hash = ((unsigned int)((A>>32)^(A))); unsigned int slot = hash%PRIMELESSP2[htable->sizei]; loloctable_node **preptr = &htable->slots[slot]; while(*preptr!=NULL){ loloctable_node *ptrc = *preptr; unsigned long long B = ptrc->key; if(A==B){ htable->n_modifications += 1; htable->len -= 1; *preptr = ptrc->next; char val = ptrc->val; free(ptrc); if(htable->len<PRIMELESSP2[htable->sizei]/4){ loloctable_node **neo_slots = malloc(sizeof(loloctable_node *)*PRIMELESSP2[htable->sizei-1]); for(int i=0;i<PRIMELESSP2[htable->sizei-1];i++) neo_slots[i] = NULL; for(int i=0;i<PRIMELESSP2[htable->sizei];i++){ loloctable_node *ptr = htable->slots[i]; while(ptr!=NULL){ loloctable_node *ptrc = ptr; ptr = ptr->next; unsigned long long A = ptrc->key; unsigned int hash = ((unsigned int)((A>>32)^(A))); unsigned int cslot = hash%PRIMELESSP2[htable->sizei-1]; ptrc->next = neo_slots[cslot]; neo_slots[cslot] = ptrc; } } free(htable->slots); htable->slots = neo_slots; htable->sizei -= 1; } return val; } preptr = &ptrc->next; } assert(!"Key exists."); char dummy; memset(&dummy,0,sizeof(char)); return dummy;}typedef struct { loloctable *origin; int n_modifications; int slot; loloctable_node *ptrc;} loloctable_iter;loloctable_iter loloctable_begin(loloctable *htable){ loloctable_iter iter; iter.origin = htable; iter.n_modifications = htable->n_modifications; iter.slot = PRIMELESSP2[iter.origin->sizei]; for(int i=0;i<PRIMELESSP2[iter.origin->sizei];i++){ if(iter.origin->slots[i]!=NULL){ iter.ptrc = iter.origin->slots[i]; iter.slot = i; break; } } return iter;}void loloctable_iter_next(loloctable_iter *iter){ if(iter->n_modifications!=iter->origin->n_modifications){ assert(!"Hashtable wasn't modified."); } if(iter->slot==PRIMELESSP2[iter->origin->sizei]) return; iter->ptrc = iter->ptrc->next; while(iter->ptrc==NULL){ iter->slot += 1; if(iter->slot==PRIMELESSP2[iter->origin->sizei]) break; iter->ptrc = iter->origin->slots[iter->slot]; }}int loloctable_iter_done(loloctable_iter *iter){ if(iter->n_modifications!=iter->origin->n_modifications){ assert(!"Hashtable wasn't modified."); } return iter->slot==PRIMELESSP2[iter->origin->sizei];}unsigned long long loloctable_iter_key(loloctable_iter *iter){ if(iter->n_modifications!=iter->origin->n_modifications){ assert(!"Hashtable wasn't modified."); } assert(!loloctable_iter_done(iter)); return iter->ptrc->key;}char loloctable_iter_val(loloctable_iter *iter){ if(iter->n_modifications!=iter->origin->n_modifications){ assert(!"Hashtable wasn't modified."); } assert(!loloctable_iter_done(iter)); return iter->ptrc->val;}static inline int loloctable_len(loloctable *htable){ return htable->len;}
+int cmp_floats(const void *a, const void *b){
+    return (*(float*)a-*(float*)b);
+}
+int main(int argc, char const *argv[]){
+    printf("VECTOR:\n");
+    floatvec *fvec = floatvec_init(0);
+    for(int i=0;i<20;i++){
+        floatvec_endadd(fvec,20-3*i-2*(i%2));
+    }
+    for(int i=0;i<10;i++){
+        floatvec_endpop(fvec);
+    }
+    printf("%f\n", floatvec_endtop(fvec));
+    for(int i=0;i< floatvec_len(fvec);i++){
+        printf("%f ",fvec->items[i]);
+    }
+    printf("\n");
+    qsort(fvec->items,floatvec_len(fvec),sizeof(float),cmp_floats);
+    for(int i=0;i< floatvec_len(fvec);i++){
+        printf("%f ",fvec->items[i]);
+    }
+    printf("\n");
+    floatvec_free(fvec);
+    printf("HEAP:\n");
+    intheap *heap = intheap_init(0);
+    intheap_add(heap,5);
+    intheap_add(heap,7);
+    intheap_add(heap,1);
+    intheap_add(heap,4);
+    intheap_add(heap,3);
+    for(int i=0;i<3;i++){
+        printf("heap lowest: %d\n",intheap_poll(heap));
+    }
+    intheap_add(heap,2);
+    intheap_add(heap,10);
+    for(int i=0;i<4;i++){
+        printf("heap lowest: %d\n",intheap_poll(heap));
+    }
+    intheap_free(heap);
+    printf("HASHTABLE:\n");
+    loloctable *htable = loloctable_init();
+    loloctable_add(htable,600000,'B');
+    loloctable_add(htable,600002,'O');
+    loloctable_add(htable,600003,'O');
+    loloctable_add(htable,600004,'K');
+    loloctable_add(htable,600005,' ');
+    loloctable_add(htable,600006,'K');
+    loloctable_add(htable,600007,'E');
+    loloctable_add(htable,600008,'E');
+    loloctable_add(htable,600009,'P');
+    loloctable_add(htable,600010,'E');
+    loloctable_add(htable,600011,'R');
+    char val = loloctable_pop(htable,600004);
+    printf("poped: '%c'\n",val);
+    for(loloctable_iter it=loloctable_begin(htable); !loloctable_iter_done(&it); loloctable_iter_next(&it)){
+        printf("KEY '%llu' VAL '%c'\n",loloctable_iter_key(&it),loloctable_iter_val(&it));
+    }
+    loloctable_pop(htable,600002);
+    loloctable_pop(htable,600005);
+    loloctable_pop(htable,600006);
+    loloctable_pop(htable,600007);
+    loloctable_pop(htable,600009);
+    loloctable_pop(htable,600010);
+    printf("poped several\n");
+    for(loloctable_iter it=loloctable_begin(htable); !loloctable_iter_done(&it); loloctable_iter_next(&it)){
+        printf("KEY '%llu' VAL '%c'\n",loloctable_iter_key(&it),loloctable_iter_val(&it));
+    }
+    printf("poped 600004: '%c'\n",val);
+    loloctable_free(htable);
+    return 0;
+}

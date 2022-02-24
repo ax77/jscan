@@ -1,0 +1,11 @@
+static const char h_00[] = "b8810b73-e79c-4a3c-8b50-787c8bfcd189";
+       
+static const char unsigned UCHARTMP_ONCE = '_';
+static const char h_01[] = "95d2fef3-033d-40bf-b17c-9a462c5a9757";
+static const char h_02[] = "d9f06602-35aa-4228-b7fd-20af00933ff6";
+static const char h_03[] = "31323424-e451-4839-9ed7-d6a07eea2835";
+static const char h_04[] = "d7522fe2-35d2-4fa7-aff1-a6cda33b52b4";
+static const char h_05[] = "9678b092-f24d-42f9-a63d-e760403ef449";
+static const char h_06[] = "c06d461d-057c-4aa7-b9a3-06d0df67cd81";
+static const char h_07[] = "6280e781-ddaa-410a-b691-b6632825405b";
+int main() { return 0; }

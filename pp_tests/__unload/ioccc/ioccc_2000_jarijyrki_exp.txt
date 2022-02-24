@@ -1,0 +1,21 @@
+int q,P,W,Z,X,Y,r,u; char E[U][U][T+1] ,D[T]; Window J; GC k; XEvent w;
+ Display*i; v(c,j ,K){ char*P=E[c][j],*X,g=0; double A=0,F=0,m[T]; for(; K<U&&*
+ P; ){ m[g]=strtod(P ,&X); for( q=-1; ++q <g; F+=*P==64? m[q]:0,A=*P==33 ? m[q]>A
+? m[q]:A :0); if( isupper(*P)*isdigit(P[1])){ if( v(*P-65 ,atoi(P+1) ,K+1))goto
+i; for( m[g++]=atof(D); P++&&isdigit(*P); ); } else if( P-X){ g++; P=X; }
+else{ if( g>1&&*P==*"="){ g--; m[g-1]==m[g]; } else if( g>1&&*P==*"+"){ g--; m[g-1]+=m[g]; } else if( g>1&&*P==*"-"){ g--; m[g-1]-=m[g]; } else if( g>1&&*P==*"*"){ g--; m[g-1]*=m[g]; } else if( g>1&&*P==*"/"){ g--; m[g-1]/=m[g]; } else if( *P-32)goto i; P++; } } if( !--g)return !sprintf(D,
+ "%10.2f",*m); i: for(; A&&q--; XFillRectangle(i,J,k,((W-r)+q)*Q+S,(Z-u)*S+S-K,Q/2,K))K=Q*
+  m[q]/A; for(; q--&&F; A+=m[q]){ if( q%2)XSetForeground(i,k,WhitePixel(i,0));XFillArc(i,J,k,(W-r)*Q-Q,((Z-u)+2)*S,Q*3,Q*3,360*A/F*64,360*m[q]/F*64); XSetForeground(i,k,BlackPixel(i,0));XDrawArc(i,J,k,(W-r)*Q-Q,((Z-u)+2)*S,Q*3,Q*3,360*A/F*64,360*m[q]/F*64);}
+   return !!strcpy(D ,E[c][j]); } main(){ read(q,E,z); i=XOpenDisplay(0);
+k=XCreateGC(i,J=RootWindow(i,W),Z,0); XSelectInput(i ,J=XCreateSimpleWindow(i,
+J,P,q,M ,H ,r,u ,WhitePixel(i,X)) ,ButtonPressMask|KeyPressMask|ExposureMask);
+for( XMapWindow(i,J); ; XDrawString(i,J,k,S ,S,E[X][Y] ,P=strlen(E[X][Y]))){ XNextEvent(i ,&w);
+  XLookupString(&w.xkey,D ,1,&q,0); q & 96&&q<128 ? E[X][Y][P++]=q :q== C ? Y-- :q==
+L ? Y++ :q== V ? X++ :q== _ ? E[X][Y][--P]=0 :q== O&&X ? X--:P; if( w.type==ButtonPress){
+X=r +(w.xbutton.x-S)/ Q; Y=u+w.xbutton.y/S-1; } X%=26; for( X>r+p ? r++
+ :X; X<r; r--); Y%=U; if( Y<1)Y=1; for(; q== R; exit(write(1 ,E,z))); for( Y>u+G
+? u++ :u; Y<=u; u--); XClearWindow(i,J); for( Z=u+1; sprintf(D ,"%3d" ,Z)&&
+Z<=u+G; Z++){ XDrawString(i,J,k,0,((Z-u)+2)*S-B,D,3); for( W=r; W<=r+p; XDrawString(i,J,k,(W-r)*Q+S+N,S*
+2-B,D,1),W++){ XDrawRectangle(i,J,k,(W-r)*Q+S,(Z-u)*S+S,Q,S); v(W,Z,0); XDrawString(i,J,k,(W-r)*Q+S+N,((Z-u)+2)*
+S-B,D ,strlen(D)); *D=65+W; } } XDrawRectangle(i,J,k,(X-r) *Q+S+1,(Y-u) *S+S+1,Q-2,S-2);
+             } }

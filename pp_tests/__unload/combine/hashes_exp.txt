@@ -1,0 +1,13 @@
+int f() { return 0; }
+int g() { return 1; }
+int q() { return 0; }
+int main()
+{
+ int z = f(), y = f(), c = (32 + 64),
+  d = f(),
+  e = f() + (128 + 256) + g( ), h, i, j, k, l, m, n, o,
+  p = (g()+ f()+ f()),
+  r = (q()+
+      (0 + 0 + 0));
+  return 0;
+}

@@ -1,0 +1,1 @@
+somestruct.a=a; somestruct.b=b; somestruct.c=c;
