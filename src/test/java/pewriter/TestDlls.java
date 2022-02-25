@@ -10,10 +10,10 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import pe.constants.Sizeofs;
-import pe.imports.ImageImportByName;
-import pe.imports.ImportDll;
-import pe.imports.ImportSymbols;
+import jscan.pe.constants.Sizeofs;
+import jscan.pe.imports.ImageImportByName;
+import jscan.pe.imports.ImportDll;
+import jscan.pe.imports.ImportSymbols;
 
 public class TestDlls {
 

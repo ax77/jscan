@@ -18,6 +18,10 @@
 log/
 target/
 
+*.png
+*.pdf
+*.jpeg
+
 # Package Files 
 *.jar
 *.war

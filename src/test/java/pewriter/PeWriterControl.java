@@ -1,11 +1,11 @@
 package pewriter;
 
-import static pe.constants.ImageDirectoryEntry.*;
+import static jscan.pe.constants.ImageDirectoryEntry.*;
+import static jscan.pe.sections.SectionsIndexesLight.DATA;
+import static jscan.pe.sections.SectionsIndexesLight.IDATA;
+import static jscan.pe.sections.SectionsIndexesLight.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static pe.sections.SectionsIndexesLight.DATA;
-import static pe.sections.SectionsIndexesLight.IDATA;
-import static pe.sections.SectionsIndexesLight.TEXT;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,27 +13,27 @@ import java.util.List;
 
 import org.junit.Test;
 
-import buffers.IDataWriter;
-import buffers.Ubuf;
-import fio.ByteBuffDiff;
-import fio.IO;
-import pe.DosStub;
-import pe.ImageDosHeader;
-import pe.ImageFileHeader;
-import pe.ImageNtHeader64;
-import pe.ImageOptionalHeader64;
-import pe.ImageSectionHeader;
-import pe.PE64;
-import pe.constants.Alignment;
-import pe.constants.Sizeofs;
-import pe.datas.DataSymbols;
-import pe.imports.ImageImportByName;
-import pe.imports.ImportDll;
-import pe.imports.ImportSymbols;
-import pe.sections.SectionHeadersBuilder;
-import pe.sections.SectionSize;
-import pe.sections.SectionsIndexesLight;
-import utils.Aligner;
+import jscan.buffers.IDataWriter;
+import jscan.buffers.Ubuf;
+import jscan.fio.ByteBuffDiff;
+import jscan.fio.IO;
+import jscan.pe.DosStub;
+import jscan.pe.ImageDosHeader;
+import jscan.pe.ImageFileHeader;
+import jscan.pe.ImageNtHeader64;
+import jscan.pe.ImageOptionalHeader64;
+import jscan.pe.ImageSectionHeader;
+import jscan.pe.PE64;
+import jscan.pe.constants.Alignment;
+import jscan.pe.constants.Sizeofs;
+import jscan.pe.datas.DataSymbols;
+import jscan.pe.imports.ImageImportByName;
+import jscan.pe.imports.ImportDll;
+import jscan.pe.imports.ImportSymbols;
+import jscan.pe.sections.SectionHeadersBuilder;
+import jscan.pe.sections.SectionSize;
+import jscan.pe.sections.SectionsIndexesLight;
+import jscan.utils.Aligner;
 
 public class PeWriterControl {
 

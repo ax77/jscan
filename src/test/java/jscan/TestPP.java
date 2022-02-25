@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import hashed.Hash_all;
-import preproc.TokenCmp;
-import preproc.preprocess.PpEnv;
+import jscan.hashed.Hash_all;
+import jscan.preproc.TokenCmp;
+import jscan.preproc.preprocess.PpEnv;
 
 public class TestPP {
 

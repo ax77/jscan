@@ -1,18 +1,18 @@
 package pewriter;
 
-import static asm.Opc.add;
-import static asm.Opc.mov;
-import static asm.Opc.pop;
-import static asm.Opc.push;
-import static asm.Opc.ret;
-import static asm.Opc.sub;
-import static asm.Reg64.r8;
-import static asm.Reg64.r9;
-import static asm.Reg64.rax;
-import static asm.Reg64.rbp;
-import static asm.Reg64.rcx;
-import static asm.Reg64.rdx;
-import static asm.Reg64.rsp;
+import static jscan.asm.Opc.add;
+import static jscan.asm.Opc.mov;
+import static jscan.asm.Opc.pop;
+import static jscan.asm.Opc.push;
+import static jscan.asm.Opc.ret;
+import static jscan.asm.Opc.sub;
+import static jscan.asm.Reg64.r8;
+import static jscan.asm.Reg64.r9;
+import static jscan.asm.Reg64.rax;
+import static jscan.asm.Reg64.rbp;
+import static jscan.asm.Reg64.rcx;
+import static jscan.asm.Reg64.rdx;
+import static jscan.asm.Reg64.rsp;
 
 import java.io.IOException;
 
@@ -21,12 +21,12 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 
-import asm.Asm86;
-import pe.PeMainWriter;
-import pe.datas.DataSymbols;
-import pe.imports.ImageImportByName;
-import pe.imports.ImportDll;
-import pe.imports.ImportSymbols;
+import jscan.asm.Asm86;
+import jscan.pe.PeMainWriter;
+import jscan.pe.datas.DataSymbols;
+import jscan.pe.imports.ImageImportByName;
+import jscan.pe.imports.ImportDll;
+import jscan.pe.imports.ImportSymbols;
 
 public class PeWriterTestApi {
 

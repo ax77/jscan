@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import literals.IntLiteral;
-import literals.IntLiteralParser;
+import jscan.literals.IntLiteral;
+import jscan.literals.IntLiteralParser;
 
 public class TestIntegersEv {
 

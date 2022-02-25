@@ -12,10 +12,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import fio.FileReadKind;
-import fio.FileSearchKind;
-import fio.FileWrapper;
-import utils.Normalizer;
+import jscan.fio.FileReadKind;
+import jscan.fio.FileSearchKind;
+import jscan.fio.FileWrapper;
+import jscan.utils.Normalizer;
 
 /*
     //I)
