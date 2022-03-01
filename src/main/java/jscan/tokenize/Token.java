@@ -40,13 +40,13 @@ public class Token {
 
   public Token(boolean eof) {
     setDefaults();
-    type = T.TOKEN_EOF;
+    this.type = T.TOKEN_EOF;
   }
 
   private void setDefaults() {
-    value = "";
-    type = T.TOKEN_ERROR;
-    argnum = -1;
+    this.value = "";
+    this.type = T.TOKEN_ERROR;
+    this.argnum = -1;
   }
 
   // source - location routine
@@ -56,7 +56,7 @@ public class Token {
     if (location == null) {
       return "<unspec. source-location>"; // TODO:why, and when???
     }
-    return location.getFilename() + ":" + location.getLine() + ":" + location.getColumn() + ": ";
+    return location.toString();
   }
 
   public String getFilename() {
@@ -66,7 +66,7 @@ public class Token {
     return location.getFilename();
   }
 
-  public int getRow() {
+  public int getLine() {
     if (location == null) {
       return -1; // TODO:why, and when???
     }
@@ -126,9 +126,9 @@ public class Token {
 
   public void setNewLine(boolean isNewLine) {
     if (isNewLine) {
-      fposition |= fnewline;
+      this.fposition |= fnewline;
     } else {
-      fposition &= ~fnewline;
+      this.fposition &= ~fnewline;
     }
   }
 
@@ -138,34 +138,34 @@ public class Token {
 
   public void setLeadingWhitespace(boolean b) {
     if (b) {
-      fposition |= fleadws;
+      this.fposition |= fleadws;
     } else {
-      fposition &= ~fleadws;
+      this.fposition &= ~fleadws;
     }
   }
 
   public boolean isAtBol() {
-    return (fposition & fatbol) == fatbol;
+    return (this.fposition & fatbol) == fatbol;
   }
 
   public void setAtBol(boolean isAtBol) {
     if (isAtBol) {
-      fposition |= fatbol;
+      this.fposition |= fatbol;
     } else {
-      fposition &= ~fatbol;
+      this.fposition &= ~fatbol;
     }
   }
 
   public boolean isPainted() {
-    return (fposition & fpainted) == fpainted;
+    return (this.fposition & fpainted) == fpainted;
   }
 
   public void paint() {
-    fposition |= fpainted;
+    this.fposition |= fpainted;
   }
 
   public int getCategory() {
-    return fcategory;
+    return this.fcategory;
   }
 
   public void setCategory(int category) {
@@ -303,14 +303,6 @@ public class Token {
 
   public boolean isBuiltinIdent() {
     return ofType(T.TOKEN_IDENT) && (ident.getNs() != 0);
-  }
-
-  public String getLocationToString() {
-    return loc();
-  }
-
-  public int getLine() {
-    return location.getLine();
   }
 
 }

@@ -10,7 +10,11 @@ import jscan.main.Env;
 import jscan.preproc.Error;
 import jscan.preproc.ErrorCode;
 import jscan.preproc.Sym;
+import jscan.preproc.preprocess.args.ArgInfo;
+import jscan.preproc.preprocess.args.ArgInfoVararg;
+import jscan.preproc.preprocess.args.ArgVariants;
 import jscan.sourceloc.SourceLocation;
+import jscan.symtab.Keywords;
 import jscan.tokenize.Fcategory;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
@@ -26,50 +30,6 @@ public final class Scan {
   private int incLevelVisual = 0;
   private Stack<String> incstack = new Stack<String>();
 
-  //MARK:{,##__VA_ARGS__}
-  //GNU {,##__VA_ARGS__}
-  //
-  //#define F2(X, ...) f(10, X, ## __VA_ARGS__)
-  //#define H2(...) f(10, ## __VA_ARGS__)
-  //
-  //F2(a, b)   =>   f(10, a, b)  ArgInfo [info=vararg_present_normal] 
-  //F2(a, )    =>   f(10, a, )   ArgInfo [info=vararg_present_empty] 
-  //F2(a)      =>   f(10, a)     ArgInfo [info=vararg_not_present]                   => delete COMMA here
-  //H2(a)      =>   f(10, a)     ArgInfo [info=vararg_single_arg_and_present_normal] 
-  //H2()       =>   f(10)        ArgInfo [info=vararg_single_arg_and_present_empty]  => delete COMMA here
-  //
-  enum ArgInfoVararg {
-      noinfo,
-        vararg_present_normal,
-        vararg_not_present, // actual parameters don't have variadic part at all...
-        vararg_present_empty, // this mean, that macros have formal parameters, instead of variadic, and variadic part is empty
-
-        vararg_single_arg_and_present_empty,
-        vararg_single_arg_and_present_normal,
-  }
-
-  class ArgInfo {
-    private ArgInfoVararg info;
-
-    public ArgInfo() {
-      this.info = ArgInfoVararg.noinfo;
-    }
-
-    public ArgInfoVararg getInfo() {
-      return info;
-    }
-
-    public void setInfo(ArgInfoVararg info) {
-      this.info = info;
-    }
-
-    @Override
-    public String toString() {
-      return "ArgInfo [info=" + info + "]";
-    }
-
-  }
-
   private String levelPad() {
     String pad = "";
     for (int lev = 0; lev < incLevelVisual; lev++) {
@@ -78,13 +38,12 @@ public final class Scan {
     return pad;
   }
 
-  public Scan(List<Token> _tokens) {
-    tokens = _tokens;
-    size = _tokens.size();
-    offset = 0;
-    inlast = false;
-
-    rescan = new LinkedList<Token>();
+  public Scan(List<Token> input) {
+    this.tokens = input;
+    this.size = input.size();
+    this.offset = 0;
+    this.inlast = false;
+    this.rescan = new LinkedList<Token>();
   }
 
   public Token pop_noppdirective() {
@@ -146,7 +105,7 @@ public final class Scan {
       checkLF(pp);
       return new PP_include(this).scan(pp);
 
-    } else if (isIfs(pp)) {
+    } else if (PpEnv.isIfs(pp)) {
       checkLF(pp);
       return new PP_if2(this).scan(pp);
 
@@ -212,14 +171,14 @@ public final class Scan {
       return false;
     }
 
-    if (t.getValue().equals("__FILE__")) {
+    if (t.isIdent(Keywords.__FILE___ident)) {
       t.setValue("\"" + t.getFilename() + "\"");
       t.setType(T.TOKEN_STRING);
       return true;
     }
 
-    if (t.getValue().equals("__LINE__")) {
-      t.setValue(String.valueOf(t.getRow()));
+    if (t.isIdent(Keywords.__LINE___ident)) {
+      t.setValue(String.valueOf(t.getLine()));
       t.setType(T.TOKEN_NUMBER);
       return true;
     }
@@ -306,7 +265,7 @@ public final class Scan {
 
       // 0
       //
-      if (isPPDirType(t)) {
+      if (PpEnv.isPPDirType(t)) {
         if (!dline(t)) {
           throw new ScanExc("Error extract pp-directive...");
         }
@@ -538,7 +497,7 @@ public final class Scan {
     while (!isEmpty()) {
       Token u = pop();
 
-      if (isPPDirType(u)) {
+      if (PpEnv.isPPDirType(u)) {
         Error.warning(ErrorCode.W_PP_DIRECTIVE_IN_ARGUMENT_LIST, u.loc());
         if (!dline(u)) {
           throw new ScanExc(u.loc() + "error extract pp-directive...");
@@ -722,24 +681,22 @@ public final class Scan {
       return stringized;
     }
 
-    String tmp = "";
-    int bound = ts.size() - 1;
+    StringBuilder sb = new StringBuilder();
 
-    for (int j = 0; j <= bound; j++) {
-      Token t = ts.get(j);
+    for (Token t : ts) {
 
       if (t.ofType(T.TOKEN_STRING) || t.ofType(T.TOKEN_CHAR)) {
-        if (t.hasLeadingWhitespace() && tmp.length() > 0) {
-          tmp += " ";
+        if (t.hasLeadingWhitespace() && sb.length() > 0) {
+          sb.append(" ");
         }
         String escval = t.getValue();
         int slen = escval.length();
         for (int i = 0; i < slen; i++) {
           char c = escval.charAt(i);
           if (c == '\"' || c == '\\') {
-            tmp += "\\";
+            sb.append("\\");
           }
-          tmp += c;
+          sb.append(c);
         }
         continue;
       }
@@ -751,15 +708,13 @@ public final class Scan {
         continue;
       }
 
-      if (t.hasLeadingWhitespace() && tmp.length() > 0) {
-        tmp += " ";
+      if (t.hasLeadingWhitespace() && sb.length() > 0) {
+        sb.append(" ");
       }
-      tmp += t.getValue();
+      sb.append(t.getValue());
     }
 
-    tmp = "\"" + tmp + "\"";
-    stringized.setValue(tmp);
-
+    stringized.setValue("\"" + sb.toString() + "\"");
     return stringized;
 
   }
@@ -775,14 +730,6 @@ public final class Scan {
         push(tokp);
       }
     }
-  }
-
-  private boolean isPPDirType(Token tok) {
-    return PpEnv.PP_DIRECTIVES_SET.contains(tok.getType());
-  }
-
-  private boolean isIfs(Token tok) {
-    return tok.ofType(T.PT_HIF) || tok.ofType(T.PT_HIFDEF) || tok.ofType(T.PT_HIFNDEF);
   }
 
 }

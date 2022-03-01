@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jscan.tokenize.T;
+import jscan.tokenize.Token;
 
 public abstract class PpEnv {
 
@@ -54,6 +55,14 @@ public abstract class PpEnv {
     PP_DIRECTIVES.put("pragma", T.PT_HPRAGMA);
     PP_DIRECTIVES.put("warning", T.PT_HWARNING);
     PP_DIRECTIVES.put("include_next", T.PT_HINCLUDE_NEXT);
+  }
+
+  public static boolean isPPDirType(Token tok) {
+    return PpEnv.PP_DIRECTIVES_SET.contains(tok.getType());
+  }
+
+  public static boolean isIfs(Token tok) {
+    return tok.ofType(T.PT_HIF) || tok.ofType(T.PT_HIFDEF) || tok.ofType(T.PT_HIFNDEF);
   }
 
 }

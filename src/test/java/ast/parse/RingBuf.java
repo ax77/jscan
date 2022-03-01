@@ -34,7 +34,7 @@ public class RingBuf {
       boolean first = true;
       for (Token t : oneline) {
         if (first) {
-          tmp.append(String.format("%-5d|", t.getRow()));
+          tmp.append(String.format("%-5d|", t.getLine()));
           first = false;
         }
         if (t.hasLeadingWhitespace()) {

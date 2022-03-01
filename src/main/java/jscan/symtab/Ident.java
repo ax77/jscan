@@ -8,42 +8,42 @@ public final class Ident {
   private Sym sym;
   private int ns;
 
-  public Ident(String _name) {
-    name = _name;
-    ns = 0;
+  public Ident(String name) {
+    this.name = name;
+    this.ns = 0;
   }
 
-  public Ident(String _name, int _ns) {
-    name = _name;
-    ns = _ns;
+  public Ident(String name, int ns) {
+    this.name = name;
+    this.ns = ns;
   }
 
   public Sym getSym() {
     return sym;
   }
 
-  public void defineSym(Sym _sym) {
+  public void defineSym(Sym newsym) {
 
     if (getSym() != null) {
-      if (getSym().incorrectRedefined(_sym)) {
+      if (getSym().incorrectRedefined(newsym)) {
 
         System.out
-            .println(_sym.getLocation() + " warning: " + _sym.getName() + " redefined: \n" + _sym.buildRedefInfo());
+            .println(newsym.getLocation() + " warning: " + newsym.getName() + " redefined: \n" + newsym.buildRedefInfo());
 
         System.out.println(getSym().getLocation() + " note: this is the location of previous definition: \n"
             + getSym().buildRedefInfo());
       }
     }
 
-    this.sym = _sym;
+    this.sym = newsym;
   }
 
   public void undefSym() {
-    sym = null;
+    this.sym = null;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
