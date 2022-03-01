@@ -3,7 +3,7 @@ package ast.types;
 import java.util.List;
 
 import jscan.symtab.Ident;
-import ast.errors.ParseException;
+import jscan.utils.AstParseException;
 
 public class CStructType {
   private boolean isUnion;
@@ -59,7 +59,7 @@ public class CStructType {
 
   private void checkHasFields() {
     if (isIncomplete) {
-      throw new ParseException("internal error: incomplete struct has no fields.");
+      throw new AstParseException("internal error: incomplete struct has no fields.");
     }
   }
 

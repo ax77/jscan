@@ -1,7 +1,7 @@
 package ast.types;
 
-import ast.errors.ParseException;
-import ast.parse.NullChecker;
+import jscan.utils.AstParseException;
+import jscan.utils.NullChecker;
 
 public class CArrayType {
   private final CType arrayOf;
@@ -12,11 +12,11 @@ public class CArrayType {
     NullChecker.check(arrayof); // always must be present. but init-expression - optional, check it later. int x[][2];
 
     if (arrayLen < 0) {
-      throw new ParseException("negative sized array. TODO:");
+      throw new AstParseException("negative sized array. TODO:");
     }
 
     if (arrayof.isBitfield()) {
-      throw new ParseException("error: array of bitfield.");
+      throw new AstParseException("error: array of bitfield.");
     }
 
     this.arrayOf = arrayof;

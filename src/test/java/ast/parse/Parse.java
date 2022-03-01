@@ -7,24 +7,23 @@ import static jscan.tokenize.T.T_SEMI_COLON;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.symtab.CSymbol;
+import ast.symtab.CSymbolBase;
+import ast.tree.Declarator;
+import ast.tree.ExternalDeclaration;
+import ast.tree.FunctionDefinition;
+import ast.tree.TranslationUnit;
+import ast.types.CType;
+import ast.types.TypeMerger;
+import jscan.parse.RingBuf;
 import jscan.parse.Tokenlist;
 import jscan.symtab.Ident;
+import jscan.symtab.KeywordsInits;
+import jscan.symtab.ScopeLevels;
+import jscan.symtab.Symtab;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
-import ast.errors.ParseErrors;
-import ast.errors.ParseException;
-import ast.symtab.Symtab;
-import ast.symtab.elements.CSymbol;
-import ast.symtab.elements.CSymbolBase;
-import ast.types.CType;
-import ast.types.decl.CDecl;
-import ast.types.parser.ParseBase;
-import ast.types.parser.ParseDecl;
-import ast.types.util.TypeMerger;
-import ast.unit.ExternalDeclaration;
-import ast.unit.FunctionDefinition;
-import ast.unit.TranslationUnit;
-import ast.unit.parser.ParseExternal;
+import jscan.utils.AstParseException;
 
 public class Parse {
 
@@ -76,14 +75,14 @@ public class Parse {
     if (prevsym != null) {
       if (prevsym.getBase() == CSymbolBase.SYM_TYPEDEF) {
         if (!prevsym.getType().isEqualTo(sym.getType())) {
-          perror("redefinition, previous defined here: " + prevsym.getLocationToString());
+          perror("redefinition, previous defined here: " /*+ prevsym.getLocationToString()*/);
         }
       } else {
 
         if (sym.isFunction() && prevsym.getType().isEqualTo(sym.getType())) {
           // TODO: normal prototype logic.
         } else {
-          perror("redefinition, previous defined here: " + prevsym.getLocationToString());
+          perror("redefinition, previous defined here: " /*+ prevsym.getLocationToString()*/);
         }
 
       }
@@ -122,9 +121,9 @@ public class Parse {
 
   //TODO:SEMANTIC
   //
-  public void pushscope() {
-    tags.pushscope();
-    symbols.pushscope();
+  public void pushscope(ScopeLevels level) {
+    tags.pushscope(level);
+    symbols.pushscope(level);
   }
 
   public void popscope() {
@@ -136,7 +135,7 @@ public class Parse {
   // TODO:SEMANTIC
 
   private void initParser() {
-    InitKeywords.initIdentMap();
+    KeywordsInits.initIdents();
     initDefaults();
     initScopes();
     move();
@@ -209,7 +208,7 @@ public class Parse {
     sb.append("  --> " + lastloc + "\n\n");
     sb.append(RingBuf.ringBufferToStringLines(ringBuffer) + "\n");
 
-    throw new ParseException(sb.toString());
+    throw new AstParseException(sb.toString());
   }
 
   public void pwarning(String m) {
@@ -220,10 +219,6 @@ public class Parse {
     sb.append(RingBuf.ringBufferToStringLines(ringBuffer) + "\n");
 
     //System.out.println(sb.toString());
-  }
-
-  public void perror(ParseErrors code) {
-    perror(code.toString());
   }
 
   public Token checkedMove(Ident expect) {
@@ -366,8 +361,8 @@ public class Parse {
 
   public CType parseTypename() {
 
-    CType base = new ParseBase(this).parseBase();
-    CDecl decl = new ParseDecl(this).parseDecl();
+    CType base = new ParseBaseType(this).parseBase();
+    Declarator decl = new ParseDecl(this).parseDecl();
     CType type = TypeMerger.build(base, decl);
 
     if (!decl.isAstract()) {
@@ -405,7 +400,7 @@ public class Parse {
 
   public TranslationUnit parse_unit() {
     TranslationUnit tu = new TranslationUnit();
-    pushscope();
+    pushscope(ScopeLevels.FILE_SCOPE);
 
     // top-level
     moveStraySemicolon();

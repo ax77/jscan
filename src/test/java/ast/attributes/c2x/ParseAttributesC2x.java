@@ -5,11 +5,11 @@ import static jscan.tokenize.T.T_RIGHT_BRACKET;
 
 import java.util.List;
 
-import jscan.tokenize.Token;
 import ast.attributes.Attribute;
 import ast.attributes.AttributeList;
 import ast.attributes.util.BalancedTokenlistParser;
 import ast.parse.Parse;
+import jscan.tokenize.Token;
 
 public class ParseAttributesC2x {
   private final Parse parser;

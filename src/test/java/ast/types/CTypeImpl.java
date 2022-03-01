@@ -3,7 +3,6 @@ package ast.types;
 import java.util.HashMap;
 import java.util.Map;
 
-import ast.types.main.CTypeKind;
 import jscan.literals.IntLiteralType;
 
 public class CTypeImpl {

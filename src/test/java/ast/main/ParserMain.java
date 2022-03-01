@@ -4,20 +4,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.errors.ParseException;
-import ast.parse.InitKeywords;
-import ast.parse.NullChecker;
 import ast.parse.Parse;
-import ast.unit.TranslationUnit;
+import ast.tree.TranslationUnit;
 import jscan.fio.FileWrapper;
 import jscan.hashed.Hash_all;
 import jscan.hashed.Hash_stream;
 import jscan.parse.Tokenlist;
 import jscan.preproc.preprocess.Scan;
 import jscan.sourceloc.SourceLocation;
+import jscan.specs.PredefinedBuffer;
+import jscan.specs.StrConcat;
+import jscan.symtab.KeywordsInits;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.AstParseException;
+import jscan.utils.NullChecker;
 
 public class ParserMain implements ParserMainApi {
 
@@ -41,7 +43,7 @@ public class ParserMain implements ParserMainApi {
   public Tokenlist preprocess() throws IOException {
 
     // TODO: twice? here and in parser. think.
-    InitKeywords.initIdentMap();
+    KeywordsInits.initIdents();
 
     if (isFromFile) {
       ParserInternal conf = new ParserInternal(ParserInternal.PREPROCESS_FILE_INPUT | ParserInternal.APPLY_STR_CONCAT
@@ -104,7 +106,7 @@ public class ParserMain implements ParserMainApi {
 
     private void checkFlag(int f) {
       if (!isFlag(f)) {
-        throw new ParseException("internal error. conf-flag incorrect.");
+        throw new AstParseException("internal error. conf-flag incorrect.");
       }
     }
 
@@ -138,10 +140,10 @@ public class ParserMain implements ParserMainApi {
       final boolean isstring = isFlag(PREPROCESS_STRING_INPUT);
       boolean ok = isfile || isstring;
       if (!ok) {
-        throw new ParseException("need specify string|file input");
+        throw new AstParseException("need specify string|file input");
       }
       if (isfile && isstring) {
-        throw new ParseException("need specify string|file input");
+        throw new AstParseException("need specify string|file input");
       }
     }
 

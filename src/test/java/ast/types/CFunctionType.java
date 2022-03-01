@@ -2,7 +2,7 @@ package ast.types;
 
 import java.util.List;
 
-import ast.parse.NullChecker;
+import jscan.utils.NullChecker;
 
 public class CFunctionType {
 

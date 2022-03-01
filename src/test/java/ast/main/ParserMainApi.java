@@ -3,7 +3,7 @@ package ast.main;
 import java.io.IOException;
 
 import ast.parse.Parse;
-import ast.unit.TranslationUnit;
+import ast.tree.TranslationUnit;
 import jscan.parse.Tokenlist;
 
 public interface ParserMainApi {

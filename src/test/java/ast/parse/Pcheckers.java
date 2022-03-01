@@ -7,7 +7,7 @@ import static jscan.tokenize.T.T_PLUS;
 import static jscan.tokenize.T.T_TILDE;
 import static jscan.tokenize.T.T_TIMES;
 
-import ast.symtab.IdentMap;
+import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
@@ -40,43 +40,43 @@ public abstract class Pcheckers {
   }
 
   public static boolean isStorageClassSpec(Token what) {
-    return what.isIdent(IdentMap.static_ident)
-        || what.isIdent(IdentMap.extern_ident)
-        || what.isIdent(IdentMap.auto_ident)
-        || what.isIdent(IdentMap.register_ident)
-        || what.isIdent(IdentMap.typedef_ident);
+    return what.isIdent(Keywords.static_ident)
+        || what.isIdent(Keywords.extern_ident)
+        || what.isIdent(Keywords.auto_ident)
+        || what.isIdent(Keywords.register_ident)
+        || what.isIdent(Keywords.typedef_ident);
   }
 
   public static boolean isTypeSpec(Token what) {
-    return what.isIdent(IdentMap.void_ident)
-        || what.isIdent(IdentMap.char_ident)
-        || what.isIdent(IdentMap.short_ident)
-        || what.isIdent(IdentMap.int_ident)
-        || what.isIdent(IdentMap.long_ident)
-        || what.isIdent(IdentMap.float_ident)
-        || what.isIdent(IdentMap.double_ident)
-        || what.isIdent(IdentMap.signed_ident)
-        || what.isIdent(IdentMap.unsigned_ident)
-        || what.isIdent(IdentMap._Bool_ident)
-        || what.isIdent(IdentMap._Complex_ident);
+    return what.isIdent(Keywords.void_ident)
+        || what.isIdent(Keywords.char_ident)
+        || what.isIdent(Keywords.short_ident)
+        || what.isIdent(Keywords.int_ident)
+        || what.isIdent(Keywords.long_ident)
+        || what.isIdent(Keywords.float_ident)
+        || what.isIdent(Keywords.double_ident)
+        || what.isIdent(Keywords.signed_ident)
+        || what.isIdent(Keywords.unsigned_ident)
+        || what.isIdent(Keywords._Bool_ident)
+        || what.isIdent(Keywords._Complex_ident);
   }
 
   public static boolean isConstIdent(Token what) {
-    return what.isIdent(IdentMap.const_ident)
-        || what.isIdent(IdentMap.__const___ident)
-        || what.isIdent(IdentMap.__const_ident);
+    return what.isIdent(Keywords.const_ident)
+        || what.isIdent(Keywords.__const___ident)
+        || what.isIdent(Keywords.__const_ident);
   }
 
   public static boolean isVolatileIdent(Token what) {
-    return what.isIdent(IdentMap.volatile_ident)
-        || what.isIdent(IdentMap.__volatile___ident)
-        || what.isIdent(IdentMap.__volatile_ident);
+    return what.isIdent(Keywords.volatile_ident)
+        || what.isIdent(Keywords.__volatile___ident)
+        || what.isIdent(Keywords.__volatile_ident);
   }
 
   private static boolean isRestrictIdent(Token what) {
-    return what.isIdent(IdentMap.restrict_ident)
-        || what.isIdent(IdentMap.__restrict___ident)
-        || what.isIdent(IdentMap.__restrict_ident);
+    return what.isIdent(Keywords.restrict_ident)
+        || what.isIdent(Keywords.__restrict___ident)
+        || what.isIdent(Keywords.__restrict_ident);
   }
 
   public static boolean isTypeQual(Token what) {
@@ -84,9 +84,9 @@ public abstract class Pcheckers {
   }
 
   public static boolean isInlineIdent(Token what) {
-    return what.isIdent(IdentMap.inline_ident)
-        || what.isIdent(IdentMap.__inline_ident)
-        || what.isIdent(IdentMap.__inline___ident);
+    return what.isIdent(Keywords.inline_ident)
+        || what.isIdent(Keywords.__inline_ident)
+        || what.isIdent(Keywords.__inline___ident);
   }
 
   public static boolean isFuncSpec(Token what) {
@@ -94,28 +94,28 @@ public abstract class Pcheckers {
   }
 
   public static boolean isNoreturnIdent(Token what) {
-    return what.isIdent(IdentMap._Noreturn_ident);
+    return what.isIdent(Keywords._Noreturn_ident);
   }
 
   public static boolean isEnumSpecStart(Token what) {
-    return what.isIdent(IdentMap.enum_ident);
+    return what.isIdent(Keywords.enum_ident);
   }
 
   public static boolean isStructOrUnionSpecStart(Token what) {
-    return what.isIdent(IdentMap.struct_ident) || what.isIdent(IdentMap.union_ident);
+    return what.isIdent(Keywords.struct_ident) || what.isIdent(Keywords.union_ident);
   }
 
   public static boolean isAttributeStartGnuc(Token what) {
-    return what.isIdent(IdentMap.__attribute___ident) || what.isIdent(IdentMap.__attribute_ident);
+    return what.isIdent(Keywords.__attribute___ident) || what.isIdent(Keywords.__attribute_ident);
   }
 
   public static boolean isAsmStart(Token what) {
-    return what.isIdent(IdentMap.asm_ident)
-        || what.isIdent(IdentMap.__asm___ident)
-        || what.isIdent(IdentMap.__asm_ident);
+    return what.isIdent(Keywords.asm_ident)
+        || what.isIdent(Keywords.__asm___ident)
+        || what.isIdent(Keywords.__asm_ident);
   }
 
   public static boolean isStaticAssert(Token what) {
-    return what.isIdent(IdentMap._Static_assert_ident);
+    return what.isIdent(Keywords._Static_assert_ident);
   }
 }

@@ -35,6 +35,19 @@ public class IntLiteral implements Serializable {
     this.typeBySuffix = suffix(suf);
   }
 
+  public IntLiteral(long v, IntLiteralType t) {
+    this.longValue = v;
+    this.typeBySuffix = t;
+    this.originalInput = String.format("%d", v);
+
+    this.mainSign = '+';
+    this.dec = this.originalInput;
+    this.mnt = "";
+    this.exp = "";
+    this.suf = "";
+    this.exponentSign = '\0';
+  }
+
   public void setLong(long n) {
     this.longValue = (long) n;
     this.doubleValue = (double) n;
@@ -129,6 +142,11 @@ public class IntLiteral implements Serializable {
 
   public float getCfloat() {
     return (float) doubleValue;
+  }
+
+  public boolean isInteger() {
+    boolean isFloat = typeBySuffix == IntLiteralType.F32 || typeBySuffix == IntLiteralType.F64;
+    return !isFloat;
   }
 
   // A - evaluate as a decimal integer (bin, oct, dec, hex) -> 0b_1111_1111, 0o377, 255, 0xFF

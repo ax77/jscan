@@ -1,6 +1,6 @@
 package ast.types;
 
-import ast.parse.NullChecker;
+import jscan.utils.NullChecker;
 
 public class CPointerType {
   private final CType pointerTo;

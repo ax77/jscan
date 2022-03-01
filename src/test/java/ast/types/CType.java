@@ -6,10 +6,7 @@ import static ast.types.CTypeImpl.QCONST;
 
 import java.util.List;
 
-import ast.errors.ParseException;
-import ast.types.main.CTypeKind;
-import ast.types.util.TypePrinter;
-import ast.types.util.TypeSizes;
+import jscan.utils.AstParseException;
 
 public class CType implements CTypeApi {
 
@@ -89,7 +86,7 @@ public class CType implements CTypeApi {
 
   private void assertGetType(CTypeKind need) {
     if (need != kind) {
-      throw new ParseException("internal error: you want get type " + need.toString() + " from " + kind.toString());
+      throw new AstParseException("internal error: you want get type " + need.toString() + " from " + kind.toString());
     }
   }
 
@@ -124,7 +121,7 @@ public class CType implements CTypeApi {
 
   public CStructType getTpStruct() {
     if (!isStrUnion()) {
-      throw new ParseException("you want get fields from something not a struct or union.");
+      throw new AstParseException("you want get fields from something not a struct or union.");
     }
     return tpStruct;
   }
@@ -187,7 +184,7 @@ public class CType implements CTypeApi {
     }
 
     else {
-      throw new ParseException("Unknown type: " + kind.toString());
+      throw new AstParseException("Unknown type: " + kind.toString());
     }
   }
 
@@ -248,20 +245,10 @@ public class CType implements CTypeApi {
 
   @Override
   public boolean isInteger() {
-    return isBool()
-        || isChar()
-        || isUchar()
-        || isShort()
-        || isUshort()
-        || isInt()
-        || isUint()
-        || isLong()
-        || isUlong()
-        || isLongLong()
-        || isUlongLong()
+    return isBool() || isChar() || isUchar() || isShort() || isUshort() || isInt() || isUint() || isLong() || isUlong()
+        || isLongLong() || isUlongLong()
         //
-        || isBitfield()
-        || isEnumeration();
+        || isBitfield() || isEnumeration();
   }
 
   @Override

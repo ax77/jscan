@@ -2,12 +2,12 @@ package ast.attributes.gnuc;
 
 import java.util.List;
 
-import jscan.tokenize.T;
-import jscan.tokenize.Token;
 import ast.attributes.Attribute;
 import ast.attributes.AttributeList;
 import ast.attributes.util.BalancedTokenlistParser;
 import ast.parse.Parse;
+import jscan.tokenize.T;
+import jscan.tokenize.Token;
 
 public class ParseAttributesGcc {
   private final Parse parser;

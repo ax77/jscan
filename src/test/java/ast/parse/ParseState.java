@@ -3,8 +3,8 @@ package ast.parse;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.tree.FunctionDefinition;
 import jscan.tokenize.Token;
-import ast.unit.FunctionDefinition;
 
 public class ParseState {
   private final int tokenlistOffset;

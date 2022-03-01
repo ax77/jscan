@@ -1,6 +1,7 @@
 package pewriter;
 
-import static jscan.pe.constants.ImageDirectoryEntry.*;
+import static jscan.pe.constants.ImageDirectoryEntry.IMAGE_DIRECTORY_ENTRY_IAT;
+import static jscan.pe.constants.ImageDirectoryEntry.IMAGE_DIRECTORY_ENTRY_IMPORT;
 import static jscan.pe.sections.SectionsIndexesLight.DATA;
 import static jscan.pe.sections.SectionsIndexesLight.IDATA;
 import static jscan.pe.sections.SectionsIndexesLight.TEXT;

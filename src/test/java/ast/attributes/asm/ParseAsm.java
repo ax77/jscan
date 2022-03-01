@@ -7,9 +7,9 @@ import static jscan.tokenize.T.T_RIGHT_PAREN;
 import java.util.ArrayList;
 import java.util.List;
 
-import jscan.tokenize.Token;
 import ast.parse.Parse;
 import ast.parse.Pcheckers;
+import jscan.tokenize.Token;
 
 public class ParseAsm {
   private final Parse parser;
