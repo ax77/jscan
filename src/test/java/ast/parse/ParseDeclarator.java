@@ -23,14 +23,14 @@ import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
-public class ParseDecl {
+public class ParseDeclarator {
   private final Parse parser;
 
-  public ParseDecl(Parse p) {
+  public ParseDeclarator(Parse p) {
     this.parser = p;
   }
 
-  public Declarator parseDecl() {
+  public Declarator parse() {
     Declarator decl = new Declarator();
     parseDeclInternal(decl);
     return decl;
@@ -182,8 +182,8 @@ public class ParseDecl {
   }
 
   private CFuncParam parseOneParam(DeclaratorEntry e) {
-    CType base = new ParseBaseType(parser).parseBase();
-    Declarator decl = parseDecl();
+    CType base = new ParseBaseType(parser).parse();
+    Declarator decl = parse();
 
     CType type = TypeMerger.build(base, decl);
     if (decl.isAstract()) {

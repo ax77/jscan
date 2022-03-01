@@ -27,7 +27,7 @@ public class ParseBaseType {
     this.storageSpec = CStorageKind.ST_NONE;
   }
 
-  public CType parseBase() {
+  public CType parse() {
     return findTypeAgain();
   }
 

@@ -32,6 +32,8 @@ import ast.tree.Sdefault;
 import ast.tree.Sswitch;
 import ast.tree.Statement;
 import ast.tree.StatementBase;
+import ast.tree.StmtFor;
+import ast.tree.StmtWhileDo;
 import jscan.symtab.Ident;
 import jscan.symtab.ScopeLevels;
 import jscan.tokenize.T;
@@ -215,7 +217,7 @@ public class ParseStatement {
 
       popLoop();
       parser.popscope(); // TODO:
-      return new Statement(from, decl, init, test, step, loop);
+      return new Statement(new StmtFor(decl, init, test, step, loop), from);
     }
 
     // switch
@@ -283,7 +285,8 @@ public class ParseStatement {
       Statement loop = parseStatement();
 
       popLoop();
-      return new Statement(from, StatementBase.SWHILE, test, loop);
+      StmtWhileDo stmtWhileDo = new StmtWhileDo(test, loop);
+      return new Statement(StatementBase.SWHILE, stmtWhileDo, from);
     }
 
     // do stmt while expr
@@ -299,7 +302,8 @@ public class ParseStatement {
       parser.semicolon();
 
       popLoop();
-      return new Statement(from, StatementBase.SDOWHILE, test, loop);
+      StmtWhileDo stmtWhileDo = new StmtWhileDo(test, loop);
+      return new Statement(StatementBase.SDOWHILE, stmtWhileDo, from);
     }
 
     // break ;

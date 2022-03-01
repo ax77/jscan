@@ -75,14 +75,14 @@ public class Parse {
     if (prevsym != null) {
       if (prevsym.getBase() == CSymbolBase.SYM_TYPEDEF) {
         if (!prevsym.getType().isEqualTo(sym.getType())) {
-          perror("redefinition, previous defined here: " /*+ prevsym.getLocationToString()*/);
+          perror("redefinition, previous defined here: " + prevsym.getLocationToString());
         }
       } else {
 
         if (sym.isFunction() && prevsym.getType().isEqualTo(sym.getType())) {
           // TODO: normal prototype logic.
         } else {
-          perror("redefinition, previous defined here: " /*+ prevsym.getLocationToString()*/);
+          perror("redefinition, previous defined here: " + prevsym.getLocationToString());
         }
 
       }
@@ -202,7 +202,6 @@ public class Parse {
   //////////////////////////////////////////////////////////////////////
 
   public void perror(String m) {
-
     StringBuilder sb = new StringBuilder();
     sb.append("error: " + m + "\n");
     sb.append("  --> " + lastloc + "\n\n");
@@ -212,13 +211,10 @@ public class Parse {
   }
 
   public void pwarning(String m) {
-
     StringBuilder sb = new StringBuilder();
     sb.append("warning: " + m + "\n");
     sb.append("  --> " + lastloc + "\n\n");
     sb.append(RingBuf.ringBufferToStringLines(ringBuffer) + "\n");
-
-    //System.out.println(sb.toString());
   }
 
   public Token checkedMove(Ident expect) {
@@ -361,8 +357,8 @@ public class Parse {
 
   public CType parseTypename() {
 
-    CType base = new ParseBaseType(this).parseBase();
-    Declarator decl = new ParseDecl(this).parseDecl();
+    CType base = new ParseBaseType(this).parse();
+    Declarator decl = new ParseDeclarator(this).parse();
     CType type = TypeMerger.build(base, decl);
 
     if (!decl.isAstract()) {

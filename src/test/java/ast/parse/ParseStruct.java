@@ -195,7 +195,7 @@ public class ParseStruct {
 
     // TODO: this is spec-qual
     // no storage here...
-    CType basetype = new ParseBaseType(parser).parseBase();
+    CType basetype = new ParseBaseType(parser).parse();
 
     if (parser.tp() == T_SEMI_COLON) {
       parser.move();
@@ -302,7 +302,7 @@ public class ParseStruct {
 
     // need normal field or named bit-field
 
-    Declarator decl = new ParseDecl(parser).parseDecl();
+    Declarator decl = new ParseDeclarator(parser).parse();
     CType type = TypeMerger.build(base, decl);
 
     // named-bit-field

@@ -35,7 +35,7 @@ public class ParseDeclarations {
     }
 
     ParseBaseType pb = new ParseBaseType(parser);
-    basetype = pb.parseBase();
+    basetype = pb.parse();
 
     storagespec = pb.getStorageSpec();
     NullChecker.check(basetype, storagespec); // paranoia
@@ -88,7 +88,7 @@ public class ParseDeclarations {
 
     Token saved = parser.tok();
 
-    Declarator decl = new ParseDecl(parser).parseDecl();
+    Declarator decl = new ParseDeclarator(parser).parse();
     CType type = TypeMerger.build(basetype, decl);
 
     if (parser.tp() != T.T_ASSIGN) {

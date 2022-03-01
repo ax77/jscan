@@ -7,11 +7,12 @@ import ast.types.CType;
 import ast.types.CTypeApi;
 import jscan.literals.IntLiteral;
 import jscan.literals.IntLiteralParser;
+import jscan.sourceloc.Location;
 import jscan.sourceloc.SourceLocation;
 import jscan.symtab.Ident;
 import jscan.tokenize.Token;
 
-public class CSymbol implements CTypeApi {
+public class CSymbol implements CTypeApi, Location {
   private final SourceLocation location;
   private final Token from;
 
@@ -145,6 +146,21 @@ public class CSymbol implements CTypeApi {
   }
 
   public Token getFrom() {
+    return from;
+  }
+
+  @Override
+  public SourceLocation getLocation() {
+    return location;
+  }
+
+  @Override
+  public String getLocationToString() {
+    return location.toString();
+  }
+
+  @Override
+  public Token getBeginPos() {
     return from;
   }
 

@@ -114,10 +114,9 @@ public class ParseExternal {
 
   private ExternalDeclaration functionDefinition() {
 
-    ParseBaseType pb = new ParseBaseType(parser);
-    CType base = pb.parseBase();
+    CType base = new ParseBaseType(parser).parse();
 
-    Declarator decl = new ParseDecl(parser).parseDecl();
+    Declarator decl = new ParseDeclarator(parser).parse();
     CType type = TypeMerger.build(base, decl);
 
     // K&R function style declaration-list

@@ -22,11 +22,8 @@ public class Statement {
   private List<Token> asmlist;
 
   // for
-  private Declaration decl;
-  private Expression init;
-  private Expression test;
-  private Expression step;
-  private Statement loop;
+  private StmtFor stmtFor;
+  private StmtWhileDo stmtDoWhile;
 
   // return expr
   // expr-stmt
@@ -42,26 +39,19 @@ public class Statement {
   private Ident label;
   private Statement labelstmt;
 
-  public Statement(Token from, Declaration decl, Expression init, Expression test, Expression step, Statement loop) {
+  public Statement(StmtFor stmtFor, Token from) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SFOR;
-
-    this.decl = decl;
-    this.init = init;
-    this.test = test;
-    this.step = step;
-    this.loop = loop;
+    this.stmtFor = stmtFor;
   }
 
   // do loop while test
   // while (test) loop
 
-  public Statement(Token from, StatementBase base, Expression test, Statement loop) {
+  public Statement(StatementBase base, StmtWhileDo stmtDoWhile, Token from) {
     this.location = new SourceLocation(from);
     this.base = base;
-
-    this.test = test;
-    this.loop = loop;
+    this.stmtDoWhile = stmtDoWhile;
   }
 
   // return expr
@@ -70,7 +60,6 @@ public class Statement {
   public Statement(Token from, StatementBase base, Expression expr) {
     this.location = new SourceLocation(from);
     this.base = base;
-
     this.expr = expr;
   }
 
@@ -173,46 +162,6 @@ public class Statement {
 
   public void setAsmlist(List<Token> asmlist) {
     this.asmlist = asmlist;
-  }
-
-  public Declaration getDecl() {
-    return decl;
-  }
-
-  public void setDecl(Declaration decl) {
-    this.decl = decl;
-  }
-
-  public Expression getInit() {
-    return init;
-  }
-
-  public void setInit(Expression init) {
-    this.init = init;
-  }
-
-  public Expression getTest() {
-    return test;
-  }
-
-  public void setTest(Expression test) {
-    this.test = test;
-  }
-
-  public Expression getStep() {
-    return step;
-  }
-
-  public void setStep(Expression step) {
-    this.step = step;
-  }
-
-  public Statement getLoop() {
-    return loop;
-  }
-
-  public void setLoop(Statement loop) {
-    this.loop = loop;
   }
 
   public Expression getExpr() {
