@@ -58,10 +58,10 @@ public class TestPP {
 
     //TODO:
     //this in settings...
-    ret.add("b_boost_pp_test");
-    ret.add("b_chaos_pp_test");
-    ret.add("forc");
-    ret.add("perf_middle");
+    //ret.add("b_boost_pp_test");
+    //ret.add("b_chaos_pp_test");
+    //ret.add("forc");
+    //ret.add("perf_middle");
     return ret;
   }
 
