@@ -1,17 +1,16 @@
-package ast.attributes.util;
+package ast.parse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.parse.Parse;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
-public class BalancedTokenlistParser {
+public class ParseBalancedTokenlist {
 
   private final Parse parser;
 
-  public BalancedTokenlistParser(Parse parser) {
+  public ParseBalancedTokenlist(Parse parser) {
     this.parser = parser;
   }
 

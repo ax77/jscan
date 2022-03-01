@@ -1,25 +1,25 @@
-package ast.attributes.gnuc;
+package ast.parse;
+
+import static jscan.tokenize.T.T_LEFT_BRACKET;
+import static jscan.tokenize.T.T_RIGHT_BRACKET;
 
 import java.util.List;
 
 import ast.attributes.Attribute;
 import ast.attributes.AttributeList;
-import ast.attributes.util.BalancedTokenlistParser;
-import ast.parse.Parse;
-import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
-public class ParseAttributesGcc {
+public class ParseAttributesC2x {
   private final Parse parser;
 
-  public ParseAttributesGcc(Parse parser) {
+  public ParseAttributesC2x(Parse parser) {
     this.parser = parser;
   }
 
   public AttributeList parse() {
     AttributeList result = new AttributeList();
 
-    while (parser.isAttributeStartGnuc()) {
+    while (parser.isAttributeStartC2X()) {
       Attribute attr = parseOneAttribute();
       result.push(attr);
     }
@@ -30,12 +30,10 @@ public class ParseAttributesGcc {
   private Attribute parseOneAttribute() {
 
     Attribute result = new Attribute();
-    parser.move(); // __attribute__
+    ParseBalancedTokenlist balanced = new ParseBalancedTokenlist(parser);
 
-    BalancedTokenlistParser balanced = new BalancedTokenlistParser(parser);
-
-    List<Token> list = balanced.parse(T.T_LEFT_PAREN, T.T_RIGHT_PAREN);
-    balanced.checkRemoveParens(list, T.T_LEFT_PAREN, T.T_RIGHT_PAREN, 2);
+    List<Token> list = balanced.parse(T_LEFT_BRACKET, T_RIGHT_BRACKET);
+    balanced.checkRemoveParens(list, T_LEFT_BRACKET, T_RIGHT_BRACKET, 2);
 
     for (Token t : list) {
       result.push(t);

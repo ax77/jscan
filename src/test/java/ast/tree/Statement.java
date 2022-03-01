@@ -2,6 +2,7 @@ package ast.tree;
 
 import java.util.List;
 
+import ast.attributes.AsmList;
 import jscan.sourceloc.SourceLocation;
 import jscan.tokenize.Token;
 
@@ -19,7 +20,7 @@ public class Statement {
   private Expression stmtExpr;
   private StmtSelect stmtSelect;
   private StmtLabel stmtLabel;
-  private List<Token> asmlist;
+  private AsmList asmlist;
 
   public Statement(StmtFor stmtFor, Token from) {
     this.location = new SourceLocation(from);
@@ -62,7 +63,7 @@ public class Statement {
     this.block = block;
   }
 
-  public Statement(Token from, List<Token> asmlist) {
+  public Statement(Token from, AsmList asmlist) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SASM;
     this.asmlist = asmlist;
@@ -136,7 +137,7 @@ public class Statement {
     return stmtLabel;
   }
 
-  public List<Token> getAsmlist() {
+  public AsmList getAsmlist() {
     return asmlist;
   }
 

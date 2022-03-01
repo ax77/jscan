@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import ast.attributes.AsmList;
 import ast.tree.BlockItem;
 import ast.tree.BreakContinue;
 import ast.tree.Declaration;
@@ -340,6 +341,8 @@ public class ParseStatement {
 
   private Statement parseAsm() {
 
+    // TODO: ParseAsm.parse()
+
     List<Token> asmlist = new ArrayList<Token>();
     int nest = 0;
     Token startLoc = parser.tok();
@@ -364,7 +367,7 @@ public class ParseStatement {
     parser.checkedMove(T.T_RIGHT_PAREN);
     parser.checkedMove(T_SEMI_COLON);
 
-    return new Statement(startLoc, asmlist);
+    return new Statement(startLoc, new AsmList(asmlist));
   }
 
   private BlockItem parseOneBlock() {

@@ -1,4 +1,4 @@
-package ast.attributes.asm;
+package ast.attributes;
 
 import java.util.List;
 

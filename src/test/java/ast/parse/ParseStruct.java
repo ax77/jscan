@@ -7,8 +7,7 @@ import static jscan.tokenize.T.T_SEMI_COLON;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.attributes.main.AttributesAsmsLists;
-import ast.attributes.main.ParseAttributesAsms;
+import ast.attributes.AttributesAsmsLists;
 import ast.builders.ApplyStructInfo;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;

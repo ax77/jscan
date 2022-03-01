@@ -1,4 +1,4 @@
-package ast.attributes.asm;
+package ast.parse;
 
 import static jscan.tokenize.T.TOKEN_EOF;
 import static jscan.tokenize.T.T_LEFT_PAREN;
@@ -7,8 +7,7 @@ import static jscan.tokenize.T.T_RIGHT_PAREN;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.parse.Parse;
-import ast.parse.Pcheckers;
+import ast.attributes.AsmList;
 import jscan.tokenize.Token;
 
 public class ParseAsm {

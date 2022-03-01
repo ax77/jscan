@@ -5,8 +5,7 @@ import static jscan.tokenize.T.T_LEFT_BRACE;
 import java.util.List;
 import java.util.Set;
 
-import ast.attributes.main.AttributesAsmsLists;
-import ast.attributes.main.ParseAttributesAsms;
+import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;

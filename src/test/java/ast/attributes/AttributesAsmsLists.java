@@ -1,7 +1,4 @@
-package ast.attributes.main;
-
-import ast.attributes.AttributeList;
-import ast.attributes.asm.AsmList;
+package ast.attributes;
 
 public class AttributesAsmsLists {
   private AttributeList attributeList;

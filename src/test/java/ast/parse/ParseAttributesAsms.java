@@ -1,11 +1,8 @@
-package ast.attributes.main;
+package ast.parse;
 
+import ast.attributes.AsmList;
 import ast.attributes.AttributeList;
-import ast.attributes.asm.AsmList;
-import ast.attributes.asm.ParseAsm;
-import ast.attributes.c2x.ParseAttributesC2x;
-import ast.attributes.gnuc.ParseAttributesGcc;
-import ast.parse.Parse;
+import ast.attributes.AttributesAsmsLists;
 
 public class ParseAttributesAsms {
   private final Parse parser;
