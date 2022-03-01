@@ -1,4 +1,4 @@
-package ast.tree;
+package ast.builders;
 
 import static jscan.tokenize.T.T_COLON;
 
@@ -7,6 +7,7 @@ import java.util.List;
 
 import ast.parse.Parse;
 import ast.parse.ParseExpression;
+import ast.tree.Expression;
 import ast.types.CType;
 import jscan.symtab.Keywords;
 import jscan.tokenize.T;
@@ -77,10 +78,10 @@ class GenericSelection {
 
 }
 
-public class ExpandGenericResult {
+public class ApplyGenericResult {
   private final Parse parser;
 
-  public ExpandGenericResult(Parse parser) {
+  public ApplyGenericResult(Parse parser) {
     this.parser = parser;
   }
 
@@ -150,12 +151,12 @@ public class ExpandGenericResult {
 
   private Expression selectResultExpression(GenericSelection genericSelection) {
     for (GenericAssociation e : genericSelection.getAssociations()) {
-      TypeApplier.applytype(e.getAssignment(), TypeApplierStage.stage_start);
+      ApplyExpressionType.applytype(e.getAssignment(), TypeApplierStage.stage_start);
     }
 
-    TypeApplier.applytype(genericSelection.getControlExpression(), TypeApplierStage.generic_control_expr);
+    ApplyExpressionType.applytype(genericSelection.getControlExpression(), TypeApplierStage.generic_control_expr);
     if (genericSelection.getDefaultAssociation() != null) {
-      TypeApplier.applytype(genericSelection.getDefaultAssociation(), TypeApplierStage.stage_start);
+      ApplyExpressionType.applytype(genericSelection.getDefaultAssociation(), TypeApplierStage.stage_start);
     }
 
     CType need = genericSelection.getControlExpression().getResultType();

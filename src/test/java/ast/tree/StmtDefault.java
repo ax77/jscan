@@ -1,11 +1,11 @@
 package ast.tree;
 
-public class Sdefault {
+public class StmtDefault {
 
-  private final Sswitch parent;
+  private final StmtSwitch parent;
   private final Statement stmt;
 
-  public Sdefault(Sswitch parent, Statement stmt) {
+  public StmtDefault(StmtSwitch parent, Statement stmt) {
     this.parent = parent;
     this.stmt = stmt;
   }
@@ -14,7 +14,7 @@ public class Sdefault {
     return stmt;
   }
 
-  public Sswitch getParent() {
+  public StmtSwitch getParent() {
     return parent;
   }
 

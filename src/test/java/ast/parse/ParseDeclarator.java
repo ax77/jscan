@@ -10,6 +10,7 @@ import java.util.Set;
 
 import ast.attributes.main.AttributesAsmsLists;
 import ast.attributes.main.ParseAttributesAsms;
+import ast.builders.TypeMerger;
 import ast.tree.ConstexprEval;
 import ast.tree.Declarator;
 import ast.tree.DeclaratorEntry;
@@ -17,7 +18,6 @@ import ast.tree.Expression;
 import ast.types.CFuncParam;
 import ast.types.CType;
 import ast.types.CTypeKind;
-import ast.types.TypeMerger;
 import jscan.symtab.Ident;
 import jscan.symtab.Keywords;
 import jscan.tokenize.T;
@@ -186,7 +186,7 @@ public class ParseDeclarator {
     Declarator decl = parse();
 
     CType type = TypeMerger.build(base, decl);
-    if (decl.isAstract()) {
+    if (decl.isAbstract()) {
       return new CFuncParam(type);
     }
     return new CFuncParam(decl.getName(), type);

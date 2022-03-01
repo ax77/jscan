@@ -3,6 +3,7 @@ package ast.parse;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
@@ -11,7 +12,6 @@ import ast.tree.Expression;
 import ast.tree.Initializer;
 import ast.types.CStorageKind;
 import ast.types.CType;
-import ast.types.TypeMerger;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 import jscan.utils.NullChecker;

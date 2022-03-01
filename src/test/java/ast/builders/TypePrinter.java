@@ -1,7 +1,9 @@
-package ast.types;
+package ast.builders;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ast.types.CTypeKind;
 
 public abstract class TypePrinter {
 

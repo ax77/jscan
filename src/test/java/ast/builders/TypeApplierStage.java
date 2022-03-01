@@ -1,4 +1,4 @@
-package ast.tree;
+package ast.builders;
 
 public enum TypeApplierStage {
     stage_start,

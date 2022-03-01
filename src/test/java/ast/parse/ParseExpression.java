@@ -33,15 +33,15 @@ import static jscan.tokenize.T.T_XOR;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.builders.ApplyGenericResult;
+import ast.builders.ApplyExpressionType;
+import ast.builders.TypeApplierStage;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
-import ast.tree.ExpandGenericResult;
 import ast.tree.ExprUtil;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;
 import ast.tree.Initializer;
-import ast.tree.TypeApplier;
-import ast.tree.TypeApplierStage;
 import ast.types.CArrayType;
 import ast.types.CStructField;
 import ast.types.CStructType;
@@ -405,7 +405,7 @@ public class ParseExpression {
         // sizeof(any-varname)
 
         Expression sizeofexpr = e_expression();
-        TypeApplier.applytype(sizeofexpr, TypeApplierStage.stage_start);
+        ApplyExpressionType.applytype(sizeofexpr, TypeApplierStage.stage_start);
         parser.rparen();
 
         if (sizeofexpr.getResultType() == null) {
@@ -421,7 +421,7 @@ public class ParseExpression {
     // sizeof 1
 
     Expression sizeofexpr = e_unary();
-    TypeApplier.applytype(sizeofexpr, TypeApplierStage.stage_start);
+    ApplyExpressionType.applytype(sizeofexpr, TypeApplierStage.stage_start);
 
     if (sizeofexpr.getResultType() == null) {
       parser.perror("unimplemented sizeof for: " + sizeofexpr.toString());
@@ -489,7 +489,7 @@ public class ParseExpression {
         parser.move(); // move . or ->
 
         Ident fieldName = parser.getIdent();
-        TypeApplier.applytype(lhs, TypeApplierStage.stage_start);
+        ApplyExpressionType.applytype(lhs, TypeApplierStage.stage_start);
 
         // a->b :: (*a).b
         if (operator.ofType(T_ARROW)) {
@@ -595,7 +595,7 @@ public class ParseExpression {
 
     if (parser.tok().isIdent(Keywords._Generic_ident)) {
       Token saved = parser.tok();
-      return new ExpandGenericResult(parser).getGenericResult(saved);
+      return new ApplyGenericResult(parser).getGenericResult(saved);
     }
 
     if (parser.tp() == TOKEN_NUMBER || parser.tp() == TOKEN_CHAR || parser.tp() == TOKEN_STRING) {

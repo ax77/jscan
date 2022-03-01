@@ -1,4 +1,4 @@
-package ast.types;
+package ast.builders;
 
 import static jscan.symtab.Keywords._Bool_ident;
 import static jscan.symtab.Keywords._Complex_ident;
@@ -20,6 +20,8 @@ import static jscan.symtab.Keywords.void_ident;
 
 import java.util.List;
 
+import ast.types.CStorageKind;
+import ast.types.CTypeKind;
 import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;

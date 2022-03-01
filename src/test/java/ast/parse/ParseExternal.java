@@ -7,6 +7,7 @@ import java.util.Set;
 
 import ast.attributes.main.AttributesAsmsLists;
 import ast.attributes.main.ParseAttributesAsms;
+import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
@@ -16,7 +17,6 @@ import ast.tree.FunctionDefinition;
 import ast.tree.Statement;
 import ast.types.CFuncParam;
 import ast.types.CType;
-import ast.types.TypeMerger;
 import jscan.symtab.Ident;
 import jscan.symtab.ScopeLevels;
 import jscan.tokenize.T;

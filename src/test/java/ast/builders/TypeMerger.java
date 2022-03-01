@@ -1,10 +1,15 @@
-package ast.types;
+package ast.builders;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ast.tree.Declarator;
 import ast.tree.DeclaratorEntry;
+import ast.types.CArrayType;
+import ast.types.CFunctionType;
+import ast.types.CPointerType;
+import ast.types.CType;
+import ast.types.CTypeKind;
 import jscan.symtab.Ident;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;

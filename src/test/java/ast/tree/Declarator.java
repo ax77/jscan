@@ -12,11 +12,11 @@ public class Declarator {
   private List<DeclaratorEntry> typelist;
 
   public Declarator() {
-    this.typelist = new ArrayList<DeclaratorEntry>(0);
+    this.typelist = new ArrayList<>();
   }
 
   public Ident getName() {
-    if (isAstract()) {
+    if (isAbstract()) {
       throw new AstParseException("abstract declarator has no name.");
     }
     return name;
@@ -36,7 +36,7 @@ public class Declarator {
     typelist.add(type);
   }
 
-  public boolean isAstract() {
+  public boolean isAbstract() {
     return name == null;
   }
 

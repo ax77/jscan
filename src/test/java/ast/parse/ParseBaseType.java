@@ -7,13 +7,13 @@ import java.util.Set;
 
 import ast.attributes.main.AttributesAsmsLists;
 import ast.attributes.main.ParseAttributesAsms;
+import ast.builders.TypeCombiner;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.types.CStorageKind;
 import ast.types.CType;
 import ast.types.CTypeImpl;
 import ast.types.CTypeKind;
-import ast.types.TypeCombiner;
 import jscan.symtab.Keywords;
 import jscan.tokenize.Token;
 

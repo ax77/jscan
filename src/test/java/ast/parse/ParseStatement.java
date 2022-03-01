@@ -27,12 +27,14 @@ import ast.tree.BreakContinue;
 import ast.tree.Declaration;
 import ast.tree.Expression;
 import ast.tree.FunctionDefinition;
-import ast.tree.Scase;
-import ast.tree.Sdefault;
-import ast.tree.Sswitch;
+import ast.tree.StmtCase;
+import ast.tree.StmtDefault;
+import ast.tree.StmtSwitch;
 import ast.tree.Statement;
 import ast.tree.StatementBase;
 import ast.tree.StmtFor;
+import ast.tree.StmtLabel;
+import ast.tree.StmtSelect;
 import ast.tree.StmtWhileDo;
 import jscan.symtab.Ident;
 import jscan.symtab.ScopeLevels;
@@ -41,12 +43,12 @@ import jscan.tokenize.Token;
 
 public class ParseStatement {
   private final Parse parser;
-  private final Stack<Sswitch> switches;
+  private final Stack<StmtSwitch> switches;
   private final Stack<String> loops;
 
   public ParseStatement(Parse parser) {
     this.parser = parser;
-    this.switches = new Stack<Sswitch>();
+    this.switches = new Stack<StmtSwitch>();
     this.loops = new Stack<String>();
   }
 
@@ -118,10 +120,10 @@ public class ParseStatement {
       }
 
       Statement stmt = parseStatement();
-      Sswitch parent = peekSwitch();
+      StmtSwitch parent = peekSwitch();
 
-      parent.setDefault_stmt(new Sdefault(parent, stmt));
-      return new Statement(from, new Sdefault(parent, stmt));
+      parent.setDefault_stmt(new StmtDefault(parent, stmt));
+      return new Statement(from, new StmtDefault(parent, stmt));
     }
 
     // label:
@@ -152,7 +154,9 @@ public class ParseStatement {
       function.addGotos(label);
 
       parser.semicolon();
-      return new Statement(from, StatementBase.SGOTO, function, label, labelstmt);
+
+      StmtLabel stmtLabel = new StmtLabel(function, label, labelstmt);
+      return new Statement(StatementBase.SGOTO, stmtLabel, from);
     }
 
     // return ... ;
@@ -226,7 +230,7 @@ public class ParseStatement {
       Token from = parser.checkedMove(switch_ident);
       Expression expr = new ParseExpression(parser).getExprInParen();
 
-      Sswitch nodeSwitch = new Sswitch(expr);
+      StmtSwitch nodeSwitch = new StmtSwitch(expr);
       pushSwitch(nodeSwitch);
 
       Statement stmt = parseStatement();
@@ -247,8 +251,8 @@ public class ParseStatement {
       Expression expr = new ParseExpression(parser).e_const_expr();
       parser.checkedMove(T_COLON);
 
-      Sswitch parent = peekSwitch();
-      Scase caselab = new Scase(parent, expr);
+      StmtSwitch parent = peekSwitch();
+      StmtCase caselab = new StmtCase(parent, expr);
       parent.pushcase(caselab);
 
       Statement stmt = parseStatement();
@@ -262,17 +266,20 @@ public class ParseStatement {
     if (parser.tok().isIdent(if_ident)) {
       Token from = parser.checkedMove(if_ident);
 
-      Expression ifexpr = new ParseExpression(parser).getExprInParen();
-      Statement ifstmt = parseStatement();
-      Statement ifelse = null;
+      Expression condition = new ParseExpression(parser).getExprInParen();
+      Statement ifStmt = parseStatement();
+      Statement elseStmt = null;
 
       if (parser.tok().isIdent(else_ident)) {
         Token elsekw = parser.checkedMove(else_ident);
-        ifelse = parseStatement();
-        return new Statement(elsekw, ifexpr, ifstmt, ifelse);
+        elseStmt = parseStatement();
+
+        final StmtSelect stmtSelect = new StmtSelect(condition, ifStmt, elseStmt);
+        return new Statement(stmtSelect, elsekw);
       }
 
-      return new Statement(from, ifexpr, ifstmt, ifelse);
+      final StmtSelect stmtSelect = new StmtSelect(condition, ifStmt, elseStmt);
+      return new Statement(stmtSelect, from);
     }
 
     // while ( expr ) stmt
@@ -415,14 +422,15 @@ public class ParseStatement {
     parser.checkedMove(T_COLON);
     Statement labelstmt = parseStatement();
 
-    return new Statement(from, StatementBase.SLABEL, function, label, labelstmt);
+    StmtLabel stmtLabel = new StmtLabel(function, label, labelstmt);
+    return new Statement(StatementBase.SLABEL, stmtLabel, from);
   }
 
-  private void pushSwitch(Sswitch s) {
+  private void pushSwitch(StmtSwitch s) {
     switches.push(s);
   }
 
-  private Sswitch peekSwitch() {
+  private StmtSwitch peekSwitch() {
     return switches.peek();
   }
 
@@ -438,7 +446,7 @@ public class ParseStatement {
     loops.pop();
   }
 
-  public Stack<Sswitch> getSwitches() {
+  public Stack<StmtSwitch> getSwitches() {
     return switches;
   }
 

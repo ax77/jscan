@@ -7,6 +7,7 @@ import static jscan.tokenize.T.T_SEMI_COLON;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
@@ -14,7 +15,6 @@ import ast.tree.ExternalDeclaration;
 import ast.tree.FunctionDefinition;
 import ast.tree.TranslationUnit;
 import ast.types.CType;
-import ast.types.TypeMerger;
 import jscan.parse.RingBuf;
 import jscan.parse.Tokenlist;
 import jscan.symtab.Ident;
@@ -361,7 +361,7 @@ public class Parse {
     Declarator decl = new ParseDeclarator(this).parse();
     CType type = TypeMerger.build(base, decl);
 
-    if (!decl.isAstract()) {
+    if (!decl.isAbstract()) {
       perror("expect abstract declarator.");
     }
     return type;

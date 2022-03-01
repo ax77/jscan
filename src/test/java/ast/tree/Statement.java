@@ -3,50 +3,29 @@ package ast.tree;
 import java.util.List;
 
 import jscan.sourceloc.SourceLocation;
-import jscan.symtab.Ident;
 import jscan.tokenize.Token;
 
 public class Statement {
 
-  //TODO: range loc
-
   private final StatementBase base;
   private final SourceLocation location;
 
-  private List<BlockItem> compound;
-
-  // switch-cases
-  private Sswitch sswitch;
-  private Scase scase;
-  private Sdefault sdefault;
-  private List<Token> asmlist;
-
-  // for
+  private List<BlockItem> block;
+  private StmtSwitch stmtSwitch;
+  private StmtCase stmtCase;
+  private StmtDefault stmtDefault;
   private StmtFor stmtFor;
   private StmtWhileDo stmtDoWhile;
-
-  // return expr
-  // expr-stmt
-  private Expression expr;
-
-  // if's
-  private Expression ifexpr;
-  private Statement ifstmt;
-  private Statement ifelse;
-
-  // label:
-  private FunctionDefinition function;
-  private Ident label;
-  private Statement labelstmt;
+  private Expression stmtExpr;
+  private StmtSelect stmtSelect;
+  private StmtLabel stmtLabel;
+  private List<Token> asmlist;
 
   public Statement(StmtFor stmtFor, Token from) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SFOR;
     this.stmtFor = stmtFor;
   }
-
-  // do loop while test
-  // while (test) loop
 
   public Statement(StatementBase base, StmtWhileDo stmtDoWhile, Token from) {
     this.location = new SourceLocation(from);
@@ -60,34 +39,27 @@ public class Statement {
   public Statement(Token from, StatementBase base, Expression expr) {
     this.location = new SourceLocation(from);
     this.base = base;
-    this.expr = expr;
+    this.stmtExpr = expr;
   }
 
   // label: stmt
   // goto label;
-  public Statement(Token from, StatementBase base, FunctionDefinition function, Ident label, Statement labelstmt) {
+  public Statement(StatementBase base, StmtLabel stmtLabel, Token from) {
     this.location = new SourceLocation(from);
     this.base = base;
-
-    this.function = function;
-    this.label = label;
-    this.labelstmt = labelstmt;
+    this.stmtLabel = stmtLabel;
   }
 
-  public Statement(Token from, Expression ifexpr, Statement ifstmt, Statement ifelse) {
+  public Statement(StmtSelect stmtSelect, Token from) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SIF;
-
-    this.ifexpr = ifexpr;
-    this.ifstmt = ifstmt;
-    this.ifelse = ifelse;
+    this.stmtSelect = stmtSelect;
   }
 
-  public Statement(Token lbrace, Token rbrace, List<BlockItem> blockItemList) {
+  public Statement(Token lbrace, Token rbrace, List<BlockItem> block) {
     this.location = new SourceLocation(lbrace); // TODO: range loc
     this.base = StatementBase.SCOMPOUND;
-
-    this.compound = blockItemList;
+    this.block = block;
   }
 
   public Statement(Token from, List<Token> asmlist) {
@@ -96,10 +68,10 @@ public class Statement {
     this.asmlist = asmlist;
   }
 
-  public Statement(Token from, Sdefault default_stmt) {
+  public Statement(Token from, StmtDefault default_stmt) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SDEFAULT;
-    this.sdefault = default_stmt;
+    this.stmtDefault = default_stmt;
   }
 
   // break, continue
@@ -108,116 +80,64 @@ public class Statement {
     this.base = base;
   }
 
-  public Statement(Token from, Sswitch switch_stmt) {
+  public Statement(Token from, StmtSwitch switch_stmt) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SSWITCH;
-    this.sswitch = switch_stmt;
+    this.stmtSwitch = switch_stmt;
   }
 
-  public Statement(Token from, Scase case_stmt) {
+  public Statement(Token from, StmtCase case_stmt) {
     this.location = new SourceLocation(from);
     this.base = StatementBase.SCASE;
-    this.scase = case_stmt;
-  }
-
-  public Sswitch getSswitch() {
-    return sswitch;
-  }
-
-  public void setSswitch(Sswitch sswitch) {
-    this.sswitch = sswitch;
-  }
-
-  public Scase getScase() {
-    return scase;
-  }
-
-  public void setScase(Scase scase) {
-    this.scase = scase;
-  }
-
-  public Sdefault getSdefault() {
-    return sdefault;
-  }
-
-  public void setSdefault(Sdefault sdefault) {
-    this.sdefault = sdefault;
+    this.stmtCase = case_stmt;
   }
 
   public StatementBase getBase() {
     return base;
   }
 
-  public List<BlockItem> getCompound() {
-    return compound;
+  public SourceLocation getLocation() {
+    return location;
   }
 
-  public void setCompound(List<BlockItem> compound) {
-    this.compound = compound;
+  public List<BlockItem> getBlock() {
+    return block;
+  }
+
+  public StmtSwitch getStmtSwitch() {
+    return stmtSwitch;
+  }
+
+  public StmtCase getStmtCase() {
+    return stmtCase;
+  }
+
+  public StmtDefault getStmtDefault() {
+    return stmtDefault;
+  }
+
+  public StmtFor getStmtFor() {
+    return stmtFor;
+  }
+
+  public StmtWhileDo getStmtDoWhile() {
+    return stmtDoWhile;
+  }
+
+  public Expression getStmtExpr() {
+    return stmtExpr;
+  }
+
+  public StmtSelect getStmtSelect() {
+    return stmtSelect;
+  }
+
+  public StmtLabel getStmtLabel() {
+    return stmtLabel;
   }
 
   public List<Token> getAsmlist() {
     return asmlist;
-  }
-
-  public void setAsmlist(List<Token> asmlist) {
-    this.asmlist = asmlist;
-  }
-
-  public Expression getExpr() {
-    return expr;
-  }
-
-  public void setExpr(Expression expr) {
-    this.expr = expr;
-  }
-
-  public Expression getIfexpr() {
-    return ifexpr;
-  }
-
-  public void setIfexpr(Expression ifexpr) {
-    this.ifexpr = ifexpr;
-  }
-
-  public Statement getIfstmt() {
-    return ifstmt;
-  }
-
-  public void setIfstmt(Statement ifstmt) {
-    this.ifstmt = ifstmt;
-  }
-
-  public Statement getIfelse() {
-    return ifelse;
-  }
-
-  public void setIfelse(Statement ifelse) {
-    this.ifelse = ifelse;
-  }
-
-  public FunctionDefinition getFunction() {
-    return function;
-  }
-
-  public void setFunction(FunctionDefinition function) {
-    this.function = function;
-  }
-
-  public Ident getLabel() {
-    return label;
-  }
-
-  public void setLabel(Ident label) {
-    this.label = label;
-  }
-
-  public Statement getLabelstmt() {
-    return labelstmt;
-  }
-
-  public void setLabelstmt(Statement labelstmt) {
-    this.labelstmt = labelstmt;
   }
 
 }

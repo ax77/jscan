@@ -5,19 +5,19 @@ import java.util.List;
 
 import jscan.utils.AstParseException;
 
-public class Sswitch {
+public class StmtSwitch {
 
-  private List<Scase> cases;
+  private List<StmtCase> cases;
   private Expression expr;
   private Statement stmt;
-  private Sdefault default_stmt;
+  private StmtDefault default_stmt;
 
-  public Sswitch(Expression expr) {
-    this.cases = new ArrayList<Scase>(1);
+  public StmtSwitch(Expression expr) {
+    this.cases = new ArrayList<StmtCase>(1);
     this.expr = expr;
   }
 
-  public void pushcase(Scase onecase) {
+  public void pushcase(StmtCase onecase) {
     this.cases.add(onecase);
   }
 
@@ -37,19 +37,19 @@ public class Sswitch {
     this.stmt = stmt;
   }
 
-  public List<Scase> getCases() {
+  public List<StmtCase> getCases() {
     return cases;
   }
 
-  public void setCases(List<Scase> cases) {
+  public void setCases(List<StmtCase> cases) {
     this.cases = cases;
   }
 
-  public Sdefault getDefault_stmt() {
+  public StmtDefault getDefault_stmt() {
     return default_stmt;
   }
 
-  public void setDefault_stmt(Sdefault default_stmt) {
+  public void setDefault_stmt(StmtDefault default_stmt) {
     if (this.default_stmt != null) {
       throw new AstParseException("duplicate default label");
     }

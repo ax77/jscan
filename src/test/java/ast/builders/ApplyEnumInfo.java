@@ -1,4 +1,4 @@
-package ast.types;
+package ast.builders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,14 +6,14 @@ import java.util.Map;
 import ast.parse.Parse;
 import jscan.symtab.Ident;
 
-public class InfoEnum {
+public class ApplyEnumInfo {
   private final Parse parser;
   private int minvalue;
   private int maxvalue;
   private Map<Ident, Integer> enumerators;
   private int curvalue;
 
-  public InfoEnum(Parse parser) {
+  public ApplyEnumInfo(Parse parser) {
     this.parser = parser;
     this.enumerators = new HashMap<Ident, Integer>();
   }

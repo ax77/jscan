@@ -6,6 +6,7 @@ import static ast.types.CTypeImpl.QCONST;
 
 import java.util.List;
 
+import ast.builders.TypePrinter;
 import jscan.utils.AstParseException;
 
 public class CType implements CTypeApi {

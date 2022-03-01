@@ -1,4 +1,4 @@
-package ast.tree;
+package ast.builders;
 
 import static ast.tree.ExpressionBase.EASSIGN;
 import static ast.tree.ExpressionBase.EBINARY;
@@ -39,6 +39,8 @@ import static jscan.tokenize.T.T_TILDE;
 import static jscan.tokenize.T.T_TIMES;
 import static jscan.tokenize.T.T_XOR;
 
+import ast.tree.Expression;
+import ast.tree.ExpressionBase;
 import ast.types.CPointerType;
 import ast.types.CType;
 import ast.types.CTypeImpl;
@@ -47,7 +49,7 @@ import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
 import jscan.utils.NullChecker;
 
-public abstract class TypeApplier {
+public abstract class ApplyExpressionType {
 
   private static void assertType(Expression e) {
     if (e.getResultType() == null) {

@@ -9,6 +9,8 @@ import java.util.List;
 
 import ast.attributes.main.AttributesAsmsLists;
 import ast.attributes.main.ParseAttributesAsms;
+import ast.builders.ApplyStructInfo;
+import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.ConstexprEval;
@@ -17,9 +19,7 @@ import ast.tree.Expression;
 import ast.types.CStructField;
 import ast.types.CStructType;
 import ast.types.CType;
-import ast.types.InfoStruct;
 import ast.types.SemanticBitfield;
-import ast.types.TypeMerger;
 import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
@@ -33,11 +33,11 @@ public class ParseStruct {
     this.isUnion = isUnion;
   }
 
-  private InfoStruct finalizeStructType(CStructType tpStruct) {
+  private ApplyStructInfo finalizeStructType(CStructType tpStruct) {
     if (tpStruct.isIncomplete()) {
       parser.unimplemented("incomplete struct finalization");
     }
-    return new InfoStruct(tpStruct.isUnion(), tpStruct.getFields());
+    return new ApplyStructInfo(tpStruct.isUnion(), tpStruct.getFields());
   }
 
   // TODO: incomplete fields
@@ -105,7 +105,7 @@ public class ParseStruct {
       List<CStructField> fields = parseFields(parser);
       type.getTpStruct().setFields(fields);
 
-      InfoStruct sizeAlignDto = finalizeStructType(type.getTpStruct());
+      ApplyStructInfo sizeAlignDto = finalizeStructType(type.getTpStruct());
 
       type.setSize(sizeAlignDto.getSize());
       type.setAlign(sizeAlignDto.getAlign());
@@ -136,7 +136,7 @@ public class ParseStruct {
     List<CStructField> fields = parseFields(parser);
     newstruct.setFields(fields);
 
-    InfoStruct sizeAlignDto = finalizeStructType(newstruct);
+    ApplyStructInfo sizeAlignDto = finalizeStructType(newstruct);
     CType type = new CType(newstruct, sizeAlignDto.getSize(), sizeAlignDto.getAlign());
 
     return type;

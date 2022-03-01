@@ -1,19 +1,21 @@
-package ast.types;
+package ast.builders;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ast.types.CStructField;
+import ast.types.TypeUtil;
 import jscan.symtab.Ident;
 import jscan.utils.AstParseException;
 
-public class InfoStruct {
+public class ApplyStructInfo {
 
   private final List<CStructField> fields;
   private int size;
   private int align;
 
-  public InfoStruct(boolean isUnion, List<CStructField> fields) {
+  public ApplyStructInfo(boolean isUnion, List<CStructField> fields) {
 
     this.fields = fields;
     this.size = 0;

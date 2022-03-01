@@ -2,6 +2,7 @@ package ast.parse;
 
 import static jscan.tokenize.T.TOKEN_IDENT;
 
+import ast.builders.ApplyEnumInfo;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.ConstexprEval;
@@ -9,7 +10,6 @@ import ast.tree.Expression;
 import ast.types.CEnumType;
 import ast.types.CType;
 import ast.types.CTypeImpl;
-import ast.types.InfoEnum;
 import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
@@ -91,7 +91,7 @@ public class ParseEnum {
           // 2) complete previous incompleted
           // 3) ... ??? 
 
-          InfoEnum dto = parseEnumeratorList();
+          ApplyEnumInfo dto = parseEnumeratorList();
 
           if (paranoia) {
             System.out.println("1");
@@ -149,7 +149,7 @@ public class ParseEnum {
           // TODO:XXX:?
           // rewrite...???
 
-          InfoEnum dto = parseEnumeratorList();
+          ApplyEnumInfo dto = parseEnumeratorList();
           CType type = parser.getTag(tag.getIdent()).getType();
           type.getTpEnum().setEnumerators(dto.getEnumerators());
 
@@ -179,7 +179,7 @@ public class ParseEnum {
 
       if (parser.tp() == T.T_LEFT_BRACE) {
 
-        InfoEnum dto = parseEnumeratorList();
+        ApplyEnumInfo dto = parseEnumeratorList();
         CEnumType newenum = new CEnumType(null);
 
         newenum.setEnumerators(dto.getEnumerators());
@@ -206,11 +206,11 @@ public class ParseEnum {
 
   }
 
-  private InfoEnum parseEnumeratorList() {
+  private ApplyEnumInfo parseEnumeratorList() {
 
     parser.checkedMove(T.T_LEFT_BRACE);
 
-    InfoEnum enumdto = new InfoEnum(parser);
+    ApplyEnumInfo enumdto = new ApplyEnumInfo(parser);
     parseEnumerator(enumdto);
 
     while (parser.tp() == T.T_COMMA) {
@@ -232,7 +232,7 @@ public class ParseEnum {
     return enumdto;
   }
 
-  private void parseEnumerator(InfoEnum enumdto) {
+  private void parseEnumerator(ApplyEnumInfo enumdto) {
     Token saved = parser.tok();
     Ident identifier = parser.getIdent();
 

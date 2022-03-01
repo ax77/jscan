@@ -1,12 +1,12 @@
 package ast.tree;
 
-public class Scase {
+public class StmtCase {
 
-  private final Sswitch parent;
+  private final StmtSwitch parent;
   private Expression constexpr;
   private Statement casestmt;
 
-  public Scase(Sswitch parent, Expression constexpr) {
+  public StmtCase(StmtSwitch parent, Expression constexpr) {
     this.parent = parent;
     this.constexpr = constexpr;
   }
@@ -27,7 +27,7 @@ public class Scase {
     this.casestmt = casestmt;
   }
 
-  public Sswitch getParent() {
+  public StmtSwitch getParent() {
     return parent;
   }
 
