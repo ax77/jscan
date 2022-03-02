@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import jscan.utils.AstParseException;
 import jscan.utils.NullChecker;
 
 public abstract class IntLiteralParser {
@@ -177,10 +178,11 @@ public abstract class IntLiteralParser {
 
     ///////
     // TODO:TODO:TODO: evaluation
+    // 4.f -> this does not work now :)
     ///////
 
     final boolean isFloating = mnt.length() > 0 || exp.length() > 0;
-    IntLiteralType typeBySuf = suffix(suf.toString(), isFloating);
+    IntLiteralType typeBySuf = suffix(suf.toString(), isFloating, originalInput);
 
     IntLiteral ret = new IntLiteral(originalInput, main_sign, dec.toString(), mnt.toString(), exp.toString(),
         suf.toString(), exp_sign, typeBySuf);
@@ -215,7 +217,7 @@ public abstract class IntLiteralParser {
     return ret;
   }
 
-  private static IntLiteralType suffix(String suf, boolean isFloating) {
+  private static IntLiteralType suffix(String suf, boolean isFloating, String originalInput) {
 
     if (isFloating) {
       IntLiteralType floatingSuff = null;
@@ -266,6 +268,9 @@ public abstract class IntLiteralParser {
     }
 
     IntLiteralType res = map.get(suf);
+    if (res == null) {
+      throw new AstParseException("cannot decide the suffix for: " + originalInput);
+    }
     NullChecker.check(res);
     return res;
   }
