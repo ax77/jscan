@@ -19,6 +19,8 @@ import ast.tree.StatementBase;
 import ast.tree.TranslationUnit;
 import jscan.parse.Tokenlist;
 import jscan.utils.AstParseException;
+import static ast.tree.ExpressionBase.*;
+import static ast.tree.StatementBase.*;
 
 public class Again0 {
 
@@ -43,7 +45,7 @@ public class Again0 {
     }
 
     List<CSymbol> vars = declaration.getVariables();
-    for(CSymbol var : vars) {
+    for (CSymbol var : vars) {
       genVarDecl(var);
     }
   }
@@ -71,14 +73,49 @@ public class Again0 {
       }
     }
 
-    else if (base == StatementBase.SEXPR) {
-      Expression e = s.getStmtExpr();
-      genExpr(e);
+    else if (base == SIF) {
     }
 
-    else if (base == StatementBase.SRETURN) {
-      Expression e = s.getStmtExpr();
-      genExpr(e);
+    else if (base == SWHILE) {
+    }
+
+    else if (base == SDOWHILE) {
+    }
+
+    else if (base == SEXPR) {
+    }
+
+    else if (base == SBREAK) {
+    }
+
+    else if (base == SCONTINUE) {
+    }
+
+    else if (base == SSEMICOLON) {
+    }
+
+    else if (base == SSWITCH) {
+    }
+
+    else if (base == SCASE) {
+    }
+
+    else if (base == SFOR) {
+    }
+
+    else if (base == SRETURN) {
+    }
+
+    else if (base == SGOTO) {
+    }
+
+    else if (base == SLABEL) {
+    }
+
+    else if (base == SDEFAULT) {
+    }
+
+    else if (base == SASM) {
     }
 
     else {
@@ -95,16 +132,49 @@ public class Again0 {
     ExpressionBase base = e.getBase();
     System.out.println(e);
 
-    if (base == ExpressionBase.EASSIGN) {
-
+    if (base == EASSIGN) {
     }
 
-    else if (base == ExpressionBase.EUNARY) {
-
+    else if (base == EBINARY) {
     }
 
-    else if (base == ExpressionBase.EBINARY) {
+    else if (base == ECOMMA) {
+    }
 
+    else if (base == ETERNARY) {
+    }
+
+    else if (base == EUNARY) {
+    }
+
+    else if (base == EPRIMARY_IDENT) {
+    }
+
+    else if (base == EPRIMARY_NUMBER) {
+    }
+
+    else if (base == EPRIMARY_STRING) {
+    }
+
+    else if (base == EPRIMARY_GENERIC) {
+    }
+
+    else if (base == ECOMPSEL) {
+    }
+
+    else if (base == ECAST) {
+    }
+
+    else if (base == EFCALL) {
+    }
+
+    else if (base == EPREINCDEC) {
+    }
+
+    else if (base == EPOSTINCDEC) {
+    }
+
+    else if (base == ECOMPLITERAL) {
     }
 
     else {

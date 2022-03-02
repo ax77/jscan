@@ -18,18 +18,9 @@ import ast.symtab.CSymbol;
 import ast.types.CStructField;
 import ast.types.CType;
 import jscan.literals.IntLiteral;
-import jscan.sourceloc.SourceLocation;
 import jscan.tokenize.CStr;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
-
-abstract class NodeTemp {
-  private static long iter = 0;
-
-  public static long gettemp() {
-    return iter++;
-  }
-}
 
 public class Expression {
 
@@ -38,9 +29,6 @@ public class Expression {
   private static final int CND_INDEX = 2;
 
   private final ExpressionBase base; // what union contains
-  private final long tname; // just unique id. for codegen.
-  private final SourceLocation location;
-
   private CType resultType; // what expression doe's after evaluation
   private final Token token; // operator, position
   private final Expression tree[];
@@ -102,8 +90,6 @@ public class Expression {
   // pre-post inc-dec
   public Expression(ExpressionBase base, Token op, Expression lhs) {
     this.base = base;
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(op);
     this.token = op;
     this.tree = emptyTree();
 
@@ -117,8 +103,6 @@ public class Expression {
   // binary, asssign, comma, array-subscript
   public Expression(ExpressionBase base, Expression lhs, Expression rhs, Token token) {
     this.base = base;
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(token);
     this.token = token;
     this.tree = emptyTree();
 
@@ -129,8 +113,6 @@ public class Expression {
   // unary
   public Expression(Token op, Expression lhs) {
     this.base = ExpressionBase.EUNARY;
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(op);
     this.token = op;
     this.tree = emptyTree();
 
@@ -138,9 +120,7 @@ public class Expression {
   }
 
   public Expression(CType typename, List<Initializer> initializerList, Token token) {
-    this.tname = NodeTemp.gettemp();
     this.tree = emptyTree();
-    this.location = new SourceLocation(token);
     this.token = token;
     this.base = ExpressionBase.ECOMPLITERAL;
     this.resultType = typename;
@@ -148,9 +128,7 @@ public class Expression {
   }
 
   public Expression(Expression function, List<Expression> arguments, Token token) {
-    this.tname = NodeTemp.gettemp();
     this.tree = emptyTree();
-    this.location = new SourceLocation(token);
     this.token = token;
     this.base = ExpressionBase.EFCALL;
     setLhs(function);
@@ -158,9 +136,7 @@ public class Expression {
   }
 
   public Expression(CType typename, Expression tocast, Token token) {
-    this.tname = NodeTemp.gettemp();
     this.tree = emptyTree();
-    this.location = new SourceLocation(token);
     this.token = token;
     this.base = ExpressionBase.ECAST;
     this.resultType = typename;
@@ -170,8 +146,6 @@ public class Expression {
   // (*a) -> x
   // a . x
   public Expression(Expression postfis, Token operator, CStructField fieldName) {
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(operator);
     this.tree = emptyTree();
     this.token = operator;
     this.base = ExpressionBase.ECOMPSEL;
@@ -181,8 +155,6 @@ public class Expression {
   }
 
   public Expression(Expression condition, Expression branchTrue, Expression branchFalse, Token token) {
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(token);
     this.tree = emptyTree();
     this.token = token;
     this.base = ExpressionBase.ETERNARY;
@@ -193,8 +165,6 @@ public class Expression {
   }
 
   public Expression(CSymbol e, Token token) {
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(token);
     this.tree = emptyTree();
     this.token = token;
     this.base = ExpressionBase.EPRIMARY_IDENT;
@@ -202,8 +172,6 @@ public class Expression {
   }
 
   public Expression(CStr cstring, Token token) {
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(token);
     this.tree = emptyTree();
     this.token = token;
     this.base = ExpressionBase.EPRIMARY_STRING;
@@ -211,8 +179,6 @@ public class Expression {
   }
 
   public Expression(Expression genericSelectionResult, Token token) {
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(token);
     this.tree = emptyTree();
     this.token = token;
     this.base = ExpressionBase.EPRIMARY_GENERIC;
@@ -221,8 +187,6 @@ public class Expression {
   }
 
   public Expression(IntLiteral number, Token from) {
-    this.tname = NodeTemp.gettemp();
-    this.location = new SourceLocation(from);
     this.tree = emptyTree();
     this.token = from;
     this.base = ExpressionBase.EPRIMARY_NUMBER;
@@ -267,10 +231,6 @@ public class Expression {
 
   public void setArglist(List<Expression> arglist) {
     this.arglist = arglist;
-  }
-
-  public long getTname() {
-    return tname;
   }
 
   public Expression[] getTree() {

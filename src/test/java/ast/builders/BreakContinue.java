@@ -1,7 +1,9 @@
-package ast.tree;
+package ast.builders;
 
 import ast.parse.Parse;
 import ast.parse.ParseStatement;
+import ast.tree.Statement;
+import ast.tree.StatementBase;
 import jscan.symtab.Keywords;
 import jscan.tokenize.Token;
 

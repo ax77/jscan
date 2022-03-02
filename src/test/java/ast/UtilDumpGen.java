@@ -25,6 +25,23 @@ public class UtilDumpGen {
     ENAMES.add("EPREINCDEC           ");
     ENAMES.add("EPOSTINCDEC          ");
     ENAMES.add("ECOMPLITERAL         ");
+
+    ENAMES.add("SCOMPOUND     ");
+    ENAMES.add("SIF           ");
+    ENAMES.add("SWHILE        ");
+    ENAMES.add("SDOWHILE      ");
+    ENAMES.add("SEXPR         ");
+    ENAMES.add("SBREAK        ");
+    ENAMES.add("SCONTINUE     ");
+    ENAMES.add("SSEMICOLON    ");
+    ENAMES.add("SSWITCH       ");
+    ENAMES.add("SCASE         ");
+    ENAMES.add("SFOR          ");
+    ENAMES.add("SRETURN       ");
+    ENAMES.add("SGOTO         ");
+    ENAMES.add("SLABEL        ");
+    ENAMES.add("SDEFAULT      ");
+    ENAMES.add("SASM          ");
   }
 
   @Ignore
