@@ -1,4 +1,4 @@
-package ast;
+package ast_util;
 
 import java.util.ArrayList;
 import java.util.List;

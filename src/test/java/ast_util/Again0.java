@@ -1,4 +1,4 @@
-package ast;
+package ast_util;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,6 +56,8 @@ public class Again0 {
 
   private void genFunction(FunctionDefinition functionDefinition) {
     CSymbol sym = functionDefinition.getSignature();
+    System.out.println(sym.getName());
+    
     Statement block = functionDefinition.getBlock();
     genStmt(block);
   }
@@ -83,6 +85,7 @@ public class Again0 {
     }
 
     else if (base == SEXPR) {
+      genExpr(s.getStmtExpr());
     }
 
     else if (base == SBREAK) {
@@ -104,6 +107,7 @@ public class Again0 {
     }
 
     else if (base == SRETURN) {
+      genExpr(s.getStmtExpr());
     }
 
     else if (base == SGOTO) {
@@ -185,16 +189,13 @@ public class Again0 {
   @Test
   public void test0() throws IOException {
     StringBuilder sb = new StringBuilder();
-    sb.append(" /*001*/  int             \n");
-    sb.append(" /*002*/  main()          \n");
-    sb.append(" /*003*/  {               \n");
-    sb.append(" /*004*/      int x;      \n");
-    sb.append(" /*005*/      int *p;     \n");
-    sb.append(" /*006*/      x = 4;      \n");
-    sb.append(" /*007*/      p = &x;     \n");
-    sb.append(" /*008*/      *p = 0;     \n");
-    sb.append(" /*009*/      return *p;  \n");
-    sb.append(" /*010*/  }               \n");
+    sb.append(" int             \n");
+    sb.append(" main()          \n");
+    sb.append(" {               \n");
+    sb.append("     int x;      \n");
+    sb.append("     x = 4;      \n");
+    sb.append("     return x;   \n");
+    sb.append(" }               \n");
 
     Tokenlist it = new ParserMain(sb).preprocess();
     Parse p = new Parse(it);

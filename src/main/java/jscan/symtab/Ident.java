@@ -48,7 +48,7 @@ public final class Ident {
 
   @Override
   public String toString() {
-    return "Ident [name=" + name + ", sym=" + sym + "]";
+    return name;
   }
 
   // XXX:XXX: do __NOT__ compare ident by namespace !!! 
