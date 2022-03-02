@@ -60,7 +60,7 @@ public abstract class ExprUtil {
   }
 
   public static Expression createNumericConst(Token from, Integer intValue) {
-    IntLiteral e = new IntLiteral(intValue.toString(), '+', "", "", "", "", '\0');
+    IntLiteral e = new IntLiteral(intValue.toString(), '+', "", "", "", "", '\0', IntLiteralType.I32);
     e.setLong(intValue);
     return new Expression(e, from);
   }

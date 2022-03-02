@@ -1,10 +1,6 @@
 package jscan.literals;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class IntLiteral implements Serializable {
   private static final long serialVersionUID = 7055604293623516324L;
@@ -24,7 +20,7 @@ public class IntLiteral implements Serializable {
   private double doubleValue;
 
   public IntLiteral(String originalInput, char mainSign, String dec, String mnt, String exp, String suf,
-      char exponentSign) {
+      char exponentSign, IntLiteralType typeBySuffix) {
     this.originalInput = originalInput;
     this.mainSign = mainSign;
     this.dec = dec;
@@ -32,7 +28,7 @@ public class IntLiteral implements Serializable {
     this.exp = exp;
     this.suf = suf;
     this.exponentSign = exponentSign;
-    this.typeBySuffix = suffix(suf);
+    this.typeBySuffix = typeBySuffix;
   }
 
   public IntLiteral(long v, IntLiteralType t) {
@@ -56,43 +52,6 @@ public class IntLiteral implements Serializable {
   public void setDouble(double n) {
     this.longValue = (long) n;
     this.doubleValue = (double) n;
-  }
-
-  private IntLiteralType suffix(String suf) {
-    Map<String, IntLiteralType> map = new HashMap<>();
-
-    List<String> suffixes = new ArrayList<>();
-    suffixes.add("U    @  U32 ");
-    suffixes.add("L    @  I64 ");
-    suffixes.add("LL   @  I64 ");
-    suffixes.add("UL   @  U64 ");
-    suffixes.add("LU   @  U64 ");
-    suffixes.add("ULL  @  U64 ");
-    suffixes.add("LLU  @  U64 ");
-    suffixes.add("i8   @  I8  ");
-    suffixes.add("u8   @  U8  ");
-    suffixes.add("i16  @  I16 ");
-    suffixes.add("u16  @  U16 ");
-    suffixes.add("i32  @  I32 ");
-    suffixes.add("u32  @  U32 ");
-    suffixes.add("i64  @  I64 ");
-    suffixes.add("u64  @  U64 ");
-    suffixes.add("f32  @  F32 ");
-    suffixes.add("f64  @  F64 ");
-
-    for (String s : suffixes) {
-      String splitten[] = s.split("@");
-      String lhs = splitten[0].trim();
-      String rhs = splitten[1].trim();
-      map.put(lhs.toLowerCase(), IntLiteralType.valueOf(rhs));
-      map.put(lhs.toUpperCase(), IntLiteralType.valueOf(rhs));
-    }
-
-    IntLiteralType res = map.get(suf);
-    if (res == null) {
-      return IntLiteralType.NO_SUFFIX;
-    }
-    return res;
   }
 
   public String getOriginalInput() {

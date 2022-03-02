@@ -6,7 +6,13 @@ import static jscan.main.Env.isHex;
 import static jscan.main.Env.isLetter;
 import static jscan.main.Env.isOct;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import jscan.utils.NullChecker;
 
 public abstract class IntLiteralParser {
 
@@ -174,9 +180,10 @@ public abstract class IntLiteralParser {
     ///////
 
     final boolean isFloating = mnt.length() > 0 || exp.length() > 0;
+    IntLiteralType typeBySuf = suffix(suf.toString(), isFloating);
 
     IntLiteral ret = new IntLiteral(originalInput, main_sign, dec.toString(), mnt.toString(), exp.toString(),
-        suf.toString(), exp_sign);
+        suf.toString(), exp_sign, typeBySuf);
 
     if (isBin || isOct) {
       final int base = isBin ? 2 : 8;
@@ -206,6 +213,61 @@ public abstract class IntLiteralParser {
     }
 
     return ret;
+  }
+
+  private static IntLiteralType suffix(String suf, boolean isFloating) {
+
+    if (isFloating) {
+      IntLiteralType floatingSuff = null;
+
+      if (suf.isEmpty() || suf.toUpperCase().equals("L")) {
+        floatingSuff = IntLiteralType.F64;
+      }
+      if (suf.toUpperCase().equals("F")) {
+        floatingSuff = IntLiteralType.F32;
+      }
+
+      NullChecker.check(floatingSuff);
+      return floatingSuff;
+    }
+
+    // not a floating constant, i32 by default
+    if (suf.isEmpty()) {
+      return IntLiteralType.I32;
+    }
+
+    Map<String, IntLiteralType> map = new HashMap<>();
+
+    List<String> suffixes = new ArrayList<>();
+    suffixes.add("U    @  U32 ");
+    suffixes.add("L    @  I64 ");
+    suffixes.add("LL   @  I64 ");
+    suffixes.add("UL   @  U64 ");
+    suffixes.add("LU   @  U64 ");
+    suffixes.add("ULL  @  U64 ");
+    suffixes.add("LLU  @  U64 ");
+    suffixes.add("i8   @  I8  ");
+    suffixes.add("u8   @  U8  ");
+    suffixes.add("i16  @  I16 ");
+    suffixes.add("u16  @  U16 ");
+    suffixes.add("i32  @  I32 ");
+    suffixes.add("u32  @  U32 ");
+    suffixes.add("i64  @  I64 ");
+    suffixes.add("u64  @  U64 ");
+    //suffixes.add("f32  @  F32 ");
+    //suffixes.add("f64  @  F64 ");
+
+    for (String s : suffixes) {
+      String splitten[] = s.split("@");
+      String lhs = splitten[0].trim();
+      String rhs = splitten[1].trim();
+      map.put(lhs.toLowerCase(), IntLiteralType.valueOf(rhs));
+      map.put(lhs.toUpperCase(), IntLiteralType.valueOf(rhs));
+    }
+
+    IntLiteralType res = map.get(suf);
+    NullChecker.check(res);
+    return res;
   }
 
   private static long evalLong(int base, String dec) {
