@@ -89,6 +89,7 @@ public class Parse {
     }
 
     if (currentFn != null) {
+      currentFn.addLocal(sym);
     }
 
     symbols.addsym(key, sym);

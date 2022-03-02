@@ -1,0 +1,40 @@
+_Bool
+
+char
+signed char
+unsigned char
+
+short
+signed short
+short int
+signed short int
+unsigned short
+unsigned short int
+
+int
+signed
+signed int
+unsigned int
+unsigned
+
+long
+signed long
+long int
+signed long int
+unsigned long
+unsigned long int
+
+long long
+signed long long
+long long int
+signed long long int
+unsigned long long
+unsigned long long int
+
+float
+double
+long double
+
+float _Complex
+double _Complex
+long double _Complex

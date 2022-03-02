@@ -17,12 +17,22 @@ import ast.tree.FunctionDefinition;
 import ast.tree.Statement;
 import ast.tree.StatementBase;
 import ast.tree.TranslationUnit;
+import ast.types.CType;
 import jscan.parse.Tokenlist;
+import jscan.utils.Aligner;
 import jscan.utils.AstParseException;
 import static ast.tree.ExpressionBase.*;
 import static ast.tree.StatementBase.*;
 
 public class Again0 {
+
+  private void out(String s) {
+    if (s.endsWith(":") || s.startsWith(".")) {
+      System.out.println(s);
+    } else {
+      System.out.printf("    %s\n", s);
+    }
+  }
 
   private void cg(TranslationUnit unit) {
     for (ExternalDeclaration ext : unit.getExternalDeclarations()) {
@@ -51,15 +61,35 @@ public class Again0 {
   }
 
   private void genVarDecl(CSymbol var) {
-    System.out.println(var);
+  }
+
+  private int applyOffset(FunctionDefinition functionDefinition) {
+    int offset = 0;
+    for (CSymbol sym : functionDefinition.getLocals()) {
+      sym.setOffset(offset);
+      final CType type = sym.getType();
+      offset += Aligner.align(type.getSize(), type.getAlign());
+    }
+    return Aligner.align(offset, 16);
   }
 
   private void genFunction(FunctionDefinition functionDefinition) {
     CSymbol sym = functionDefinition.getSignature();
-    System.out.println(sym.getName());
-    
+    int localsize = applyOffset(functionDefinition);
+
+    out(".global " + sym.getName().getName());
+    out(sym.getName().getName() + ":");
+    out("push rbp");
+    out("mov rbp, rsp");
+    out(String.format("sub rsp, %d", localsize));
+
     Statement block = functionDefinition.getBlock();
     genStmt(block);
+
+    out(String.format("add rsp, %d", localsize));
+    out("mov rsp, rbp");
+    out("pop rbp");
+    out("ret");
   }
 
   private void genStmt(Statement s) {
@@ -134,7 +164,6 @@ public class Again0 {
     }
 
     ExpressionBase base = e.getBase();
-    System.out.println(e);
 
     if (base == EASSIGN) {
     }
@@ -192,15 +221,24 @@ public class Again0 {
     sb.append(" int             \n");
     sb.append(" main()          \n");
     sb.append(" {               \n");
-    sb.append("     int x;      \n");
+    sb.append("     int x,y,z;  \n");
     sb.append("     x = 4;      \n");
     sb.append("     return x;   \n");
     sb.append(" }               \n");
+
+    // .intel_syntax noprefix
+    // .bss
+    // .data
+    // .text
+    // .global main
 
     Tokenlist it = new ParserMain(sb).preprocess();
     Parse p = new Parse(it);
 
     TranslationUnit unit = p.parse_unit();
+
+    out(".intel_syntax noprefix");
+    out(".text");
     cg(unit);
   }
 

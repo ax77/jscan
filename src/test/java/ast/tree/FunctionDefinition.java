@@ -1,6 +1,8 @@
 package ast.tree;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import ast.symtab.CSymbol;
@@ -14,11 +16,13 @@ public class FunctionDefinition {
   // TODO: location for this two
   private final Set<Ident> gotos;
   private final Set<Ident> labels;
+  private final List<CSymbol> locals;
 
   public FunctionDefinition(CSymbol symbol) {
     this.symbol = symbol;
-    this.gotos = new HashSet<Ident>();
-    this.labels = new HashSet<Ident>();
+    this.gotos = new HashSet<>();
+    this.labels = new HashSet<>();
+    this.locals = new ArrayList<>();
   }
 
   public void addGotos(Ident label) {
@@ -47,6 +51,14 @@ public class FunctionDefinition {
 
   public Set<Ident> getLabels() {
     return labels;
+  }
+
+  public void addLocal(CSymbol sym) {
+    locals.add(sym);
+  }
+
+  public List<CSymbol> getLocals() {
+    return locals;
   }
 
 }

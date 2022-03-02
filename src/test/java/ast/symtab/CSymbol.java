@@ -22,6 +22,8 @@ public class CSymbol implements Location {
   private IntLiteral numericConstant;
   private List<Initializer> initializer;
 
+  private int offset;
+
   public CSymbol(CSymbolBase base, Ident name, CType type, Token from) {
     this.location = new SourceLocation(from);
     this.from = from;
@@ -99,6 +101,14 @@ public class CSymbol implements Location {
 
   public boolean isFunction() {
     return base == CSymbolBase.SYM_FUNC;
+  }
+
+  public int getOffset() {
+    return offset;
+  }
+
+  public void setOffset(int offset) {
+    this.offset = offset;
   }
 
 }
