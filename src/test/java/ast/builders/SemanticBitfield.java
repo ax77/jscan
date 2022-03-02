@@ -1,6 +1,10 @@
-package ast.types;
+package ast.builders;
 
 import ast.parse.Parse;
+import ast.types.CBitfieldType;
+import ast.types.CType;
+import ast.types.CTypeKind;
+import ast.types.TypeSizes;
 
 public class SemanticBitfield {
   private final Parse parser;

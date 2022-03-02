@@ -49,7 +49,7 @@ public class Declaration {
     return agregate != null;
   }
 
-  public boolean isStaticAssert() {
+  public boolean isStaticAssertStub() {
     return !isAgregate() && !isVarlist();
   }
 

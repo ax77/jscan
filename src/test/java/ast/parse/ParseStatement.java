@@ -376,23 +376,20 @@ public class ParseStatement {
     // different scope between names of labels and all other names.
     // why ??? 
     if (isLabel()) {
-      BlockItem block = new BlockItem();
-      block.setStatement(parseLabel());
+      final Statement labelStmt = parseLabel();
+      final BlockItem block = new BlockItem(labelStmt);
       return block;
     }
 
     if (parser.isDeclSpecStart()) {
-      Declaration dec = new ParseDeclarations(parser).parse();
-
-      BlockItem block = new BlockItem();
-      block.setDeclaration(dec);
+      final Declaration dec = new ParseDeclarations(parser).parse();
+      final BlockItem block = new BlockItem(dec);
       return block;
     }
 
-    Statement stmt = parseStatement();
+    final Statement stmt = parseStatement();
     if (stmt != null) {
-      BlockItem block = new BlockItem();
-      block.setStatement(stmt);
+      final BlockItem block = new BlockItem(stmt);
       return block;
     }
 

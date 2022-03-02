@@ -138,10 +138,10 @@ public class ParseExternal {
     parser.pushscope(ScopeLevels.METHOD_SCOPE);
 
     defineParameters(fd.getSignature().getType());
-    define__func__(fd.getSymbol().getName());
+    define__func__(fd.getSignature().getName());
 
     Statement cst = new ParseStatement(parser).parseCompoundStatement(true);
-    fd.setCompoundStatement(cst);
+    fd.setBlock(cst);
 
     parser.setCurrentFn(null);
     parser.popscope();

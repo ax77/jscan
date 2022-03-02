@@ -1,4 +1,4 @@
-package ast.tree;
+package ast.builders;
 
 import static jscan.tokenize.T.TOKEN_NUMBER;
 import static jscan.tokenize.T.T_AND;
@@ -25,6 +25,7 @@ import static jscan.tokenize.T.T_XOR_EQUAL;
 import java.util.HashMap;
 import java.util.Map;
 
+import ast.tree.Expression;
 import ast.types.CTypeImpl;
 import jscan.literals.IntLiteral;
 import jscan.literals.IntLiteralType;

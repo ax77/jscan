@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import ast.types.CStructField;
-import ast.types.TypeUtil;
 import jscan.symtab.Ident;
+import jscan.utils.Aligner;
 import jscan.utils.AstParseException;
 
 public class ApplyStructInfo {
@@ -33,7 +33,7 @@ public class ApplyStructInfo {
 
   private void applyAlignment() {
     for (CStructField f : fields) {
-      align = TypeUtil.align(align, f.getType().getAlign());
+      align = Aligner.align(align, f.getType().getAlign());
     }
   }
 
@@ -67,7 +67,7 @@ public class ApplyStructInfo {
   private void calcStructFieldsOffsets() {
     int offset = 0;
     for (CStructField f : fields) {
-      offset = TypeUtil.align(offset, f.getType().getAlign());
+      offset = Aligner.align(offset, f.getType().getAlign());
       f.setOffset(offset);
       offset += f.getType().getSize();
     }

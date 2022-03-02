@@ -4,9 +4,6 @@ public class BlockItem {
   private Declaration declaration;
   private Statement statement;
 
-  public BlockItem() {
-  }
-
   public BlockItem(Declaration declaration) {
     this.declaration = declaration;
   }
@@ -19,16 +16,16 @@ public class BlockItem {
     return declaration;
   }
 
-  public void setDeclaration(Declaration declaration) {
-    this.declaration = declaration;
-  }
-
   public Statement getStatement() {
     return statement;
   }
 
-  public void setStatement(Statement statement) {
-    this.statement = statement;
+  public boolean isDeclaration() {
+    return declaration != null;
+  }
+
+  public boolean isStatement() {
+    return statement != null;
   }
 
 }

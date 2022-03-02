@@ -9,16 +9,16 @@ import java.util.List;
 
 import ast.attributes.AttributesAsmsLists;
 import ast.builders.ApplyStructInfo;
+import ast.builders.ConstexprEval;
+import ast.builders.SemanticBitfield;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
-import ast.tree.ConstexprEval;
 import ast.tree.Declarator;
 import ast.tree.Expression;
 import ast.types.CStructField;
 import ast.types.CStructType;
 import ast.types.CType;
-import ast.types.SemanticBitfield;
 import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
