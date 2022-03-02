@@ -417,25 +417,14 @@ public class Stream {
 
     // TODO:
     int escaped[] = Escaper.escape(strbuf.toString());
-    Token token = new Token();
 
-    if (endof == '\"') {
-      CStr strconstant = new CStr(escaped, enc);
-      token.setStrconstant(strconstant);
-    } else {
-      if (escaped.length == 0) {
-        throw new ScanExc("" + " error : empty char constant");
-      }
-      if (escaped.length > 2) {
-        //throw new ScanExc(startLocation + " error : too long char constant"); // TODO: WC
-      }
-      CChar charconstant = new CChar(escaped[0], enc);
-      token.setCharconstant(charconstant);
-    }
+    Token token = new Token();
+    CStr strconstant = new CStr(endof + strbuf.toString() + endof, escaped, enc);
+    token.setStrconstant(strconstant);
+    token.setType(typeoftok);
+    token.setValue(endof + strbuf.toString() + endof);
 
     setPos(token);
-    token.setType(typeoftok);
-    token.setValue((char) endof + strbuf.toString() + (char) endof);
     return token;
 
   }

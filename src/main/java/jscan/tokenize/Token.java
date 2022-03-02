@@ -20,7 +20,6 @@ public class Token {
   private SourceLocation location;
 
   private CStr strconstant;
-  private CChar charconstant;
 
   private boolean definedInreplList;
 
@@ -99,7 +98,6 @@ public class Token {
     this.value = other.value;
     this.argnum = other.argnum;
     this.strconstant = other.strconstant;
-    this.charconstant = other.charconstant;
     this.fposition = other.fposition;
     this.definedInreplList = other.definedInreplList;
     this.location = new SourceLocation(other.location);
@@ -276,14 +274,6 @@ public class Token {
 
   public void setStrconstant(CStr strconstant) {
     this.strconstant = strconstant;
-  }
-
-  public CChar getCharconstant() {
-    return charconstant;
-  }
-
-  public void setCharconstant(CChar charconstant) {
-    this.charconstant = charconstant;
   }
 
   public boolean isDefinedInreplList() {

@@ -611,7 +611,7 @@ public class ParseExpression {
         //TODO:NUMBERS
         String toeval = "";
         if (saved.ofType(TOKEN_CHAR)) {
-          toeval = String.format("%d", saved.getCharconstant().getV());
+          toeval = String.format("%d", saved.getStrconstant().getV()[0]);
         } else {
           toeval = saved.getValue();
         }

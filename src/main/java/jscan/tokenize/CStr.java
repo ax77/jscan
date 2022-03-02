@@ -2,14 +2,14 @@ package jscan.tokenize;
 
 public class CStr {
 
+  private final String original;
   private final CStrEnc enc;
   private final int v[];
-  private final int len;
 
-  public CStr(int buffer[], CStrEnc escapePrefix) {
-    v = buffer;
-    enc = escapePrefix;
-    len = v.length;
+  public CStr(String original, int buffer[], CStrEnc escapePrefix) {
+    this.original = original;
+    this.v = buffer;
+    this.enc = escapePrefix;
   }
 
   public CStrEnc getEnc() {
@@ -20,8 +20,13 @@ public class CStr {
     return v;
   }
 
-  public int getLen() {
-    return len;
+  public String getOriginal() {
+    return original;
+  }
+
+  @Override
+  public String toString() {
+    return original;
   }
 
 }

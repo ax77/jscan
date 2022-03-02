@@ -489,7 +489,7 @@ public class PP_expr2 {
 
     if (t == PP_ExprNodeType.e_prim_char) {
       Token numtok = e.getTok();
-      long res = numtok.getCharconstant().getV();
+      long res = numtok.getStrconstant().getV()[0];
       return res;
     }
 
