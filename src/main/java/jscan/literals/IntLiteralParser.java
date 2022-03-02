@@ -181,7 +181,7 @@ public abstract class IntLiteralParser {
     // 4.f -> this does not work now :)
     ///////
 
-    final boolean isFloating = mnt.length() > 0 || exp.length() > 0;
+    final boolean isFloating = mnt.length() > 0 || exp.length() > 0 || originalInput.contains(".");
     IntLiteralType typeBySuf = suffix(suf.toString(), isFloating, originalInput);
 
     IntLiteral ret = new IntLiteral(originalInput, main_sign, dec.toString(), mnt.toString(), exp.toString(),

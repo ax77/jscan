@@ -1496,7 +1496,7 @@ public class Test_Typedefs {
     s.put( " sizeof((char)1ULL)              \n",  1);
     s.put( " sizeof((int)1ULL)               \n",  4);
     s.put( " sizeof((long long)1ULL)         \n",  8);
-    //s.put( " sizeof(1.0f + 2.14)             \n",  8); // TODO:
+    s.put( " sizeof(1.0f + 2.14)             \n",  8); // TODO:
     s.put( " sizeof(1.0f + 2.14f)            \n",  4);
     s.put( " sizeof((void*)0)                \n",  8);
     s.put( " sizeof((int*)0)                 \n",  8);
@@ -1512,8 +1512,8 @@ public class Test_Typedefs {
     s.put(" sizeof(((char)'1'))              \n",  1);
     s.put(" sizeof(('1', 2))                 \n",  4);
     s.put(" sizeof(('1', 2, 3ULL))           \n",  8);
-    //s.put(" sizeof(('1', 2, 3ULL, 4.f))      \n",  4); // TODO:
-    //s.put(" sizeof(('1', 2, 3ULL, 4.f, 5.))  \n",  8); // TODO:
+    s.put(" sizeof(('1', 2, 3ULL, 4.f))      \n",  4);
+    s.put(" sizeof(('1', 2, 3ULL, 4.f, 5.))  \n",  8); // TODO:
     s.put("sizeof( ((_Bool)0 + (_Bool)0) )   \n",  4);
     //@formatter:on
 

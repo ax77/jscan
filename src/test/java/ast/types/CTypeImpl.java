@@ -22,17 +22,18 @@ public class CTypeImpl {
   public static final CType TYPE_DOUBLE = new CType(CTypeKind.TP_DOUBLE);
   public static final CType TYPE_LONG_DOUBLE = new CType(CTypeKind.TP_LONG_DOUBLE);
 
+  //TODO:
   public static Map<IntLiteralType, CType> bindings = new HashMap<IntLiteralType, CType>();
   static {
     bindings.put(IntLiteralType.I32, TYPE_INT);
     bindings.put(IntLiteralType.U32, TYPE_UINT);
     bindings.put(IntLiteralType.I64, TYPE_LONG);
     bindings.put(IntLiteralType.U64, TYPE_ULONG);
-    bindings.put(IntLiteralType.I64, TYPE_LONG_LONG);
-    bindings.put(IntLiteralType.U64, TYPE_ULONG_LONG);
+    //bindings.put(IntLiteralType.I64, TYPE_LONG_LONG);
+    //bindings.put(IntLiteralType.U64, TYPE_ULONG_LONG);
     bindings.put(IntLiteralType.F32, TYPE_FLOAT);
     bindings.put(IntLiteralType.F64, TYPE_DOUBLE);
-    bindings.put(IntLiteralType.F64, TYPE_LONG_DOUBLE);
+    //bindings.put(IntLiteralType.F64, TYPE_LONG_DOUBLE);
   }
 
   public static final int QCONST = 1 << 0;
