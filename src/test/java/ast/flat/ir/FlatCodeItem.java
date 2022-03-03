@@ -1,21 +1,21 @@
-package _st3_linearize_expr.ir;
+package ast.flat.ir;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import _st3_linearize_expr.items.AssignVarBinop;
-import _st3_linearize_expr.items.AssignVarBool;
-import _st3_linearize_expr.items.AssignVarFieldAccess;
-import _st3_linearize_expr.items.AssignVarFlatCallResult;
-import _st3_linearize_expr.items.AssignVarNum;
-import _st3_linearize_expr.items.AssignVarUnop;
-import _st3_linearize_expr.items.AssignVarVar;
-import _st3_linearize_expr.items.BuiltinFuncAssertTrue;
-import _st3_linearize_expr.items.FlatCallVoid;
-import _st3_linearize_expr.items.StoreFieldLiteral;
-import _st3_linearize_expr.items.StoreVarLiteral;
-import _st3_linearize_expr.rvalues.Var;
+import ast.flat.items.AssignVarBinop;
+import ast.flat.items.AssignVarBool;
+import ast.flat.items.AssignVarFieldAccess;
+import ast.flat.items.AssignVarFlatCallResult;
+import ast.flat.items.AssignVarNum;
+import ast.flat.items.AssignVarUnop;
+import ast.flat.items.AssignVarVar;
+import ast.flat.items.BuiltinFuncAssertTrue;
+import ast.flat.items.FlatCallVoid;
+import ast.flat.items.StoreFieldLiteral;
+import ast.flat.items.StoreVarLiteral;
+import ast.flat.rvalues.Var;
 import jscan.utils.AstParseException;
 
 public class FlatCodeItem {

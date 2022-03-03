@@ -1,22 +1,28 @@
-package _st3_linearize_expr.items;
+package ast.flat.rvalues;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import _st3_linearize_expr.VarCollector;
-import _st3_linearize_expr.rvalues.Var;
+import ast.flat.VarCollector;
 import ast.tree.FunctionDefinition;
+import ast.types.CType;
+import jscan.utils.ArgsListToString;
 
-public class FlatCallVoid implements VarCollector {
-
+public class FunctionCallWithResult implements VarCollector {
   private final FunctionDefinition method;
   private final String fullname;
+  private final CType type;
   private final List<Var> args;
 
-  public FlatCallVoid(FunctionDefinition method, String fullname, List<Var> args) {
+  public FunctionCallWithResult(FunctionDefinition method, String fullname, CType type, List<Var> args) {
     this.method = method;
     this.fullname = fullname;
+    this.type = type;
     this.args = args;
+  }
+
+  public CType getType() {
+    return type;
   }
 
   public List<Var> getArgs() {

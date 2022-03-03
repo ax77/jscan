@@ -1,10 +1,10 @@
-package _st3_linearize_expr;
+package ast.flat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import _st3_linearize_expr.ir.FlatCodeItem;
-import _st3_linearize_expr.rvalues.Var;
+import ast.flat.ir.FlatCodeItem;
+import ast.flat.rvalues.Var;
 
 public class LinearExpression {
   private final List<FlatCodeItem> items;

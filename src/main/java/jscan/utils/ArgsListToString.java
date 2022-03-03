@@ -1,4 +1,4 @@
-package _st3_linearize_expr.items;
+package jscan.utils;
 
 import java.util.List;
 
@@ -17,8 +17,19 @@ public class ArgsListToString {
       }
     }
 
-    // method parameters, generic parameters
-    sb.append(open == '(' ? ")" : ">");
+    if (open == '(') {
+      sb.append(")");
+    }
+    if (open == '<') {
+      sb.append(">");
+    }
+    if (open == '[') {
+      sb.append("]");
+    }
+    if (open == '{') {
+      sb.append("}");
+    }
+
     return sb.toString();
   }
 

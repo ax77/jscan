@@ -1,9 +1,9 @@
-package _st3_linearize_expr.rvalues;
+package ast.flat.rvalues;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import _st3_linearize_expr.VarCollector;
+import ast.flat.VarCollector;
 
 public class Unop implements VarCollector {
   private final String op;

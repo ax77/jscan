@@ -1,4 +1,4 @@
-package _st3_linearize_expr.rvalues;
+package ast.flat.rvalues;
 
 import ast.types.CType;
 import jscan.symtab.Ident;

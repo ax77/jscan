@@ -1,4 +1,4 @@
-package _st3_linearize_expr.ir;
+package ast.flat.ir;
 
 //@formatter:off
 public enum Opc {  

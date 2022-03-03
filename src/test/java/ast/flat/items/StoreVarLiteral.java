@@ -1,11 +1,11 @@
-package _st3_linearize_expr.items;
+package ast.flat.items;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import _st3_linearize_expr.VarCollector;
-import _st3_linearize_expr.rvalues.Leaf;
-import _st3_linearize_expr.rvalues.Var;
+import ast.flat.VarCollector;
+import ast.flat.rvalues.Leaf;
+import ast.flat.rvalues.Var;
 
 public class StoreVarLiteral implements VarCollector {
   private final Var dst;

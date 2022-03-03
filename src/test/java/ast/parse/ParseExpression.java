@@ -33,9 +33,9 @@ import static jscan.tokenize.T.T_XOR;
 import java.util.ArrayList;
 import java.util.List;
 
+import ast.builders.ApplyExpressionType;
 import ast.builders.ApplyGenericResult;
 import ast.builders.ExprUtil;
-import ast.builders.ApplyExpressionType;
 import ast.builders.TypeApplierStage;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;

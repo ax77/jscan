@@ -1,11 +1,11 @@
-package _st3_linearize_expr.symbols;
+package ast.flat;
 
-import _st3_linearize_expr.GlobalCounter;
-import _st3_linearize_expr.rvalues.Var;
+import ast.flat.rvalues.Var;
 import ast.symtab.CSymbol;
 import ast.types.CType;
 import jscan.hashed.Hash_ident;
 import jscan.symtab.Ident;
+import jscan.utils.GlobalCounter;
 
 public abstract class VarCreator {
 

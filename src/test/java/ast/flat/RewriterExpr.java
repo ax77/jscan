@@ -1,4 +1,4 @@
-package _st3_linearize_expr;
+package ast.flat;
 
 import static ast.tree.ExpressionBase.EASSIGN;
 import static ast.tree.ExpressionBase.EBINARY;
@@ -9,19 +9,18 @@ import static ast.tree.ExpressionBase.EUNARY;
 import java.util.ArrayList;
 import java.util.List;
 
-import _st3_linearize_expr.ir.FlatCodeItem;
-import _st3_linearize_expr.items.AssignVarBinop;
-import _st3_linearize_expr.items.AssignVarNum;
-import _st3_linearize_expr.items.AssignVarUnop;
-import _st3_linearize_expr.items.AssignVarVar;
-import _st3_linearize_expr.items.StoreFieldLiteral;
-import _st3_linearize_expr.items.StoreVarLiteral;
-import _st3_linearize_expr.rvalues.Binop;
-import _st3_linearize_expr.rvalues.FieldAccess;
-import _st3_linearize_expr.rvalues.Leaf;
-import _st3_linearize_expr.rvalues.Unop;
-import _st3_linearize_expr.rvalues.Var;
-import _st3_linearize_expr.symbols.VarCreator;
+import ast.flat.ir.FlatCodeItem;
+import ast.flat.items.AssignVarBinop;
+import ast.flat.items.AssignVarNum;
+import ast.flat.items.AssignVarUnop;
+import ast.flat.items.AssignVarVar;
+import ast.flat.items.StoreFieldLiteral;
+import ast.flat.items.StoreVarLiteral;
+import ast.flat.rvalues.Binop;
+import ast.flat.rvalues.FieldAccess;
+import ast.flat.rvalues.Leaf;
+import ast.flat.rvalues.Unop;
+import ast.flat.rvalues.Var;
 import ast.symtab.CSymbol;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;

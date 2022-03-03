@@ -1,17 +1,17 @@
-package _st3_linearize_expr.items;
+package ast.flat.items;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import _st3_linearize_expr.VarCollector;
-import _st3_linearize_expr.rvalues.Binop;
-import _st3_linearize_expr.rvalues.Var;
+import ast.flat.VarCollector;
+import ast.flat.rvalues.Unop;
+import ast.flat.rvalues.Var;
 
-public class AssignVarBinop implements VarCollector {
+public class AssignVarUnop implements VarCollector {
   private final Var lvalue;
-  private final Binop rvalue;
+  private final Unop rvalue;
 
-  public AssignVarBinop(Var lvalue, Binop rvalue) {
+  public AssignVarUnop(Var lvalue, Unop rvalue) {
     this.lvalue = lvalue;
     this.rvalue = rvalue;
   }
@@ -20,7 +20,7 @@ public class AssignVarBinop implements VarCollector {
     return lvalue;
   }
 
-  public Binop getRvalue() {
+  public Unop getRvalue() {
     return rvalue;
   }
 
@@ -28,7 +28,7 @@ public class AssignVarBinop implements VarCollector {
   public String toString() {
     return lvalue.typeNameToString() + " = " + rvalue.toString();
   }
-  
+
   @Override
   public List<Var> getAllVars() {
     List<Var> vars = new ArrayList<>();

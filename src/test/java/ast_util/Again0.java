@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import _st3_linearize_expr.LinearExpression;
-import _st3_linearize_expr.RewriterExpr;
-import _st3_linearize_expr.ir.FlatCodeItem;
 import ast.builders.ApplyExpressionType;
 import ast.builders.TypeApplierStage;
+import ast.flat.LinearExpression;
+import ast.flat.RewriterExpr;
+import ast.flat.ir.FlatCodeItem;
 import ast.main.ParserMain;
 import ast.parse.Parse;
 import ast.tree.Expression;
