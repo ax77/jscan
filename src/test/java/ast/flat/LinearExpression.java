@@ -42,25 +42,12 @@ public class LinearExpression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (FlatCodeItem item : items) {
-      sb.append(item.toString());
-
-      boolean needSemicolon = true;
-      boolean needNewline = true;
-
       if (item.isIgnore()) {
-        needSemicolon = false;
-        needNewline = false;
+        continue;
       }
-
-      if (needSemicolon) {
-        sb.append(";");
-      }
-
-      if (needNewline) {
-        sb.append("\n");
-      }
+      sb.append(item.toString() + "\n");
     }
-    return sb.toString();
+    return sb.toString().trim();
   }
 
 }
