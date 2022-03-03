@@ -116,7 +116,6 @@ public abstract class ApplyExpressionType {
     }
 
     else if (base == EPRIMARY_IDENT) {
-      //System.out.printf("stage=%-16s, ident=%s\n", stage.toString(), e.getSymbol().getName().getName());
 
       final CType symtype = e.getSymbol().getType();
       e.setResultType(symtype);
@@ -127,10 +126,11 @@ public abstract class ApplyExpressionType {
     }
 
     else if (base == EPRIMARY_NUMBER) {
-      //System.out.printf("stage=%-16s, number=%d\n", stage.toString(), e.getCnumber().getClong());
 
       final IntLiteralType numtype = e.getCnumber().getTypeBySuffix();
-      e.setResultType(CTypeImpl.bindings.get(numtype));
+      final CType resultType = CTypeImpl.bindings.get(numtype);
+      NullChecker.check(resultType);
+      e.setResultType(resultType);
     }
 
     else if (base == ECOMPSEL) {
