@@ -5,13 +5,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 import ast.flat.items.AssignVarBinop;
-import ast.flat.items.AssignVarBool;
 import ast.flat.items.AssignVarFieldAccess;
 import ast.flat.items.AssignVarFlatCallResult;
 import ast.flat.items.AssignVarNum;
 import ast.flat.items.AssignVarUnop;
 import ast.flat.items.AssignVarVar;
-import ast.flat.items.BuiltinFuncAssertTrue;
 import ast.flat.items.FlatCallVoid;
 import ast.flat.items.StoreFieldLiteral;
 import ast.flat.items.StoreVarLiteral;
@@ -24,13 +22,11 @@ public class FlatCodeItem {
   //generated code begin
   //@formatter:off
   private AssignVarBinop assignVarBinop;
-  private AssignVarBool assignVarBool;
   private AssignVarFieldAccess assignVarFieldAccess;
   private AssignVarFlatCallResult assignVarFlatCallResult;
   private AssignVarNum assignVarNum;
   private AssignVarUnop assignVarUnop;
   private AssignVarVar assignVarVar;
-  private BuiltinFuncAssertTrue builtinFuncAssertTrue;
   private FlatCallVoid flatCallVoid;
   private StoreFieldLiteral storeFieldLiteral;
   private StoreVarLiteral storeVarLiteral;
@@ -128,13 +124,11 @@ public class FlatCodeItem {
 
   public Opc getOpcode() { return this.opcode; }
   public AssignVarBinop getAssignVarBinop() { return this.assignVarBinop; }
-  public AssignVarBool getAssignVarBool() { return this.assignVarBool; }
   public AssignVarFieldAccess getAssignVarFieldAccess() { return this.assignVarFieldAccess; }
   public AssignVarFlatCallResult getAssignVarFlatCallResult() { return this.assignVarFlatCallResult; }
   public AssignVarNum getAssignVarNum() { return this.assignVarNum; }
   public AssignVarUnop getAssignVarUnop() { return this.assignVarUnop; }
   public AssignVarVar getAssignVarVar() { return this.assignVarVar; }
-  public BuiltinFuncAssertTrue getBuiltinFuncAssertTrue() { return this.builtinFuncAssertTrue; }
   public FlatCallVoid getFlatCallVoid() { return this.flatCallVoid; }
   public StoreFieldLiteral getStoreFieldLiteral() { return this.storeFieldLiteral; }
   public StoreVarLiteral getStoreVarLiteral() { return this.storeVarLiteral; }

@@ -24,6 +24,7 @@ import ast.flat.rvalues.Var;
 import ast.symtab.CSymbol;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;
+import ast.tree.Initializer;
 import ast.types.CType;
 import ast.types.CTypeImpl;
 import jscan.literals.IntLiteral;
@@ -48,18 +49,56 @@ public class RewriterExpr {
     gen(expr);
   }
 
+  public RewriterExpr(CSymbol var) {
+    NullChecker.check(var);
+
+    this.temproraries = new ArrayList<>();
+    this.rawResult = new ArrayList<>();
+
+    List<Initializer> inits = var.getInitializer();
+
+    if (inits == null) {
+      throw new AstParseException(var.getLocationToString() + ":expect initializer: " + var.toString());
+    }
+
+    if (inits.size() > 1) {
+      todo("init-list");
+    }
+
+    Initializer init = inits.get(0);
+    gen(init.getInit());
+
+    FlatCodeItem srcItem = getLast();
+    Var lvaluevar = VarCreator.copyVarDecl(var);
+    Var rvaluevar = srcItem.getDest();
+
+    if (isLiteralItem(srcItem)) {
+      final Leaf u = makeLeaf(srcItem);
+      final StoreVarLiteral s = new StoreVarLiteral(lvaluevar, u, true);
+      rawResult.add(new FlatCodeItem(s));
+    } else {
+      AssignVarVar assignVarVar = new AssignVarVar(lvaluevar, rvaluevar);
+      rawResult.add(new FlatCodeItem(assignVarVar));
+    }
+
+  }
+
+  private void todo(String string) {
+    throw new AstParseException("todo: " + string);
+  }
+
   public List<FlatCodeItem> getRawResult() {
     return rawResult;
   }
 
-  //  private FlatCodeItem getLast() {
-  //    return rawResult.get(rawResult.size() - 1);
-  //  }
-  //
-  //  public String getLastResultNameToString() {
-  //    FlatCodeItem item = getLast();
-  //    return item.getDest().getName().getName();
-  //  }
+  private FlatCodeItem getLast() {
+    return rawResult.get(rawResult.size() - 1);
+  }
+
+  public String getLastResultNameToString() {
+    FlatCodeItem item = getLast();
+    return item.getDest().getName().getName();
+  }
 
   private void genRaw(FlatCodeItem item) {
     temproraries.add(0, item);
