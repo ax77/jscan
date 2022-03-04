@@ -1,16 +1,20 @@
-package ast.flat.func;
+package ast.flat;
 
-import ast.flat.LinearExpression;
-import ast.flat.rvalues.Var;
+import ast.symtab.CSymbol;
+import ast.tree.Expression;
 
 public class ExecFlowItem {
   final ExecFlowBase opc;
   String label;
-  Cmp cmp;
-  LinearExpression expr;
-  Var retVar;
+  Expression expr;
+  CSymbol var;
   boolean isLeader;
   String basicBlockId = "";
+
+  public ExecFlowItem(CSymbol var) {
+    this.opc = ExecFlowBase.sym;
+    this.var = var;
+  }
 
   public boolean isAnyJmp() {
     return opc == ExecFlowBase.jmp || opc == ExecFlowBase.je;
@@ -47,12 +51,7 @@ public class ExecFlowItem {
     this.isLeader = isLeader;
   }
 
-  public ExecFlowItem(Var retVar) {
-    this.opc = ExecFlowBase.ret;
-    this.retVar = retVar;
-  }
-
-  public ExecFlowItem(LinearExpression expr) {
+  public ExecFlowItem(Expression expr) {
     this.opc = ExecFlowBase.expr;
     this.expr = expr;
   }
@@ -68,11 +67,6 @@ public class ExecFlowItem {
     this.label = label;
   }
 
-  public ExecFlowItem(Cmp cmp) {
-    this.opc = ExecFlowBase.cmp;
-    this.cmp = cmp;
-  }
-
   public String getLabel() {
     return label;
   }
@@ -81,28 +75,12 @@ public class ExecFlowItem {
     this.label = label;
   }
 
-  public Cmp getCmp() {
-    return cmp;
-  }
-
-  public void setCmp(Cmp cmp) {
-    this.cmp = cmp;
-  }
-
-  public LinearExpression getExpr() {
+  public Expression getExpr() {
     return expr;
   }
 
-  public void setExpr(LinearExpression expr) {
+  public void setExpr(Expression expr) {
     this.expr = expr;
-  }
-
-  public Var getRetVar() {
-    return retVar;
-  }
-
-  public void setRetVar(Var retVar) {
-    this.retVar = retVar;
   }
 
   public ExecFlowBase getOpc() {
@@ -115,8 +93,12 @@ public class ExecFlowItem {
     if (opc == ExecFlowBase.jmp || opc == ExecFlowBase.je) {
       return id + opc.toString() + " " + label;
     }
+    if (opc == ExecFlowBase.sym) {
+      String base = var.getType().toString() + " " + var.getName();
+      String init = var.getInitializer() == null ? "" : " = " + var.getInitializer().get(0).toString();
+      return base + init;
+    }
     if (opc == ExecFlowBase.cmp) {
-      return id + cmp.toString();
     }
     if (opc == ExecFlowBase.label) {
       return id + label + ":";
@@ -125,7 +107,6 @@ public class ExecFlowItem {
       return id + expr.toString();
     }
     if (opc == ExecFlowBase.ret) {
-      return id + opc.toString() + " " + retVar.getName();
     }
     return super.toString();
   }

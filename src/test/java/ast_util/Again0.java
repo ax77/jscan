@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ast.flat.func.ExecFlowItem;
-import ast.flat.func.RewriteStmt;
+import ast.flat.ExecFlowItem;
+import ast.flat.RewriteStmt;
 import ast.main.ParserMain;
 import ast.parse.Parse;
 import ast.tree.Statement;
@@ -106,52 +106,6 @@ public class Again0 {
   }
 
   private void rewriteLabels(List<ExecFlowItem> items) {
-    // BB_25:
-    // int t4 = 1
-    // int t5 = (x == t4)
-    // cmp t5, 0
-    // je else.1
-    // 
-    // BB_26:
-    // x = 1
-    // again:
-    // 
-    // BB_27:
-    // x = 32
-    // jmp out.2
-    // else.1:
-    // 
-    // BB_28:
-    // int t13 = 2
-    // int t14 = (x == t13)
-    // cmp t14, 0
-    // je else.10
-    // 
-    // BB_29:
-    // x = 2
-    // jmp out.11
-    // else.10:
-    // 
-    // BB_30:
-    // int t20 = 3
-    // int t21 = (x == t20)
-    // cmp t21, 0
-    // je else.17
-    // 
-    // BB_31:
-    // x = 3
-    // jmp out.18
-    // else.17:
-    // out.18:
-    // out.11:
-    // out.2:
-    // 
-    // BB_32:
-    // jmp again
-    // 
-    // BB_33:
-    // int t24 = x
-    // ret t24
 
     int size = items.size();
     for (int i = 0; i < size; i++) {

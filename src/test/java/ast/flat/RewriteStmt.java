@@ -1,4 +1,4 @@
-package ast.flat.func;
+package ast.flat;
 
 import static ast.tree.StatementBase.SASM;
 import static ast.tree.StatementBase.SBREAK;
@@ -19,24 +19,15 @@ import static ast.tree.StatementBase.SWHILE;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.builders.ApplyExpressionType;
-import ast.builders.TypeApplierStage;
-import ast.flat.LinearExpression;
-import ast.flat.RewriterExpr;
-import ast.flat.rvalues.Leaf;
-import ast.flat.rvalues.Var;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.BlockItem;
 import ast.tree.Declaration;
 import ast.tree.Expression;
-import ast.tree.Initializer;
 import ast.tree.Statement;
 import ast.tree.StatementBase;
 import ast.tree.StmtLabel;
 import ast.tree.StmtSelect;
-import jscan.literals.IntLiteral;
-import jscan.literals.IntLiteralType;
 import jscan.symtab.Ident;
 import jscan.utils.AstParseException;
 import jscan.utils.GlobalCounter;
@@ -87,15 +78,9 @@ public class RewriteStmt {
       Statement ifStmt = select.getIfStmt();
       Statement elseStmt = select.getElseStmt();
 
-      LinearExpression flat = genExpr(cond);
-      push(new ExecFlowItem(flat));
-
-      Var dest = flat.getDest();
-
       if (elseStmt != null) {
 
-        Cmp cmp = new Cmp(dest, new Leaf(new IntLiteral(0, IntLiteralType.I32)));
-        push(new ExecFlowItem(cmp));
+        push(new ExecFlowItem(cond));
         push(new ExecFlowItem(ExecFlowBase.je, elseLabel));
 
         genStmt(ifStmt);
@@ -107,8 +92,7 @@ public class RewriteStmt {
 
       } else {
 
-        Cmp cmp = new Cmp(dest, new Leaf(new IntLiteral(0, IntLiteralType.I32)));
-        push(new ExecFlowItem(cmp));
+        push(new ExecFlowItem(cond));
         push(new ExecFlowItem(ExecFlowBase.je, endLabel));
 
         genStmt(ifStmt);
@@ -123,8 +107,7 @@ public class RewriteStmt {
     }
 
     else if (base == SEXPR) {
-      LinearExpression expr = genExpr(s.getStmtExpr());
-      push(new ExecFlowItem(expr));
+      push(new ExecFlowItem(s.getStmtExpr()));
     }
 
     else if (base == SBREAK) {
@@ -146,11 +129,7 @@ public class RewriteStmt {
     }
 
     else if (base == SRETURN) {
-      LinearExpression expr = genExpr(s.getStmtExpr());
-      push(new ExecFlowItem(expr));
-
-      Var dest = expr.getDest();
-      push(new ExecFlowItem(dest));
+      push(new ExecFlowItem(s.getStmtExpr()));
     }
 
     else if (base == SGOTO) {
@@ -176,40 +155,10 @@ public class RewriteStmt {
     }
   }
 
-  private LinearExpression genExpr(Expression e) {
-    if (e == null) {
-      todo("unexpected here.");
-    }
-
-    ApplyExpressionType.applytype(e, TypeApplierStage.stage_start);
-    RewriterExpr rew = new RewriterExpr(e);
-    LinearExpression lin = new LinearExpression(rew.getRawResult());
-
-    return lin;
-  }
-
-  private LinearExpression genLvar(CSymbol sym) {
-    List<Initializer> inits = sym.getInitializer();
-    if (inits == null) {
-      todo("unexpected here.");
-    }
-    if (inits.size() > 1) {
-      todo("initializerr list: " + sym.getName());
-    }
-    Initializer init = inits.get(0);
-    ApplyExpressionType.applytype(init.getInit(), TypeApplierStage.stage_start);
-
-    RewriterExpr rew = new RewriterExpr(sym);
-    LinearExpression lin = new LinearExpression(rew.getRawResult());
-
-    push(new ExecFlowItem(lin));
-    return lin;
-  }
-
   private void genSym(CSymbol sym) {
     CSymbolBase base = sym.getBase();
     if (base == CSymbolBase.SYM_LVAR) {
-      genLvar(sym);
+      push(new ExecFlowItem(sym));
     } else {
       todo("symbol: " + base.toString());
     }

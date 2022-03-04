@@ -19,7 +19,7 @@ public class Initializer implements Comparable<Initializer> {
 
   @Override
   public String toString() {
-    return String.format("%d=%s", offset, init);
+    return init.toString(); // String.format("%d=%s", offset, init)
   }
 
   @Override
