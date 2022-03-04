@@ -73,22 +73,59 @@ public class ExecFlowItem {
     this.cmp = cmp;
   }
 
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public Cmp getCmp() {
+    return cmp;
+  }
+
+  public void setCmp(Cmp cmp) {
+    this.cmp = cmp;
+  }
+
+  public LinearExpression getExpr() {
+    return expr;
+  }
+
+  public void setExpr(LinearExpression expr) {
+    this.expr = expr;
+  }
+
+  public Var getRetVar() {
+    return retVar;
+  }
+
+  public void setRetVar(Var retVar) {
+    this.retVar = retVar;
+  }
+
+  public ExecFlowBase getOpc() {
+    return opc;
+  }
+
   @Override
   public String toString() {
+    String id = isLeader ? "\n" + basicBlockId + ":\n" : "";
     if (opc == ExecFlowBase.jmp || opc == ExecFlowBase.je) {
-      return opc.toString() + " " + label;
+      return id + opc.toString() + " " + label;
     }
     if (opc == ExecFlowBase.cmp) {
-      return cmp.toString();
+      return id + cmp.toString();
     }
     if (opc == ExecFlowBase.label) {
-      return label + ":";
+      return id + label + ":";
     }
     if (opc == ExecFlowBase.expr) {
-      return expr.toString();
+      return id + expr.toString();
     }
     if (opc == ExecFlowBase.ret) {
-      return opc.toString() + " " + retVar.getName();
+      return id + opc.toString() + " " + retVar.getName();
     }
     return super.toString();
   }

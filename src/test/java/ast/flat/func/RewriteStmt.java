@@ -202,6 +202,7 @@ public class RewriteStmt {
     RewriterExpr rew = new RewriterExpr(sym);
     LinearExpression lin = new LinearExpression(rew.getRawResult());
 
+    push(new ExecFlowItem(lin));
     return lin;
   }
 

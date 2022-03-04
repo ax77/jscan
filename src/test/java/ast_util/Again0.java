@@ -2,6 +2,7 @@ package ast_util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
@@ -14,10 +15,10 @@ import ast.tree.Statement;
 import ast.tree.TranslationUnit;
 import jscan.fio.FileReadKind;
 import jscan.fio.FileWrapper;
+import jscan.utils.AstParseException;
 import jscan.utils.GlobalCounter;
 
 public class Again0 {
-
 
   class BasicBlock {
     private final List<ExecFlowItem> items;
@@ -104,6 +105,99 @@ public class Again0 {
     }
   }
 
+  private void rewriteLabels(List<ExecFlowItem> items) {
+    // BB_25:
+    // int t4 = 1
+    // int t5 = (x == t4)
+    // cmp t5, 0
+    // je else.1
+    // 
+    // BB_26:
+    // x = 1
+    // again:
+    // 
+    // BB_27:
+    // x = 32
+    // jmp out.2
+    // else.1:
+    // 
+    // BB_28:
+    // int t13 = 2
+    // int t14 = (x == t13)
+    // cmp t14, 0
+    // je else.10
+    // 
+    // BB_29:
+    // x = 2
+    // jmp out.11
+    // else.10:
+    // 
+    // BB_30:
+    // int t20 = 3
+    // int t21 = (x == t20)
+    // cmp t21, 0
+    // je else.17
+    // 
+    // BB_31:
+    // x = 3
+    // jmp out.18
+    // else.17:
+    // out.18:
+    // out.11:
+    // out.2:
+    // 
+    // BB_32:
+    // jmp again
+    // 
+    // BB_33:
+    // int t24 = x
+    // ret t24
+
+    int size = items.size();
+    for (int i = 0; i < size; i++) {
+      ExecFlowItem curr = items.get(i);
+      if (curr.isAnyJmp()) {
+        String oldlabel = curr.getLabel();
+        String bbIdent = getBbIdent(items, oldlabel);
+        curr.setLabel(bbIdent); // + "(" + oldlabel + ")"
+      }
+    }
+
+    Iterator<ExecFlowItem> it = items.iterator();
+    while (it.hasNext()) {
+      ExecFlowItem item = it.next();
+      if (item.isLabel()) {
+        it.remove();
+      }
+    }
+
+  }
+
+  private String getBbIdent(List<ExecFlowItem> items, String labelName) {
+    int size = items.size();
+    int from = -1;
+    for (int i = 0; i < size; i++) {
+      ExecFlowItem curr = items.get(i);
+      if (curr.isLabel() && curr.getLabel().equals(labelName)) {
+        from = i;
+        break;
+      }
+    }
+
+    if (from < 0) {
+      throw new AstParseException("unreachable");
+    }
+
+    for (int i = from; i < size; i++) {
+      ExecFlowItem curr = items.get(i);
+      if (curr.isLeader()) {
+        return curr.getBasicBlockId();
+      }
+    }
+
+    throw new AstParseException("unreachable");
+  }
+
   private List<BasicBlock> buildBlocks(List<ExecFlowItem> items) {
     List<BasicBlock> result = new ArrayList<>();
     BasicBlock block = new BasicBlock();
@@ -142,11 +236,16 @@ public class Again0 {
 
     List<ExecFlowItem> items = stmt.getItems();
     identifyLeaders(items);
+    rewriteLabels(items);
 
-    List<BasicBlock> blocks = buildBlocks(items);
-    for (BasicBlock b : blocks) {
-      System.out.println(b);
+    for (ExecFlowItem item : items) {
+      System.out.println(item);
     }
+
+    //    List<BasicBlock> blocks = buildBlocks(items);
+    //    for (BasicBlock b : blocks) {
+    //      System.out.println(b);
+    //    }
 
   }
 
