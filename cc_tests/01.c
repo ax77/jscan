@@ -1,5 +1,7 @@
 int main() {
 	int x = 70;
+	int *z;
+	z = &x;
 	if(x == 1) {
 		x = 1;
 	} else if(x == 2) {
@@ -9,6 +11,6 @@ int main() {
 	} else {
 		x = 1024;
 	}
-	return x;
+	return x + *z * 3;
 }
 

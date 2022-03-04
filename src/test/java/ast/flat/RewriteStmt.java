@@ -80,7 +80,7 @@ public class RewriteStmt {
 
       if (elseStmt != null) {
 
-        push(new ExecFlowItem(cond));
+        push(new ExecFlowItem(ExecFlowBase.test, cond));
         push(new ExecFlowItem(ExecFlowBase.je, elseLabel));
 
         genStmt(ifStmt);
@@ -92,7 +92,7 @@ public class RewriteStmt {
 
       } else {
 
-        push(new ExecFlowItem(cond));
+        push(new ExecFlowItem(ExecFlowBase.test, cond));
         push(new ExecFlowItem(ExecFlowBase.je, endLabel));
 
         genStmt(ifStmt);
@@ -107,7 +107,7 @@ public class RewriteStmt {
     }
 
     else if (base == SEXPR) {
-      push(new ExecFlowItem(s.getStmtExpr()));
+      push(new ExecFlowItem(ExecFlowBase.expr, s.getStmtExpr()));
     }
 
     else if (base == SBREAK) {
@@ -129,7 +129,7 @@ public class RewriteStmt {
     }
 
     else if (base == SRETURN) {
-      push(new ExecFlowItem(s.getStmtExpr()));
+      push(new ExecFlowItem(ExecFlowBase.ret, s.getStmtExpr()));
     }
 
     else if (base == SGOTO) {
@@ -158,7 +158,9 @@ public class RewriteStmt {
   private void genSym(CSymbol sym) {
     CSymbolBase base = sym.getBase();
     if (base == CSymbolBase.SYM_LVAR) {
-      push(new ExecFlowItem(sym));
+      if (sym.getInitializer() != null) {
+        push(new ExecFlowItem(sym));
+      }
     } else {
       todo("symbol: " + base.toString());
     }

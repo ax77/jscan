@@ -1,15 +1,21 @@
 package ast.flat;
 
+import ast.builders.ApplyExpressionType;
+import ast.builders.TypeApplierStage;
 import ast.symtab.CSymbol;
 import ast.tree.Expression;
 
 public class ExecFlowItem {
-  final ExecFlowBase opc;
-  String label;
-  Expression expr;
-  CSymbol var;
-  boolean isLeader;
-  String basicBlockId = "";
+  private final ExecFlowBase opc;
+
+  // union-items
+  private String label;
+  private Expression expr;
+  private CSymbol var;
+
+  // bb-routine
+  private boolean isLeader;
+  private String basicBlockId = "";
 
   public ExecFlowItem(CSymbol var) {
     this.opc = ExecFlowBase.sym;
@@ -51,8 +57,9 @@ public class ExecFlowItem {
     this.isLeader = isLeader;
   }
 
-  public ExecFlowItem(Expression expr) {
-    this.opc = ExecFlowBase.expr;
+  public ExecFlowItem(ExecFlowBase opc, Expression expr) {
+    ApplyExpressionType.applytype(expr, TypeApplierStage.stage_start);
+    this.opc = opc;
     this.expr = expr;
   }
 
@@ -98,7 +105,8 @@ public class ExecFlowItem {
       String init = var.getInitializer() == null ? "" : " = " + var.getInitializer().get(0).toString();
       return base + init;
     }
-    if (opc == ExecFlowBase.cmp) {
+    if (opc == ExecFlowBase.test) {
+      return id + opc.toString() + " " + expr;
     }
     if (opc == ExecFlowBase.label) {
       return id + label + ":";
@@ -107,6 +115,10 @@ public class ExecFlowItem {
       return id + expr.toString();
     }
     if (opc == ExecFlowBase.ret) {
+      if (expr != null) {
+        return id + opc.toString() + " " + expr;
+      }
+      return id + opc.toString();
     }
     return super.toString();
   }

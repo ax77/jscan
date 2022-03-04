@@ -1,5 +1,5 @@
 package ast.flat;
 
 public enum ExecFlowBase {
-    jmp, cmp, label, je, expr, ret, sym,
+    jmp, test, label, je, expr, ret, sym,
 }

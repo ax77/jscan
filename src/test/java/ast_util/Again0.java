@@ -11,10 +11,14 @@ import ast.flat.ExecFlowItem;
 import ast.flat.RewriteStmt;
 import ast.main.ParserMain;
 import ast.parse.Parse;
+import ast.symtab.CSymbol;
+import ast.tree.FunctionDefinition;
 import ast.tree.Statement;
 import ast.tree.TranslationUnit;
+import ast.types.CType;
 import jscan.fio.FileReadKind;
 import jscan.fio.FileWrapper;
+import jscan.utils.Aligner;
 import jscan.utils.AstParseException;
 import jscan.utils.GlobalCounter;
 
@@ -107,16 +111,18 @@ public class Again0 {
 
   private void rewriteLabels(List<ExecFlowItem> items) {
 
+    // apply all jumps
     int size = items.size();
     for (int i = 0; i < size; i++) {
       ExecFlowItem curr = items.get(i);
       if (curr.isAnyJmp()) {
         String oldlabel = curr.getLabel();
         String bbIdent = getBbIdent(items, oldlabel);
-        curr.setLabel(bbIdent); // + "(" + oldlabel + ")"
+        curr.setLabel(bbIdent);
       }
     }
 
+    // and remove all of the labels
     Iterator<ExecFlowItem> it = items.iterator();
     while (it.hasNext()) {
       ExecFlowItem item = it.next();
@@ -173,6 +179,21 @@ public class Again0 {
     }
 
     return result;
+  }
+
+  int applyLocalOffset(FunctionDefinition fn) {
+    int curoffset = 0;
+    for (CSymbol sym : fn.getLocals()) {
+      CType tp = sym.getType();
+      int tsz = tp.getSize();
+      if (tsz <= 8) {
+        tsz = 8;
+      }
+      curoffset += tsz;
+      curoffset = Aligner.align(curoffset, tp.getAlign());
+      sym.setOffset(-curoffset);
+    }
+    return Aligner.align(curoffset, 16);
   }
 
   @Test
