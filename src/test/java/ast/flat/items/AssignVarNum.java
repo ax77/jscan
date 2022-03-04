@@ -26,7 +26,7 @@ public class AssignVarNum implements VarCollector {
 
   @Override
   public String toString() {
-    return "const " + lvalue.typeNameToString() + " = " + literal.toString();
+    return /*"const " + */ lvalue.typeNameToString() + " = " + literal.toString();
   }
 
   @Override

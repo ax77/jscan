@@ -8,4 +8,9 @@ public class GlobalCounter {
     count += 1;
     return res;
   }
+
+  public static String nextLabel(String pref) {
+    int cnt = next();
+    return String.format("%s%d", pref, cnt);
+  }
 }

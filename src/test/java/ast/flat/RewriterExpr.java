@@ -144,8 +144,7 @@ public class RewriterExpr {
       return new Leaf(srcItem.getAssignVarVar().getRvalue());
     }
 
-    // unreachable
-    return null;
+    throw new AstParseException("unreachable");
   }
 
   private void store(CType resultType) {

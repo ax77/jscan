@@ -9,6 +9,43 @@ public class ExecFlowItem {
   Cmp cmp;
   LinearExpression expr;
   Var retVar;
+  boolean isLeader;
+  String basicBlockId = "";
+
+  public boolean isAnyJmp() {
+    return opc == ExecFlowBase.jmp || opc == ExecFlowBase.je;
+  }
+
+  public boolean isLabel() {
+    return opc == ExecFlowBase.label;
+  }
+
+  // this is a c-label-statement, and not a generated label
+  public boolean isOriginalLabel() {
+    if (!isLabel()) {
+      return false;
+    }
+    return !label.contains(".");
+  }
+
+  public String getBasicBlockId() {
+    return basicBlockId;
+  }
+
+  public void setBasicBlockId(String basicBlockId) {
+    this.basicBlockId = basicBlockId;
+  }
+
+  public boolean isLeader() {
+    return isLeader;
+  }
+
+  public void setLeader(boolean isLeader) {
+    if (isLabel()) {
+      return;
+    }
+    this.isLeader = isLeader;
+  }
 
   public ExecFlowItem(Var retVar) {
     this.opc = ExecFlowBase.ret;

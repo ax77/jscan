@@ -45,7 +45,7 @@ public class LinearExpression {
       if (item.isIgnore()) {
         continue;
       }
-      sb.append(item.toString() + "\n");
+      sb.append(item.toString().trim() + "\n");
     }
     return sb.toString().trim();
   }

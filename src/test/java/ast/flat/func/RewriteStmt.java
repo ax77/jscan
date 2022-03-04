@@ -54,7 +54,7 @@ public class RewriteStmt {
   }
 
   static private String label(String pref) {
-    return String.format("%s%d", pref, GlobalCounter.next());
+    return GlobalCounter.nextLabel(pref + ".");
   }
 
   private void push(ExecFlowItem e) {
@@ -161,6 +161,7 @@ public class RewriteStmt {
 
     else if (base == SLABEL) {
       final StmtLabel stmtLabel = s.getStmtLabel();
+      push(new ExecFlowItem(stmtLabel.getLabel().getName()));
       genStmt(stmtLabel.getStmt());
     }
 
