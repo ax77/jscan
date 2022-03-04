@@ -81,7 +81,7 @@ public class RewriteStmt {
       if (elseStmt != null) {
 
         push(new ExecFlowItem(ExecFlowBase.test, cond));
-        push(new ExecFlowItem(ExecFlowBase.je, elseLabel));
+        push(new ExecFlowItem(ExecFlowBase.jz, elseLabel));
 
         genStmt(ifStmt);
         push(new ExecFlowItem(ExecFlowBase.jmp, endLabel));
@@ -93,7 +93,7 @@ public class RewriteStmt {
       } else {
 
         push(new ExecFlowItem(ExecFlowBase.test, cond));
-        push(new ExecFlowItem(ExecFlowBase.je, endLabel));
+        push(new ExecFlowItem(ExecFlowBase.jz, endLabel));
 
         genStmt(ifStmt);
         push(new ExecFlowItem(endLabel));

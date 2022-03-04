@@ -69,7 +69,7 @@ public class ParseEnum {
           return type;
         } else {
           final CType incomplete = new CType(new CEnumType(tag.getIdent()));
-          final CSymbol nsymbol = new CSymbol(CSymbolBase.SYM_ENUM, tag.getIdent(), incomplete, tag);
+          final CSymbol nsymbol = new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), incomplete, tag);
           parser.defineTag(tag.getIdent(), nsymbol);
           return incomplete;
         }
@@ -114,7 +114,7 @@ public class ParseEnum {
 
             CType newtype = new CType(newenum);
 
-            parser.defineTag(tag.getIdent(), new CSymbol(CSymbolBase.SYM_ENUM, tag.getIdent(), newtype, tag));
+            parser.defineTag(tag.getIdent(), new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), newtype, tag));
             return newtype;
           }
 
@@ -141,7 +141,7 @@ public class ParseEnum {
 
         CEnumType incomplete = new CEnumType(tag.getIdent());
         final CType structIncompleteType = new CType(incomplete);
-        final CSymbol structSymbol = new CSymbol(CSymbolBase.SYM_ENUM, tag.getIdent(), structIncompleteType, tag);
+        final CSymbol structSymbol = new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), structIncompleteType, tag);
         parser.defineTag(tag.getIdent(), structSymbol);
 
         if (parser.tp() == T.T_LEFT_BRACE) {

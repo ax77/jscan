@@ -119,7 +119,7 @@ public class ParseStruct {
     CStructType incomplete = new CStructType(isUnion, tagId);
     CType type = new CType(incomplete, -1, -1);
 
-    CSymbol structSymbol = new CSymbol(CSymbolBase.SYM_STRUCT, tagId, type, from);
+    CSymbol structSymbol = new CSymbol(CSymbolBase.SYM_STRUCT_DECLARATION, tagId, type, from);
     parser.defineTag(tagId, structSymbol);
 
     return type;

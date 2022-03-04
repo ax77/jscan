@@ -205,7 +205,10 @@ public class Again0 {
     Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
     TranslationUnit unit = p.parse_unit();
 
-    final Statement block = unit.getExternalDeclarations().get(0).getFunctionDefinition().getBlock();
+    final FunctionDefinition func = unit.getExternalDeclarations().get(0).getFunctionDefinition();
+    int locals = applyLocalOffset(func);
+
+    final Statement block = func.getBlock();
     RewriteStmt stmt = new RewriteStmt();
     stmt.genStmt(block);
 

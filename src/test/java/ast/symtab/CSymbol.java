@@ -4,8 +4,6 @@ import java.util.List;
 
 import ast.tree.Initializer;
 import ast.types.CType;
-import jscan.literals.IntLiteral;
-import jscan.literals.IntLiteralParser;
 import jscan.sourceloc.Location;
 import jscan.sourceloc.SourceLocation;
 import jscan.symtab.Ident;
@@ -15,13 +13,18 @@ public class CSymbol implements Location {
   private final SourceLocation location;
   private final Token from;
 
+  // these fields are the base of each symbol
   private final CSymbolBase base;
   private final Ident name;
   private final CType type;
 
-  private IntLiteral numericConstant;
+  // enum value, associated with the 'name'
+  private int enumValue;
+
+  // variable initializer
   private List<Initializer> initializer;
 
+  // offset of a local variable
   private int offset;
 
   public CSymbol(CSymbolBase base, Ident name, CType type, Token from) {
@@ -50,30 +53,22 @@ public class CSymbol implements Location {
   }
 
   public int getEnumvalue() {
-    return (int) numericConstant.getClong();
+    return enumValue;
   }
 
-  public void setEnumvalue(int enumvalue) {
-    IntLiteral result = IntLiteralParser.parse(String.format("%d", enumvalue));
-    this.numericConstant = result; // TODO:
+  public void setEnumvalue(int enumValue) {
+    this.enumValue = enumValue;
   }
 
   @Override
   public String toString() {
-    return "line=" + String.format("%-3d", location.getLine()) + " (name=" + name.getName() + ", type="
-        + type.toString() + ", base=" + base.toString() + ") ";
+    String ret = String.format("off=%d, loc=%d, name=%s, type=%s, base=%s", offset, location.getLine(), name.getName(),
+        type.toString(), base.toString());
+    return ret;
   }
 
   public List<Initializer> getInitializer() {
     return initializer;
-  }
-
-  public IntLiteral getNumericConstant() {
-    return numericConstant;
-  }
-
-  public void setNumericConstant(IntLiteral numericConstant) {
-    this.numericConstant = numericConstant;
   }
 
   public CSymbolBase getBase() {

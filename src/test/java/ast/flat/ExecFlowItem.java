@@ -23,7 +23,7 @@ public class ExecFlowItem {
   }
 
   public boolean isAnyJmp() {
-    return opc == ExecFlowBase.jmp || opc == ExecFlowBase.je;
+    return opc == ExecFlowBase.jmp || opc == ExecFlowBase.jz;
   }
 
   public boolean isLabel() {
@@ -97,7 +97,7 @@ public class ExecFlowItem {
   @Override
   public String toString() {
     String id = isLeader ? "\n" + basicBlockId + ":\n" : "";
-    if (opc == ExecFlowBase.jmp || opc == ExecFlowBase.je) {
+    if (opc == ExecFlowBase.jmp || opc == ExecFlowBase.jz) {
       return id + opc.toString() + " " + label;
     }
     if (opc == ExecFlowBase.sym) {
