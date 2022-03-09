@@ -50,6 +50,7 @@ public class ParseStruct {
       parser.perror("expect identifier or { for enum type-specifier");
     }
 
+    @SuppressWarnings("unused")
     AttributesAsmsLists attributesAsmsLists = new ParseAttributesAsms(parser).parse();
 
     Token tag = null;
@@ -59,10 +60,12 @@ public class ParseStruct {
     }
 
     if (tag != null) {
-      return parseStructWithPresentedTag(tag);
+      final CType result = parseStructWithPresentedTag(tag);
+      return result;
     }
 
-    return parseStructWithNoTag();
+    final CType result = parseStructWithNoTag();
+    return result;
 
   }
 
@@ -199,41 +202,36 @@ public class ParseStruct {
     if (parser.tp() == T_SEMI_COLON) {
       parser.move();
 
-      // TODO:XXX
-      // this mean:
-      // 1) we inside struct/union
-      // 2) we get something in declspecs
-      // 3) we find semicolon
-      // 4) this field has no name
-      // this may be struct, union, enum
-      // this may have tag or not
-      // if this has a tag OR name is not anonymous
-      // if this has a tag, and no name - is warning 'declaration doe's not declare anything'
-
-      boolean isStructUnionEnum = basetype.isStrUnion() || basetype.isEnumeration();
-      if (!isStructUnionEnum) {
-        parser.perror("expect struct/union");
-      }
+      /// struct some {                                             
+      ///     enum toktype {                                        
+      ///         t_ident, t_string,                                
+      ///     };   // warning: declaration does not declare anything
+      ///     int; // warning: declaration does not declare anything
+      ///     int field;                                            
+      /// };                                                        
 
       // TODO:XXX: fields offset, if it's from anonymous UNION...
 
-      if (basetype.isEnumeration()) {
-        //TODO:
-        return r;
-      } else {
+      boolean isStructUnionEnum = basetype.isStrUnion() || basetype.isEnumeration();
+      if (isStructUnionEnum) {
+
+        if (basetype.isEnumeration()) {
+          return r;
+        }
 
         boolean isAnonymousDeclaration = !basetype.getTpStruct().isHasTag();
         if (isAnonymousDeclaration) {
-
           List<CStructField> fieldsInside = basetype.getTpStruct().getFields();
           r.addAll(fieldsInside);
           return r;
         } else {
-          parser.pwarning("declaration doe's not declare anything.");
+          parser.pwarning("declaration does not declare anything");
           return r; // TODO: empty now ?
         }
 
       }
+
+      return r;
 
     }
 

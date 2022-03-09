@@ -23,13 +23,10 @@ public class IO {
     BufferedReader br = new BufferedReader(new FileReader(fname));
 
     List<String> lines = new ArrayList<String>();
-    String maybe = br.readLine();
-    while (maybe != null) {
-      String line = maybe.trim();
-      if (!line.isEmpty()) {
-        lines.add(line);
-      }
-      maybe = br.readLine();
+    String line = br.readLine();
+    while (line != null) {
+      lines.add(line);
+      line = br.readLine();
     }
 
     br.close();

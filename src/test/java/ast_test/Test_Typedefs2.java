@@ -1,17 +1,18 @@
 package ast_test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import ast.main.ParserMain;
 import ast.parse.Parse;
-import ast.symtab.CSymbol;
-import ast.tree.Declaration;
-import ast.tree.ExternalDeclaration;
 import ast.tree.TranslationUnit;
-import jscan.parse.Tokenlist;
+import jscan.preproc.preprocess.Scan;
+import jscan.symtab.KeywordsInits;
+import jscan.tokenize.Stream;
+import jscan.tokenize.T;
+import jscan.tokenize.Token;
 
 public class Test_Typedefs2 {
 
@@ -19,85 +20,82 @@ public class Test_Typedefs2 {
   public void testTypedefs8() throws IOException {
     //@formatter:off
     StringBuilder sb = new StringBuilder();
-    sb.append(" /*255*/  extern __attribute__((dllimport)) const char _ctype_[]; \n");
-    sb.append(" /*190*/  void __assert_func (const char *, int, const char *, const char *)                                                                                                 \n");
-    sb.append(" /*191*/       __attribute__ ((__noreturn__));  \n"); 
-    
-    sb.append(" /*001*/  struct typedef_after {                        \n");
-    sb.append(" /*002*/      int flag;                                 \n");
-    sb.append(" /*003*/  } typedef typedef_after, *p_typedef_after;    \n");
-    
-    sb.append(" /*177*/  void __builtin_va_start(void);                                                                                                                                     \n");
-    sb.append(" /*178*/  void __builtin_va_arg(void);                                                                                                                                       \n");
-    sb.append(" /*179*/  typedef struct {                                                                                                                                                   \n");
-    sb.append(" /*180*/          unsigned int gp_offset;                                                                                                                                    \n");
-    sb.append(" /*181*/          unsigned int fp_offset;                                                                                                                                    \n");
-    sb.append(" /*182*/          void *overflow_arg_area;                                                                                                                                   \n");
-    sb.append(" /*183*/          void *reg_save_area;                                                                                                                                       \n");
-    sb.append(" /*184*/  } __builtin_va_list[1];                                                                                                                                            \n");
-    sb.append(" /*188*/  void __assert (const char *, int, const char *)                                                                                                                    \n");
-    sb.append(" /*189*/       __attribute__ ((__noreturn__));                                                                                                                               \n");
-    sb.append(" /*190*/  void __assert_func (const char *, int, const char *, const char *)                                                                                                 \n");
-    sb.append(" /*191*/       __attribute__ ((__noreturn__));                                                                                                                               \n");
-    sb.append(" /*192*/  typedef signed char __int8_t;                                                                                                                                      \n");
-    sb.append(" /*193*/  typedef unsigned char __uint8_t;                                                                                                                                   \n");
-    sb.append(" /*194*/  typedef short int __int16_t;                                                                                                                                       \n");
-    sb.append(" /*195*/  typedef short unsigned int __uint16_t;                                                                                                                             \n");
-    sb.append(" /*196*/  typedef int __int32_t;                                                                                                                                             \n");
-    sb.append(" /*197*/  typedef unsigned int __uint32_t;                                                                                                                                   \n");
-    sb.append(" /*198*/  typedef long int __int64_t;                                                                                                                                        \n");
-    sb.append(" /*199*/  typedef long unsigned int __uint64_t;                                                                                                                              \n");
-    sb.append(" /*200*/  typedef signed char __int_least8_t;                                                                                                                                \n");
-    sb.append(" /*201*/  typedef unsigned char __uint_least8_t;                                                                                                                             \n");
-    sb.append(" /*202*/  typedef short int __int_least16_t;                                                                                                                                 \n");
-    sb.append(" /*203*/  typedef short unsigned int __uint_least16_t;                                                                                                                       \n");
-    sb.append(" /*204*/  typedef int __int_least32_t;                                                                                                                                       \n");
-    sb.append(" /*205*/  typedef unsigned int __uint_least32_t;                                                                                                                             \n");
-    sb.append(" /*206*/  typedef long int __int_least64_t;                                                                                                                                  \n");
-    sb.append(" /*207*/  typedef long unsigned int __uint_least64_t;                                                                                                                        \n");
-    sb.append(" /*208*/  typedef long int __intmax_t;                                                                                                                                       \n");
-    sb.append(" /*209*/  typedef long unsigned int __uintmax_t;                                                                                                                             \n");
-    sb.append(" /*210*/  typedef long int __intptr_t;                                                                                                                                       \n");
-    sb.append(" /*211*/  typedef long unsigned int __uintptr_t;                                                                                                                             \n");
-    sb.append(" /*212*/  typedef long int ptrdiff_t;                                                                                                                                        \n");
-    sb.append(" /*213*/  typedef long unsigned int size_t;                                                                                                                                  \n");
-    sb.append(" /*214*/  typedef short unsigned int wchar_t;                                                                                                                                \n");
-    sb.append(" /*215*/  typedef struct {                                                                                                                                                   \n");
-    sb.append(" /*216*/    long long __max_align_ll __attribute__((__aligned__(__alignof__(long long))));                                                                                   \n");
-    sb.append(" /*217*/    long double __max_align_ld __attribute__((__aligned__(__alignof__(long double))));                                                                               \n");
-    sb.append(" /*218*/  } max_align_t;  ");
-    
-    sb.append(" /*004*/  static int test_typedefs_1() {                \n");
-    sb.append(" /*005*/      typedef int i32;                          \n");
-    sb.append(" /*006*/      typedef i32 i32;                          \n");
-    sb.append(" /*007*/      int signed typedef i32;                   \n");
-    sb.append(" /*008*/      i32 typedef i32;                          \n");
-    sb.append(" /*009*/      typedef i32 dword;                        \n");
-    sb.append(" /*010*/      i32 x = 1;                                \n");
-    sb.append(" /*011*/      x -= 1;                                   \n");
-    sb.append(" /*012*/      dword y = 1;                              \n");
-    sb.append(" /*013*/      y -= 1;                                   \n");
-    sb.append(" /*014*/      return x + y;                             \n");
-    sb.append(" /*015*/  }                                             \n");
-    sb.append(" /*027*/  int main() {                                  \n");
-    sb.append(" /*028*/      long long result = 0;                     \n");
-    sb.append(" /*031*/      return (result == 0) ? 0 : 1;             \n");
-    sb.append(" /*032*/  }                                             \n");
+    sb.append(" /*001*/  #define COMPOUND_DESIGNATORS (0)                             \n");
+    sb.append(" /*002*/                                                               \n");
+    sb.append(" /*003*/  struct typedef_after {                                       \n");
+    sb.append(" /*004*/      int flag;                                                \n");
+    sb.append(" /*005*/  } typedef typedef_after, *p_typedef_after;                   \n");
+    sb.append(" /*006*/                                                               \n");
+    sb.append(" /*007*/  static int test_typedefs_1() {                               \n");
+    sb.append(" /*008*/      typedef int i32;                                         \n");
+    sb.append(" /*009*/      typedef i32 i32;                                         \n");
+    sb.append(" /*010*/      int signed typedef i32;                                  \n");
+    sb.append(" /*011*/      i32 typedef i32;                                         \n");
+    sb.append(" /*012*/      typedef i32 dword;                                       \n");
+    sb.append(" /*013*/                                                               \n");
+    sb.append(" /*014*/      i32 x = 1;                                               \n");
+    sb.append(" /*015*/      x -= 1;                                                  \n");
+    sb.append(" /*016*/                                                               \n");
+    sb.append(" /*017*/      dword y = 1;                                             \n");
+    sb.append(" /*018*/      y -= 1;                                                  \n");
+    sb.append(" /*019*/                                                               \n");
+    sb.append(" /*020*/      return x + y;                                            \n");
+    sb.append(" /*021*/  }                                                            \n");
+    sb.append(" /*022*/                                                               \n");
+    sb.append(" /*023*/  static int test_desg_1() {                                   \n");
+    sb.append(" /*024*/  #if COMPOUND_DESIGNATORS                                     \n");
+    sb.append(" /*025*/      struct s {                                               \n");
+    sb.append(" /*026*/          int a[2][2];                                         \n");
+    sb.append(" /*027*/      };                                                       \n");
+    sb.append(" /*028*/      struct s var = {                                         \n");
+    sb.append(" /*029*/          .a[0][0] = 1,                                        \n");
+    sb.append(" /*030*/          .a[1][0] = 2,                                        \n");
+    sb.append(" /*031*/      };                                                       \n");
+    sb.append(" /*032*/      int result = var.a[0][0] + var.a[1][0];                  \n");
+    sb.append(" /*033*/      return (result == 3) ? 0 : 1;                            \n");
+    sb.append(" /*034*/  #else                                                        \n");
+    sb.append(" /*035*/      return 0;                                                \n");
+    sb.append(" /*036*/  #endif                                                       \n");
+    sb.append(" /*037*/  }                                                            \n");
+    sb.append(" /*038*/                                                               \n");
+    sb.append(" /*039*/  struct some {                                                \n");
+    sb.append(" /*040*/      enum toktype {                                           \n");
+    sb.append(" /*041*/          t_ident, t_string,                                   \n");
+    sb.append(" /*042*/      };   // warning: declaration does not declare anything   \n");
+    sb.append(" /*043*/      int; // warning: declaration does not declare anything   \n");
+    sb.append(" /*044*/      int field;                                               \n");
+    sb.append(" /*045*/  };                                                           \n");
+    sb.append(" /*046*/                                                               \n");
+    sb.append(" /*047*/  int main() {                                                 \n");
+    sb.append(" /*048*/      enum toktype tp = t_ident;                               \n");
+    sb.append(" /*049*/      long long result = 0;                                    \n");
+    sb.append(" /*050*/      result += test_desg_1();                                 \n");
+    sb.append(" /*051*/      result += test_typedefs_1();                             \n");
+    sb.append(" /*052*/                                                               \n");
+    sb.append(" /*053*/      return (result == 0) ? 0 : 1;                            \n");
+    sb.append(" /*054*/  }                                                            \n");
+    sb.append(" /*055*/                                                               \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(new StringBuilder(sb)).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
-
-    for (ExternalDeclaration ext : unit.getExternalDeclarations()) {
-      if (ext.isDeclaration()) {
-        Declaration decl = ext.getDeclaration();
-        if (decl.isVarlist()) {
-          for (CSymbol sym : decl.getVariables()) {
-          }
-        }
+    KeywordsInits.initIdents();
+    List<Token> tokens = new Stream("utest", sb.toString()).getTokenlist();
+    List<Token> pp = new ArrayList<Token>();
+    Scan s = new Scan(tokens);
+    for (;;) {
+      Token tok = s.get();
+      if (tok.ofType(T.TOKEN_EOF)) {
+        pp.add(tok);
+        break;
       }
+      if (tok.typeIsSpecialStreamMarks()) {
+        continue;
+      }
+      pp.add(tok);
     }
+
+    Parse parser = new Parse(pp);
+    TranslationUnit unit = parser.parse_unit();
+
   }
 
 }

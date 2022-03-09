@@ -11,6 +11,8 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import jscan.fio.IO;
+
 public class UtilSrcToStringGenerator {
 
   private String pad(String s, int c) {
@@ -57,38 +59,18 @@ public class UtilSrcToStringGenerator {
     String n = "\\n";
     String b = "\\";
     int mlen = 0;
-    List<String> lines = new ArrayList<String>();
-
-    try {
-      File f = new File(fnameinput);
-      BufferedReader bufreader = new BufferedReader(new FileReader(f));
-
-      String readLine = "";
-      while ((readLine = bufreader.readLine()) != null) {
-
-        readLine = esc(readLine);
-        lines.add(readLine);
-
-        int slen = readLine.length();
-        if (mlen < slen) {
-          mlen = slen;
-        }
+    List<String> lines = IO.readf(fnameinput);
+    for (String line : lines) {
+      if (mlen < line.length()) {
+        mlen = line.length();
       }
-
-    } catch (IOException e) {
-      e.printStackTrace();
     }
 
     FileWriter fw = new FileWriter(fnameout);
-
     fw.write("    //@formatter:off\n");
     fw.write("    StringBuilder sb = new StringBuilder();\n");
     int cnt = 1;
     for (String line : lines) {
-      String tmp = line.trim();
-      if (tmp.isEmpty()) {
-        continue;
-      }
       fw.write("    sb.append(" + q + lineno(cnt++) + line + pad(line, mlen + 3) + n + q + ");\n");
     }
     fw.write("    //@formatter:on\n");
