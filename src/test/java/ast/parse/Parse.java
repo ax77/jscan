@@ -274,6 +274,10 @@ public class Parse {
     return tokenlist.peek();
   }
 
+  public boolean is(T t) {
+    return tok.ofType(t);
+  }
+
   public Token lparen() {
     return checkedMove(T.T_LEFT_PAREN);
   }
@@ -292,6 +296,18 @@ public class Parse {
 
   public Token semicolon() {
     return checkedMove(T_SEMI_COLON);
+  }
+
+  public void lbrace() {
+    checkedMove(T.T_LEFT_BRACE);
+  }
+
+  public void rbrace() {
+    checkedMove(T.T_RIGHT_BRACE);
+  }
+
+  public void comma() {
+    checkedMove(T.T_COMMA);
   }
 
   //@formatter:off

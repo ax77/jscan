@@ -1,0 +1,39 @@
+struct typedef_after {
+    int flag;
+} typedef typedef_after, *p_typedef_after;
+
+static int test_typedefs_1() {
+    typedef int i32;
+    typedef i32 i32;
+    int signed typedef i32;
+    i32 typedef i32;
+    typedef i32 dword;
+    
+    i32 x = 1;
+    x -= 1;
+    
+    dword y = 1;
+    y -= 1;
+    
+    return x + y;
+}
+
+static int test_desg_1() {
+    struct s {
+        int a[2][2];
+    };
+    struct s var = {
+        .a[0][0] = 1,
+        .a[1][0] = 2,
+    };
+    int result = var.a[0][0] + var.a[1][0];
+    return (result == 3) ? 0 : 1;
+}
+
+int main() {
+    long long result = 0;
+    result += test_desg_1();
+    result += test_typedefs_1();
+    
+    return (result == 0) ? 0 : 1;
+}
