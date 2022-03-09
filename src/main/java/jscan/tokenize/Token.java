@@ -158,7 +158,7 @@ public class Token {
     return (this.fposition & fpainted) == fpainted;
   }
 
-  public void paint() {
+  public void setNoexpand() {
     this.fposition |= fpainted;
   }
 

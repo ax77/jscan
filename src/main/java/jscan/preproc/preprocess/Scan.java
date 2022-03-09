@@ -274,8 +274,7 @@ public final class Scan {
 
       // 1
       //
-      if (t.ofType(T.T_SPEC_UNHIDE)) {
-        t.getIdent().getSym().unhide();
+      if (unhide(t)) {
         continue restart;
       }
 
@@ -304,7 +303,7 @@ public final class Scan {
       //
       if (macros.isHidden()) {
         Token painted = new Token(t);
-        painted.paint();
+        painted.setNoexpand();
         return painted;
       }
 
@@ -321,8 +320,7 @@ public final class Scan {
       while (!isEmpty()) {
         Token u = pop();
 
-        if (u.ofType(T.T_SPEC_UNHIDE)) {
-          u.getIdent().getSym().unhide();
+        if (unhide(u)) {
           continue;
         }
 
@@ -335,8 +333,7 @@ public final class Scan {
         if (macros.getArity() == 0) {
           while (!isEmpty()) {
             u = pop();
-            if (u.ofType(T.T_SPEC_UNHIDE)) {
-              u.getIdent().getSym().unhide();
+            if (unhide(u)) {
               continue;
             } else if (u.ofType(T.T_RIGHT_PAREN)) {
               replaceSimple(macros, macros.getRepl(), t, null);
@@ -353,12 +350,12 @@ public final class Scan {
         List<List<Token>> arguments = scanArgs(macros.getParm().size(), macros.isVararg(), t, argInfo);
         ArgVariants argvariants = new ArgVariants(arguments.size());
 
-        for (int argidx = 0; argidx != arguments.size(); ++argidx) {
+        for (int argidx = 0; argidx < arguments.size(); argidx++) {
 
           if (macros.usage(argidx) == 0) { // argument not used
             for (Token nused : arguments.get(argidx)) {
-              if (nused.ofType(T.T_SPEC_UNHIDE)) {
-                nused.getIdent().getSym().unhide();
+              if (unhide(nused)) {
+                throw new ScanExc("unexpecting unhide");
               }
             }
             continue;
@@ -366,12 +363,10 @@ public final class Scan {
 
           // argument used
 
-          List<Sym> reset = new ArrayList<Sym>();
-
           // I
           //
           if ((macros.usage(argidx) & Fcategory.stringized) == Fcategory.stringized) {
-            Token stringizedTok = stringize(arguments.get(argidx), reset, t);
+            Token stringizedTok = stringize(arguments.get(argidx), t);
             List<Token> argvar = argvariants.get(argidx, Fcategory.formal | Fcategory.stringized);
             argvar.add(stringizedTok);
           }
@@ -379,36 +374,13 @@ public final class Scan {
           // II
           //
           if ((macros.usage(argidx) & Fcategory.unscanned) == Fcategory.unscanned) {
-            for (Sym mdef : reset) {
-              mdef.hide();
-            }
-            reset.clear();
 
             List<Token> argvar = argvariants.get(argidx, Fcategory.formal | Fcategory.unscanned);
             for (Token glued : arguments.get(argidx)) {
-              if (glued.ofType(T.T_SPEC_UNHIDE)) {
-                Sym mac = glued.getIdent().getSym();
-                mac.unhide();
-                reset.add(mac);
-                continue;
+              if (unhide(glued)) {
+                throw new ScanExc("unexpecting unhide");
               }
-
-              if (!glued.ofType(T.TOKEN_IDENT)) {
-                argvar.add(glued);
-              } else {
-                Sym mac = glued.getIdent().getSym();
-                if (mac == null) {
-                  argvar.add(glued);
-                } else {
-                  if (mac.isHidden()) {
-                    Token painted = new Token(glued);
-                    argvar.add(painted);
-                    painted.paint();
-                  } else {
-                    argvar.add(glued);
-                  }
-                }
-              }
+              argvar.add(glued);
             }
 
           }
@@ -416,9 +388,6 @@ public final class Scan {
           // III
           //
           if ((macros.usage(argidx) & Fcategory.scanned) == Fcategory.scanned) {
-            for (Sym mdef : reset) {
-              mdef.hide();
-            }
 
             List<Token> argvar = argvariants.get(argidx, Fcategory.formal | Fcategory.scanned);
             Scan nscan = new Scan(arguments.get(argidx));
@@ -496,6 +465,19 @@ public final class Scan {
 
     while (!isEmpty()) {
       Token u = pop();
+
+      // XXX: I)
+      if (unhide(u)) {
+        continue;
+      }
+
+      // XXX: II)
+      if (u.ofType(T.TOKEN_IDENT)) {
+        Sym sym = u.getIdent().getSym();
+        if (sym != null && sym.isHidden()) {
+          u.setNoexpand();
+        }
+      }
 
       if (PpEnv.isPPDirType(u)) {
         Error.warning(ErrorCode.W_PP_DIRECTIVE_IN_ARGUMENT_LIST, u.loc());
@@ -671,7 +653,7 @@ public final class Scan {
     return rv;
   }
 
-  public Token stringize(List<Token> ts, List<Sym> reset, Token headToCopy) {
+  public Token stringize(List<Token> ts, Token headToCopy) {
 
     Token stringized = new Token(headToCopy);
     stringized.setType(T.TOKEN_STRING);
@@ -701,11 +683,8 @@ public final class Scan {
         continue;
       }
 
-      if (t.ofType(T.T_SPEC_UNHIDE)) {
-        Sym mac = t.getIdent().getSym();
-        mac.unhide();
-        reset.add(mac);
-        continue;
+      if (unhide(t)) {
+        throw new ScanExc("unexpecting unhide");
       }
 
       if (t.hasLeadingWhitespace() && sb.length() > 0) {
@@ -730,6 +709,14 @@ public final class Scan {
         push(tokp);
       }
     }
+  }
+
+  private boolean unhide(Token u) {
+    if (u.ofType(T.T_SPEC_UNHIDE)) {
+      u.getIdent().getSym().unhide();
+      return true;
+    }
+    return false;
   }
 
 }

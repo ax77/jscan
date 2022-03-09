@@ -53,7 +53,7 @@ public class TestPP {
   // for fast...
   private List<String> ignoreFolders() {
     List<String> ret = new ArrayList<String>();
-    ret.add("diff");
+    //ret.add("diff");
     ret.add("b_c99_meta");
 
     //TODO:
