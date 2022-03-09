@@ -68,24 +68,33 @@ public class ParseBaseType {
         attributes = new ParseAttributesAsms(parser).parse();
       }
 
+      // typedef-routine
       // we found an identifier, it may be a var-name, or a typedef-alias
       if (isUserDefinedId(tok)) {
-        if (result == null && specifiers.isEmpty()) {
-          CSymbol symbol = parser.getSym(tok.getIdent());
 
-          if (symbol != null) {
-            CType typeFromStab = symbol.getType();
-            if (symbol.getBase() == CSymbolBase.SYM_TYPEDEF) {
-              parser.move();
-              result = typeFromStab;
-            }
-          } else {
-            break;
-          }
-        } else {
-          // it's a var-name, we should break the loop
+        // if we've already found a type, or we have some type-specs in a list - this 
+        // identifier must be a variable name, not a typedefed-name.
+        final boolean isVarName = hasResultOrSpecs(result, specifiers);
+        if (isVarName) {
           break;
         }
+
+        // we'he got an identifier, which may be a typedefed-alias
+        final CSymbol symbol = parser.getSym(tok.getIdent());
+        if (symbol != null) {
+          final CType typeFromStab = symbol.getType();
+          if (symbol.getBase() == CSymbolBase.SYM_TYPEDEF) {
+            parser.move(); // move the identifier, and assign the type we've found by this id.
+            result = typeFromStab;
+          } else {
+            parser.perror("cannot decide the type");
+          }
+        } else {
+          // specifiers-list is empty, and we have an identifier.
+          // it means - that the type-specifier is omitted, and the default type is 'int'
+          break;
+        }
+
       } else if (Pcheckers.isStorageClassSpec(tok)) {
         storage.add(parser.moveget());
       } else if (Pcheckers.isTypeSpec(tok)) {
@@ -97,6 +106,8 @@ public class ParseBaseType {
       }
 
       else if (Pcheckers.isStructOrUnionSpecStart(tok)) {
+        checkResultAndSpecsAreEmpty(result, specifiers);
+
         boolean isUnion = (tok.isIdent(Keywords.union_ident));
         parser.move();
 
@@ -108,6 +119,7 @@ public class ParseBaseType {
       }
 
       else if (Pcheckers.isEnumSpecStart(tok)) {
+        checkResultAndSpecsAreEmpty(result, specifiers);
         parser.move();
 
         if (Pcheckers.isAttributeStartGnuc(parser.tok())) {
@@ -135,6 +147,22 @@ public class ParseBaseType {
 
     NullChecker.check(result);
     return result;
+  }
+
+  private boolean hasResultOrSpecs(CType result, List<Token> specifiers) {
+    if (result != null) {
+      return true;
+    }
+    if (specifiers.size() > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  private void checkResultAndSpecsAreEmpty(CType result, List<Token> specifiers) {
+    if (hasResultOrSpecs(result, specifiers)) {
+      parser.perror("incorrect combination between primitive and compound type-specifiers");
+    }
   }
 
   private CType findTypeAgain() {
