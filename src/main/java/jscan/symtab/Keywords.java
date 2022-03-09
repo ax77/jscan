@@ -14,24 +14,24 @@ public final class Keywords {
   }
 
   //@formatter:off
-  public static final Ident implements_ident       = g("implements");
-  public static final Ident import_ident           = g("import");
-  public static final Ident new_ident              = g("new");
-  public static final Ident native_ident           = g("native");
-  public static final Ident final_ident            = g("final");
-  public static final Ident private_ident          = g("private");
-  public static final Ident public_ident           = g("public");
-  public static final Ident true_ident             = g("true");
-  public static final Ident false_ident            = g("false");
-  public static final Ident this_ident             = g("this");
-  public static final Ident cast_ident             = g("cast");
-  public static final Ident deinit_ident           = g("deinit");
-  public static final Ident test_ident             = g("test");
-  public static final Ident static_assert_ident    = g("static_assert");
-  public static final Ident assert_true_ident      = g("assert_true");
-  public static final Ident boolean_ident          = g("boolean");
-  public static final Ident class_ident            = g("class");
-  public static final Ident interface_ident        = g("interface");
+//  public static final Ident implements_ident       = g("implements");
+//  public static final Ident import_ident           = g("import");
+//  public static final Ident new_ident              = g("new");
+//  public static final Ident native_ident           = g("native");
+//  public static final Ident final_ident            = g("final");
+//  public static final Ident private_ident          = g("private");
+//  public static final Ident public_ident           = g("public");
+//  public static final Ident true_ident             = g("true");
+//  public static final Ident false_ident            = g("false");
+//  public static final Ident this_ident             = g("this");
+//  public static final Ident cast_ident             = g("cast");
+//  public static final Ident deinit_ident           = g("deinit");
+//  public static final Ident test_ident             = g("test");
+//  public static final Ident static_assert_ident    = g("static_assert");
+//  public static final Ident assert_true_ident      = g("assert_true");
+//  public static final Ident boolean_ident          = g("boolean");
+//  public static final Ident class_ident            = g("class");
+//  public static final Ident interface_ident        = g("interface");
   
   public static final Ident auto_ident             = g("auto"            );
   public static final Ident break_ident            = g("break"           );

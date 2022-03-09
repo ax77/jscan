@@ -8,7 +8,10 @@ import org.junit.Test;
 
 import ast.parse.Parse;
 import ast.tree.TranslationUnit;
+import jscan.parse.Tokenlist;
+import jscan.preproc.TokenPrint;
 import jscan.preproc.preprocess.Scan;
+import jscan.symtab.KeywordsInits;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
@@ -2071,6 +2074,7 @@ public class Test_AllHeaders {
     sb.append(" /*2049*/  }                                                                                                                                                                  \n");
     //@formatter:on
 
+    KeywordsInits.initIdents();
     List<Token> tokens = new Stream("utest", sb.toString()).getTokenlist();
     List<Token> pp = new ArrayList<Token>();
     Scan s = new Scan(tokens);
@@ -2080,8 +2084,12 @@ public class Test_AllHeaders {
         pp.add(tok);
         break;
       }
+      if (tok.typeIsSpecialStreamMarks()) {
+        continue;
+      }
       pp.add(tok);
     }
+
     Parse parser = new Parse(pp);
     TranslationUnit unit = parser.parse_unit();
 

@@ -55,4 +55,18 @@ public class CFuncParam {
     this.type = type;
   }
 
+  @Override
+  public String toString() {
+    String stype = "";
+    String sname = "";
+    if (type != null) {
+      stype = type.toString();
+    }
+    if (name != null) {
+      sname = name.getName();
+    }
+    final String result = stype + " " + sname;
+    return result.trim();
+  }
+
 }

@@ -323,6 +323,36 @@ public class Test_Typedefs {
   }
 
   @Test
+  public void testTypedefs8() throws IOException {
+    //@formatter:off
+    StringBuilder sb = new StringBuilder();
+    sb.append(" /*001*/  struct typedef_after {                        \n");
+    sb.append(" /*002*/      int flag;                                 \n");
+    sb.append(" /*003*/  } typedef typedef_after, *p_typedef_after;    \n");
+    sb.append(" /*004*/  static int test_typedefs_1() {                \n");
+    sb.append(" /*005*/      typedef int i32;                          \n");
+    sb.append(" /*006*/      typedef i32 i32;                          \n");
+    sb.append(" /*007*/      int signed typedef i32;                   \n");
+    sb.append(" /*008*/      i32 typedef i32;                          \n");
+    sb.append(" /*009*/      typedef i32 dword;                        \n");
+    sb.append(" /*010*/      i32 x = 1;                                \n");
+    sb.append(" /*011*/      x -= 1;                                   \n");
+    sb.append(" /*012*/      dword y = 1;                              \n");
+    sb.append(" /*013*/      y -= 1;                                   \n");
+    sb.append(" /*014*/      return x + y;                             \n");
+    sb.append(" /*015*/  }                                             \n");
+    sb.append(" /*027*/  int main() {                                  \n");
+    sb.append(" /*028*/      long long result = 0;                     \n");
+    sb.append(" /*031*/      return (result == 0) ? 0 : 1;             \n");
+    sb.append(" /*032*/  }                                             \n");
+    //@formatter:on
+
+    Tokenlist it = new ParserMain(sb).preprocess();
+    Parse p = new Parse(it);
+    TranslationUnit unit = p.parse_unit();
+  }
+
+  @Test
   public void testTags1() throws IOException {
 
     //@formatter:off
@@ -1581,47 +1611,4 @@ public class Test_Typedefs {
 
   }
 
-  @Ignore
-  @Test
-  public void testTypedefs8() throws IOException {
-    //@formatter:off
-    StringBuilder sb = new StringBuilder();
-    sb.append(" /*001*/  struct typedef_after {                        \n");
-    sb.append(" /*002*/      int flag;                                 \n");
-    sb.append(" /*003*/  } typedef typedef_after, *p_typedef_after;    \n");
-    sb.append(" /*004*/  static int test_typedefs_1() {                \n");
-    sb.append(" /*005*/      typedef int i32;                          \n");
-    sb.append(" /*006*/      typedef i32 i32;                          \n");
-    sb.append(" /*007*/      int signed typedef i32;                   \n");
-    sb.append(" /*008*/      i32 typedef i32;                          \n");
-    sb.append(" /*009*/      typedef i32 dword;                        \n");
-    sb.append(" /*010*/      i32 x = 1;                                \n");
-    sb.append(" /*011*/      x -= 1;                                   \n");
-    sb.append(" /*012*/      dword y = 1;                              \n");
-    sb.append(" /*013*/      y -= 1;                                   \n");
-    sb.append(" /*014*/      return x + y;                             \n");
-    sb.append(" /*015*/  }                                             \n");
-    sb.append(" /*016*/  static int test_desg_1() {                    \n");
-    sb.append(" /*017*/      struct s {                                \n");
-    sb.append(" /*018*/          int a[2][2];                          \n");
-    sb.append(" /*019*/      };                                        \n");
-    sb.append(" /*020*/      struct s var = {                          \n");
-    sb.append(" /*021*/          .a[0][0] = 1,                         \n");
-    sb.append(" /*022*/          .a[1][0] = 2,                         \n");
-    sb.append(" /*023*/      };                                        \n");
-    sb.append(" /*024*/      int result = var.a[0][0] + var.a[1][0];   \n");
-    sb.append(" /*025*/      return (result == 3) ? 0 : 1;             \n");
-    sb.append(" /*026*/  }                                             \n");
-    sb.append(" /*027*/  int main() {                                  \n");
-    sb.append(" /*028*/      long long result = 0;                     \n");
-    sb.append(" /*029*/      result += test_desg_1();                  \n");
-    sb.append(" /*030*/      result += test_typedefs_1();              \n");
-    sb.append(" /*031*/      return (result == 0) ? 0 : 1;             \n");
-    sb.append(" /*032*/  }                                             \n");
-    //@formatter:on
-
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
-  }
 }

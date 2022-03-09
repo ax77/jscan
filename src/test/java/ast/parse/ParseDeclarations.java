@@ -92,7 +92,10 @@ public class ParseDeclarations {
     CType type = TypeMerger.build(basetype, decl);
 
     if (parser.tp() != T.T_ASSIGN) {
-      CSymbolBase symBase = CSymbolBase.SYM_LVAR;
+      CSymbolBase symBase = parser.isFileScope() ? CSymbolBase.SYM_GVAR : CSymbolBase.SYM_LVAR;
+      if (type.isFunction()) {
+        symBase = CSymbolBase.SYM_FUNC;
+      }
 
       if (storagespec == CStorageKind.ST_TYPEDEF) {
         symBase = CSymbolBase.SYM_TYPEDEF;

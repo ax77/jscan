@@ -1,5 +1,7 @@
 package ast.parse;
 
+import static jscan.tokenize.T.TOKEN_IDENT;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +17,7 @@ import ast.types.CTypeImpl;
 import ast.types.CTypeKind;
 import jscan.symtab.Keywords;
 import jscan.tokenize.Token;
+import jscan.utils.NullChecker;
 
 public class ParseBaseType {
   private final Parse parser;
@@ -27,7 +30,111 @@ public class ParseBaseType {
   }
 
   public CType parse() {
-    return findTypeAgain();
+    //return findTypeAgain();
+    return findTypeAgainAgain();
+  }
+
+  //@formatter:off
+  public boolean isUserDefinedId(Token what) {
+    return what.ofType(TOKEN_IDENT) && !what.isBuiltinIdent();
+  }
+  
+  public boolean isDeclSpecStart(Token what) {
+    return Pcheckers.isStorageClassSpec(what)
+        || Pcheckers.isTypeSpec(what)
+        || Pcheckers.isTypeQual(what)
+        || Pcheckers.isFuncSpec(what)
+        || Pcheckers.isEnumSpecStart(what)
+        || Pcheckers.isStructOrUnionSpecStart(what)
+        || Pcheckers.isStaticAssert(what)
+        || isUserDefinedId(what);
+  }
+  //@formatter:on
+
+  private CType findTypeAgainAgain() {
+    attributes = new ParseAttributesAsms(parser).parse();
+
+    CType result = null;
+    List<Token> storage = new ArrayList<Token>();
+    List<Token> specifiers = new ArrayList<Token>();
+    Set<Token> qualifiers = new HashSet<Token>();
+    Set<Token> funcspecs = new HashSet<Token>();
+
+    while (isDeclSpecStart(parser.tok()) || Pcheckers.isAttributeStartGnuc(parser.tok())) {
+
+      final Token tok = parser.tok();
+
+      if (Pcheckers.isAttributeStartGnuc(parser.tok())) {
+        attributes = new ParseAttributesAsms(parser).parse();
+      }
+
+      // we found an identifier, it may be a var-name, or a typedef-alias
+      if (isUserDefinedId(tok)) {
+        if (result == null && specifiers.isEmpty()) {
+          CSymbol symbol = parser.getSym(tok.getIdent());
+
+          if (symbol != null) {
+            CType typeFromStab = symbol.getType();
+            if (symbol.getBase() == CSymbolBase.SYM_TYPEDEF) {
+              parser.move();
+              result = typeFromStab;
+            }
+          } else {
+            break;
+          }
+        } else {
+          // it's a var-name, we should break the loop
+          break;
+        }
+      } else if (Pcheckers.isStorageClassSpec(tok)) {
+        storage.add(parser.moveget());
+      } else if (Pcheckers.isTypeSpec(tok)) {
+        specifiers.add(parser.moveget());
+      } else if (Pcheckers.isTypeQual(tok)) {
+        qualifiers.add(parser.moveget());
+      } else if (Pcheckers.isFuncSpec(tok)) {
+        funcspecs.add(parser.moveget());
+      }
+
+      else if (Pcheckers.isStructOrUnionSpecStart(tok)) {
+        boolean isUnion = (tok.isIdent(Keywords.union_ident));
+        parser.move();
+
+        if (Pcheckers.isAttributeStartGnuc(parser.tok())) {
+          attributes = new ParseAttributesAsms(parser).parse();
+        }
+
+        result = new ParseStruct(parser, isUnion).parse();
+      }
+
+      else if (Pcheckers.isEnumSpecStart(tok)) {
+        parser.move();
+
+        if (Pcheckers.isAttributeStartGnuc(parser.tok())) {
+          attributes = new ParseAttributesAsms(parser).parse();
+        }
+
+        result = new ParseEnum(parser).parse();
+      }
+    }
+
+    storageSpec = TypeCombiner.combine_storage(storage);
+
+    if (!specifiers.isEmpty()) {
+      if (result != null) {
+        parser.perror("incorrect combination between primitive/compound types");
+      }
+      CTypeKind bts = TypeCombiner.combine_typespec(specifiers);
+      result = new CType(bts);
+    }
+
+    if (result == null) {
+      parser.pwarning("type is not specified, the default type is int.");
+      result = CTypeImpl.TYPE_INT;
+    }
+
+    NullChecker.check(result);
+    return result;
   }
 
   private CType findTypeAgain() {
@@ -57,12 +164,14 @@ public class ParseBaseType {
     if (!compoundKeywords.isEmpty()) {
       Token first = compoundKeywords.remove(0);
       if (first.isIdent(Keywords.enum_ident)) {
-        return new ParseEnum(parser).parse();
+        final CType enumTypeSpec = new ParseEnum(parser).parse();
+        return enumTypeSpec;
       }
 
       else {
         boolean isUnion = (first.isIdent(Keywords.union_ident));
-        return new ParseStruct(parser, isUnion).parse();
+        final CType strUnionTypeSpec = new ParseStruct(parser, isUnion).parse();
+        return strUnionTypeSpec;
       }
     }
 
@@ -187,8 +296,8 @@ public class ParseBaseType {
     return storageSpec;
   }
 
-  public void setStorageSpec(CStorageKind storageSpec) {
-    this.storageSpec = storageSpec;
+  public AttributesAsmsLists getAttributes() {
+    return attributes;
   }
 
 }

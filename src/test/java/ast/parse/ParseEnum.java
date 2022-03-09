@@ -26,7 +26,7 @@ public class ParseEnum {
     //enum ...
     //     ^
 
-    boolean iscorrect = parser.tok().ofType(TOKEN_IDENT) || parser.tok().ofType(T.T_LEFT_BRACE);
+    boolean iscorrect = parser.isUserDefinedId() || parser.tok().ofType(T.T_LEFT_BRACE);
     if (!iscorrect) {
       parser.perror("expect identifier or { for enum type-specifier");
     }
@@ -114,7 +114,8 @@ public class ParseEnum {
 
             CType newtype = new CType(newenum);
 
-            parser.defineTag(tag.getIdent(), new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), newtype, tag));
+            parser.defineTag(tag.getIdent(),
+                new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), newtype, tag));
             return newtype;
           }
 
@@ -141,7 +142,8 @@ public class ParseEnum {
 
         CEnumType incomplete = new CEnumType(tag.getIdent());
         final CType structIncompleteType = new CType(incomplete);
-        final CSymbol structSymbol = new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), structIncompleteType, tag);
+        final CSymbol structSymbol = new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag.getIdent(), structIncompleteType,
+            tag);
         parser.defineTag(tag.getIdent(), structSymbol);
 
         if (parser.tp() == T.T_LEFT_BRACE) {

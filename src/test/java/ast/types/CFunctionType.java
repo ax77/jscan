@@ -2,6 +2,7 @@ package ast.types;
 
 import java.util.List;
 
+import jscan.utils.ArgsListToString;
 import jscan.utils.NullChecker;
 
 public class CFunctionType {
@@ -36,7 +37,8 @@ public class CFunctionType {
 
   @Override
   public String toString() {
-    return "fn(" + returnType.toString() + ")";
+    final String params = parameters == null ? "void" : ArgsListToString.paramsToStringWithBraces(parameters, '(');
+    return "fn(" + params + ") -> " + returnType.toString();
   }
 
 }

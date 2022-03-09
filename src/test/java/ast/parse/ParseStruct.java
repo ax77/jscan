@@ -45,7 +45,7 @@ public class ParseStruct {
     //struct ...
     //       ^
 
-    boolean iscorrect = parser.tok().ofType(TOKEN_IDENT) || parser.tok().ofType(T.T_LEFT_BRACE);
+    boolean iscorrect = parser.isUserDefinedId() || parser.tok().ofType(T.T_LEFT_BRACE);
     if (!iscorrect) {
       parser.perror("expect identifier or { for enum type-specifier");
     }

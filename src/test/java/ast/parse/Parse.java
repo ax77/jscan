@@ -131,6 +131,10 @@ public class Parse {
     symbols.popscope();
   }
 
+  public boolean isFileScope() {
+    return symbols.getScopes().get(0).getLevel() == ScopeLevels.FILE_SCOPE;
+  }
+
   //
   // TODO:SEMANTIC
 
@@ -215,6 +219,7 @@ public class Parse {
     sb.append("warning: " + m + "\n");
     sb.append("  --> " + lastloc + "\n\n");
     sb.append(RingBuf.ringBufferToStringLines(ringBuffer) + "\n");
+    System.out.println(sb.toString());
   }
 
   public Token checkedMove(Ident expect) {
