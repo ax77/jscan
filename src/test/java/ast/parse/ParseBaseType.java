@@ -51,6 +51,28 @@ public class ParseBaseType {
   }
   //@formatter:on
 
+  /// I)
+  /// struct typedef_after {                     
+  ///   int flag;                              
+  /// } typedef typedef_after, *p_typedef_after; 
+  ///
+  /// II)
+  /// typedef int i32;          
+  /// typedef i32 i32;          
+  /// int signed typedef i32;   
+  /// i32 typedef i32;          
+  /// typedef i32 dword;     
+  /// typedef i32 i32, i32arr5[5], (*i32func)();
+  ///
+  /// III)
+  /// typedef signed int t;
+  /// typedef int plain;   
+  /// struct tag {         
+  ///     unsigned t:4; // `t` is a name   
+  ///     const t:5;    // `t` is a type, unnamed bitfied (const int:5;)    
+  ///     plain r:5;    // `r` is a name   
+  /// };                   
+
   private CType findTypeAgainAgain() {
     attributes = new ParseAttributesAsms(parser).parse();
 
