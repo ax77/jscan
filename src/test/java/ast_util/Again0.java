@@ -12,8 +12,7 @@ import ast.flat.RewriteStmt;
 import ast.main.ParserMain;
 import ast.parse.Parse;
 import ast.symtab.CSymbol;
-import ast.tree.FunctionDefinition;
-import ast.tree.Statement;
+import ast.tree.Function;
 import ast.tree.TranslationUnit;
 import ast.types.CType;
 import jscan.fio.FileReadKind;
@@ -181,7 +180,7 @@ public class Again0 {
     return result;
   }
 
-  int applyLocalOffset(FunctionDefinition fn) {
+  int applyLocalOffset(Function fn) {
     int curoffset = 0;
     for (CSymbol sym : fn.locals) {
       CType tp = sym.type;
@@ -205,7 +204,7 @@ public class Again0 {
     Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
     TranslationUnit unit = p.parse_unit();
 
-    final FunctionDefinition func = unit.getExternalDeclarations().get(0).functionDefinition;
+    final Function func = unit.getExternalDeclarations().get(0).functionDefinition;
     int locals = applyLocalOffset(func);
 
     RewriteStmt stmt = new RewriteStmt();

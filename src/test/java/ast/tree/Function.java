@@ -8,7 +8,7 @@ import java.util.Set;
 import ast.symtab.CSymbol;
 import jscan.symtab.Ident;
 
-public class FunctionDefinition {
+public class Function {
 
   public final CSymbol symbol;
   public Statement block;
@@ -16,7 +16,7 @@ public class FunctionDefinition {
   public final Set<Ident> labels;
   public final List<CSymbol> locals;
 
-  public FunctionDefinition(CSymbol symbol) {
+  public Function(CSymbol symbol) {
     this.symbol = symbol;
     this.gotos = new HashSet<>();
     this.labels = new HashSet<>();

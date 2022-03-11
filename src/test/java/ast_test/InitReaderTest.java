@@ -8,10 +8,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ast.builders.TypeMerger;
-import ast.parse.ParseInitializer;
 import ast.parse.Parse;
 import ast.parse.ParseBaseType;
 import ast.parse.ParseDeclarator;
+import ast.parse.ParseInitializer;
 import ast.tree.Declarator;
 import ast.tree.Initializer;
 import ast.types.CType;

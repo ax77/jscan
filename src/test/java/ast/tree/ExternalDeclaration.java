@@ -1,10 +1,10 @@
 package ast.tree;
 
 public class ExternalDeclaration {
-  public FunctionDefinition functionDefinition;
+  public Function functionDefinition;
   public Declaration declaration;
 
-  public ExternalDeclaration(FunctionDefinition functionDefinition) {
+  public ExternalDeclaration(Function functionDefinition) {
     this.functionDefinition = functionDefinition;
   }
 

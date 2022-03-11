@@ -27,16 +27,16 @@ import ast.builders.BreakContinue;
 import ast.tree.BlockItem;
 import ast.tree.Declaration;
 import ast.tree.Expression;
-import ast.tree.FunctionDefinition;
+import ast.tree.Function;
 import ast.tree.Statement;
+import ast.tree.Statement.StmtCase;
+import ast.tree.Statement.StmtDefault;
+import ast.tree.Statement.StmtFor;
+import ast.tree.Statement.StmtLabel;
+import ast.tree.Statement.StmtSelect;
+import ast.tree.Statement.StmtSwitch;
+import ast.tree.Statement.StmtWhileDo;
 import ast.tree.StatementBase;
-import ast.tree.StmtCase;
-import ast.tree.StmtDefault;
-import ast.tree.StmtFor;
-import ast.tree.StmtLabel;
-import ast.tree.StmtSelect;
-import ast.tree.StmtSwitch;
-import ast.tree.StmtWhileDo;
 import jscan.symtab.Ident;
 import jscan.symtab.ScopeLevels;
 import jscan.tokenize.T;
@@ -123,7 +123,7 @@ public class ParseStatement {
       Statement stmt = parseStatement();
       StmtSwitch parent = peekSwitch();
 
-      parent.setDefault_stmt(new StmtDefault(parent, stmt));
+      parent.setDefault(new StmtDefault(parent, stmt));
       return new Statement(from, new StmtDefault(parent, stmt));
     }
 
@@ -142,7 +142,7 @@ public class ParseStatement {
     // goto label;
 
     if (parser.tok().isIdent(goto_ident)) {
-      FunctionDefinition function = parser.getCurrentFn();
+      Function function = parser.getCurrentFn();
       Statement labelstmt = null; // XXX: ok
 
       if (function == null) {
@@ -404,7 +404,7 @@ public class ParseStatement {
 
   private Statement parseLabel() {
 
-    FunctionDefinition function = parser.getCurrentFn();
+    Function function = parser.getCurrentFn();
 
     if (function == null) {
       parser.perror("label statement outside function");

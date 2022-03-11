@@ -12,7 +12,7 @@ import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;
-import ast.tree.FunctionDefinition;
+import ast.tree.Function;
 import ast.tree.TranslationUnit;
 import ast.types.CType;
 import jscan.parse.RingBuf;
@@ -32,7 +32,7 @@ public class Parse {
   private Token tok;
 
   // need for labels, also for binding local variable's
-  private FunctionDefinition currentFn;
+  private Function currentFn;
 
   // symbol-tables
   private Symtab<Ident, CSymbol> symbols;
@@ -65,7 +65,7 @@ public class Parse {
     return tok;
   }
 
-  public FunctionDefinition getCurrentFn() {
+  public Function getCurrentFn() {
     return currentFn;
   }
 
@@ -393,7 +393,7 @@ public class Parse {
     return tokenlist;
   }
 
-  public void setCurrentFn(FunctionDefinition currentFn) {
+  public void setCurrentFn(Function currentFn) {
     this.currentFn = currentFn;
   }
 

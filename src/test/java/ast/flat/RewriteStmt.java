@@ -25,9 +25,9 @@ import ast.tree.BlockItem;
 import ast.tree.Declaration;
 import ast.tree.Expression;
 import ast.tree.Statement;
+import ast.tree.Statement.StmtLabel;
+import ast.tree.Statement.StmtSelect;
 import ast.tree.StatementBase;
-import ast.tree.StmtLabel;
-import ast.tree.StmtSelect;
 import jscan.symtab.Ident;
 import jscan.utils.AstParseException;
 import jscan.utils.GlobalCounter;
@@ -62,9 +62,9 @@ public class RewriteStmt {
     if (base == StatementBase.SCOMPOUND) {
       for (BlockItem item : s.block) {
         if (item.isDeclaration()) {
-          genDeclaration(item.getDeclaration());
+          genDeclaration(item.declaration);
         } else {
-          genStmt(item.getStatement());
+          genStmt(item.statement);
         }
       }
     }

@@ -11,7 +11,7 @@ import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;
-import ast.tree.FunctionDefinition;
+import ast.tree.Function;
 import ast.types.CFuncParam;
 import ast.types.CType;
 import jscan.symtab.Ident;
@@ -131,7 +131,7 @@ public class ParseExternal {
     CSymbol funcSymbol = new CSymbol(CSymbolBase.SYM_FUNC, decl.getName(), type, parser.tok());
     parser.defineSym(decl.getName(), funcSymbol);
 
-    FunctionDefinition fd = new FunctionDefinition(funcSymbol);
+    Function fd = new Function(funcSymbol);
     parser.setCurrentFn(fd);
     parser.pushscope(ScopeLevels.METHOD_SCOPE);
 
@@ -147,7 +147,7 @@ public class ParseExternal {
     return new ExternalDeclaration(fd);
   }
 
-  private void checkLabels(FunctionDefinition fd) {
+  private void checkLabels(Function fd) {
     for (Ident id : fd.gotos) {
       if (!fd.labels.contains(id)) {
         parser.perror("goto " + id.getName() + " has no target label");

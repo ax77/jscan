@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.tree.Declarator;
-import ast.tree.DeclaratorEntry;
+import ast.tree.Declarator.DeclaratorEntry;
 import ast.types.CArrayType;
 import ast.types.CFunctionType;
 import ast.types.CPointerType;
