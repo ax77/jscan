@@ -16,7 +16,6 @@ import ast.main.ParseOpts;
 import ast.parse.Parse;
 import ast.parse.ParseExpression;
 import ast.tree.Expression;
-import jscan.parse.Tokenlist;
 import jscan.tokenize.Token;
 
 public class Test_ConstExprEval {
@@ -254,7 +253,7 @@ public class Test_ConstExprEval {
       String str = ent.getKey();
       long expected = ent.getValue().longValue();
 
-      List<Token> tokens = new ParseMainNew(new ParseOpts[]{}).preprocessString(str);
+      List<Token> tokens = new ParseMainNew(new ParseOpts[] {}).preprocessString(str);
       Parse p = new Parse(tokens);
 
       Expression expr = new ParseExpression(p).e_expression();

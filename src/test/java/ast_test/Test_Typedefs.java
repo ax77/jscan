@@ -1465,7 +1465,7 @@ public class Test_Typedefs {
     for (Entry<String, Integer> entry : s.entrySet()) {
 
       String source = entry.getKey();
-      List<Token> tokens = new ParseMainNew(new ParseOpts[]{}).preprocessString(source);
+      List<Token> tokens = new ParseMainNew(new ParseOpts[] {}).preprocessString(source);
 
       Parse p = new Parse(tokens);
       Expression expr = new ParseExpression(p).e_expression();

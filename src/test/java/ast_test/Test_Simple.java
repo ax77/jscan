@@ -12,7 +12,6 @@ import ast.main.ParseMainNew;
 import ast.main.ParseOpts;
 import ast.parse.Parse;
 import ast.tree.TranslationUnit;
-import jscan.parse.Tokenlist;
 import jscan.tokenize.Token;
 
 class UtilTestDto {

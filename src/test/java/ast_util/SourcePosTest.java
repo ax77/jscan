@@ -11,7 +11,6 @@ import ast.parse.ParseExpression;
 import ast.tree.Expression;
 import jscan.fio.IO;
 import jscan.symtab.Ident;
-import jscan.symtab.ScopeLevels;
 import jscan.tokenize.T;
 
 public class SourcePosTest {
@@ -285,13 +284,13 @@ public class SourcePosTest {
 
   @Test
   public void inits() throws IOException {
-//    String dir = System.getProperty("user.dir");
-//    String txt = "{ .a.b.c = {1,2,3,}, [1].f = 2, .a[1] = 3, { }, [11][22][33] = {11,22, .a={11,22,33}} }";
-//    Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
-//    p.pushscope(ScopeLevels.FILE_SCOPE);
-//
-//    Initializer init = parseInit(p);
-//    System.out.println(init);
+    //    String dir = System.getProperty("user.dir");
+    //    String txt = "{ .a.b.c = {1,2,3,}, [1].f = 2, .a[1] = 3, { }, [11][22][33] = {11,22, .a={11,22,33}} }";
+    //    Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
+    //    p.pushscope(ScopeLevels.FILE_SCOPE);
+    //
+    //    Initializer init = parseInit(p);
+    //    System.out.println(init);
   }
 
 }

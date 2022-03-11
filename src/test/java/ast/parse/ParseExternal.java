@@ -96,7 +96,7 @@ public class ParseExternal {
       }
 
       else if (t.is(T.T_SEMI_COLON)) {
-        if (parser.tok().is(T.T_LEFT_BRACE)) {
+        if (parser.is(T.T_LEFT_BRACE)) {
           return hasOpen && hasClose; // KnR - style declaration
         }
         return false; // end of normal declaration

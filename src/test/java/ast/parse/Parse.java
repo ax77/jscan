@@ -79,13 +79,11 @@ public class Parse {
 
     CSymbol prevsym = symbols.getsymFromCurrentScope(sym.name);
     if (prevsym != null) {
-
       if (sym.isFunction() && prevsym.type.isEqualTo(sym.type)) {
         // TODO: normal prototype logic.
       } else {
         perror("redefinition, previous defined here: " + prevsym.getLocationToString());
       }
-
     }
 
     if (currentFn != null) {
@@ -99,6 +97,11 @@ public class Parse {
     // TODO:
   }
 
+  // TODO: defineLocal()
+  // TODO: defineGlobl()
+  // TODO: defineProto()
+  // TODO: saveStrLabel()
+
   private void defineTypedef(Ident key, CType type) {
     //System.out.println("typedef " + type.toString() + " " + key.getName());
 
@@ -111,16 +114,8 @@ public class Parse {
     typedefs.addsym(key, type);
   }
 
-  public void defineTag(Ident key, CSymbol sym) {
-    tags.addsym(key, sym);
-  }
-
-  public boolean isHasTag(Ident name) {
-    return getTag(name) != null;
-  }
-
-  public boolean isHasTagInCurrentScope(Ident name) {
-    return tags.getsymFromCurrentScope(name) != null;
+  public void defineTag(CSymbol sym) {
+    tags.addsym(sym.name, sym);
   }
 
   public CSymbol getTagFromCurrentScope(Ident name) {

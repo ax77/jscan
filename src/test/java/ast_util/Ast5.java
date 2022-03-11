@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import ast.types.CTypeKind;
 import jscan.preproc.TokenPrint;
-import jscan.tokenize.Stream;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
 

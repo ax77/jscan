@@ -1,7 +1,5 @@
 package ast.parse;
 
-import static jscan.tokenize.T.TOKEN_IDENT;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,26 +26,8 @@ public class ParseBaseType {
   }
 
   public CType parse() {
-    //return findTypeAgain();
     return findTypeAgainAgain();
   }
-
-  //@formatter:off
-  public boolean isUserDefinedId(Token what) {
-    return what.is(TOKEN_IDENT) && !what.isBuiltinIdent();
-  }
-  
-  public boolean isDeclSpecStart(Token what) {
-    return Pcheckers.isStorageClassSpec(what)
-        || Pcheckers.isTypeSpec(what)
-        || Pcheckers.isTypeQual(what)
-        || Pcheckers.isFuncSpec(what)
-        || Pcheckers.isEnumSpecStart(what)
-        || Pcheckers.isStructOrUnionSpecStart(what)
-        || Pcheckers.isStaticAssert(what)
-        || isUserDefinedId(what);
-  }
-  //@formatter:on
 
   /// I)
   /// struct typedef_after {                     
@@ -80,7 +60,7 @@ public class ParseBaseType {
     Set<Token> qualifiers = new HashSet<Token>();
     Set<Token> funcspecs = new HashSet<Token>();
 
-    while (isDeclSpecStart(parser.tok()) || Pcheckers.isAttributeStartGnuc(parser.tok())) {
+    while (parser.isDeclSpecStart() || parser.isAttributeStartGnuc()) {
 
       if (Pcheckers.isAttributeStartGnuc(parser.tok())) {
         attributes = new ParseAttributesAsms(parser).parse();
@@ -90,7 +70,7 @@ public class ParseBaseType {
 
       // typedef-routine
       // we found an identifier, it may be a var-name, or a typedef-alias
-      if (isUserDefinedId(tok)) {
+      if (parser.isUserDefinedId()) {
 
         // if we've already found a type, or we have some type-specs in a list - this 
         // identifier must be a variable name, not a typedefed-name.

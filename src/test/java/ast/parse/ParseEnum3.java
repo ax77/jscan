@@ -29,7 +29,7 @@ public class ParseEnum3 {
     // enum      {
     // .... ^....^  
 
-    boolean iscorrect = parser.isUserDefinedId() || parser.tok().is(T.T_LEFT_BRACE);
+    boolean iscorrect = parser.isUserDefinedId() || parser.is(T.T_LEFT_BRACE);
     if (!iscorrect) {
       parser.perror("expect identifier or { for enum type-specifier");
     }
@@ -40,9 +40,8 @@ public class ParseEnum3 {
       tag = parser.getIdent();
     }
 
-    CType tp = null;
-
     if (tag != null) {
+      CType tp = null;
       CSymbol cur = parser.getTagFromCurrentScope(tag);
       CSymbol all = parser.getTag(tag);
       if (all != null) {
@@ -68,7 +67,7 @@ public class ParseEnum3 {
       }
 
     } else if (parser.is(T.T_LEFT_BRACE)) {
-      tp = new CType(new CEnumType(tag)); // anonymous
+      CType tp = new CType(new CEnumType(tag)); // anonymous
       enums(tp);
     } else {
       parser.unreachable("expecting tag or {");
@@ -108,7 +107,7 @@ public class ParseEnum3 {
   private CType incompl(Ident tag, Token pos) {
     final CType typ = new CType(new CEnumType(tag));
     final CSymbol sym = new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag, typ, pos);
-    parser.defineTag(tag, sym);
+    parser.defineTag(sym);
     return typ;
   }
 

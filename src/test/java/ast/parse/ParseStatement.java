@@ -101,7 +101,7 @@ public class ParseStatement {
 
     // null-statement
 
-    if (parser.tok().is(T_SEMI_COLON)) {
+    if (parser.is(T_SEMI_COLON)) {
       Token from = parser.semicolon();
       return new Statement(from, StatementBase.SSEMICOLON);
     }
@@ -324,7 +324,7 @@ public class ParseStatement {
 
     // {  }
 
-    if (parser.tok().is(T.T_LEFT_BRACE)) {
+    if (parser.is(T.T_LEFT_BRACE)) {
       return parseCompoundStatement(false);
     }
 
