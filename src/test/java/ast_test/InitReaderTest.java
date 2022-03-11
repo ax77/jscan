@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ast.builders.TypeMerger;
@@ -21,9 +22,57 @@ import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
 public class InitReaderTest {
-
+  
   @Test
-  public void testTypedefs8() throws IOException {
+  public void testStructs() throws IOException {
+
+    List<String> list = new ArrayList<>();
+    list.add(" struct x { int a; struct y { int x,y,z[3]; } b; } var = { .a = 32, .b = { .x = 128, .y = 256, .z = {11,22,33}, } }; \n");
+
+
+    KeywordsInits.initIdents();
+
+    for (String str : list) {
+
+      List<Token> tokens = new Stream("utest", str).getTokenlist();
+      List<Token> pp = new ArrayList<Token>();
+      Scan s = new Scan(tokens);
+      for (;;) {
+        Token tok = s.get();
+        if (tok.is(T.TOKEN_EOF)) {
+          pp.add(tok);
+          break;
+        }
+        if (tok.typeIsSpecialStreamMarks()) {
+          continue;
+        }
+        pp.add(tok);
+      }
+
+      Parse parser = new Parse(pp);
+      parser.pushscope(ScopeLevels.FILE_SCOPE);
+
+      CType base = new ParseBaseType(parser).parse();
+      Declarator decl = new ParseDeclarator(parser).parse();
+      CType type = TypeMerger.build(base, decl);
+
+      parser.checkedMove(T.T_ASSIGN);
+
+      List<Initializer> inits = new InitReader(parser).parse(type);
+      System.out.println();
+      System.out.println(decl.getName() + " " + type.getSize());
+      for (Initializer init : inits) {
+        System.out.println(init);
+      }
+
+      parser.semicolon();
+
+    }
+  }
+
+  @Ignore
+  @Test
+  public void testArrays() throws IOException {
 
     List<String> list = new ArrayList<>();
     list.add(" int a1[5] = {1,2,3,4,5};                                              \n");

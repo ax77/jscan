@@ -36,7 +36,14 @@ public class ParseStruct {
     if (tpStruct.isIncomplete()) {
       parser.unimplemented("incomplete struct finalization");
     }
-    return new ApplyStructInfo(tpStruct.isUnion(), tpStruct.getFields());
+    final ApplyStructInfo sinfo = new ApplyStructInfo(tpStruct.isUnion(), tpStruct.getFields());
+
+    int i = 0;
+    for (CStructField f : tpStruct.getFields()) {
+      f.setPos(i);
+      i += 1;
+    }
+    return sinfo;
   }
 
   // TODO: incomplete fields

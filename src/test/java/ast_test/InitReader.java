@@ -13,8 +13,10 @@ import ast.types.CArrayType;
 import ast.types.CStructField;
 import ast.types.CStructType;
 import ast.types.CType;
+import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.NullChecker;
 
 public class InitReader {
 
@@ -42,7 +44,7 @@ public class InitReader {
     if (type.isArray()) {
       read_array_inits(inits, type, offset, brace, designated);
     } else if (type.isStruct()) {
-      read_struct_inits(inits, type, offset);
+      read_struct_inits(inits, type, offset, brace, designated);
     } else {
       // int a = {1};
       CType arraytype = make_array_type(type, 1);
@@ -65,16 +67,67 @@ public class InitReader {
     parser.moveOptional(T.T_COMMA);
   }
 
-  private void read_struct_inits(List<Initializer> inits, CType type, int offset) {
+  private void read_struct_inits(List<Initializer> inits, CType type, int offset, boolean brace, boolean designated) {
     if (!type.isStruct()) {
       parser.perror("expect struct-type");
     }
 
     CStructType compound = type.getTpStruct();
     List<CStructField> fields = compound.getFields();
+    int fieldidx = 0;
 
     while (!parser.isEof()) {
-      Token tok = parser.tok();
+      if (parser.is(T.T_RIGHT_BRACE)) {
+        break;
+      }
+
+      // we don't actually know what that means.
+      // so - it's an unexpected `something`.
+      if ((parser.is(T.T_DOT) || parser.is(T.T_LEFT_BRACKET)) && !brace && !designated) {
+        parser.pwarning("unexpected");
+        return;
+      }
+
+      CStructField cursor = null;
+
+      if (parser.is(T.T_DOT)) {
+        parser.move();
+
+        Ident fieldname = parser.getIdent();
+        cursor = compound.findField(fieldname);
+        if (cursor == null) {
+          parser.perror("no such field: " + fieldname.getName());
+        }
+        fieldidx = cursor.getPos();
+        designated = true;
+      }
+
+      else {
+        if (fieldidx >= fields.size()) {
+          break;
+        }
+        cursor = fields.get(fieldidx++);
+      }
+      NullChecker.check(cursor);
+
+      // We've alredy read all of the elements we need to init this array.
+      // But: designations may overlap each other many times, and we have to cut them all.
+      // That's why we need the `designated` flag here.
+      //
+      if (!designated && fieldidx >= fields.size()) {
+        break;
+      }
+
+      read_initializer_elem(inits, cursor.getType(), offset + cursor.getOffset(), designated);
+      designated = false;
+
+      if (!type.isStruct()) {
+        break;
+      }
+    }
+
+    if (brace) {
+      skip_to_brace(parser);
     }
   }
 
@@ -91,8 +144,7 @@ public class InitReader {
     int cursor = 0;
 
     for (cursor = 0; !parser.isEof() /*index < arrlen || flexible*/; cursor++) {
-      Token tok = parser.tok();
-      if (tok.is(T.T_RIGHT_BRACE)) {
+      if (parser.is(T.T_RIGHT_BRACE)) {
         if (compound.getArrayLen() <= 0) {
           compound.setArrayLen(cursor);
           type.setSize(elemsz * cursor);
@@ -102,13 +154,13 @@ public class InitReader {
 
       // we don't actually know what that means.
       // so - it's an unexpected `something`.
-      if ((tok.is(T.T_DOT) || tok.is(T.T_LEFT_BRACKET)) && !brace && !designated) {
+      if ((parser.is(T.T_DOT) || parser.is(T.T_LEFT_BRACKET)) && !brace && !designated) {
         parser.pwarning("unexpected");
         return;
       }
 
       // designations
-      if (tok.is(T.T_LEFT_BRACKET)) {
+      if (parser.is(T.T_LEFT_BRACKET)) {
         // TODO: GNU range [0...2] = 0
         cursor = getDesgIndex(arrlen, flexible);
         designated = true;

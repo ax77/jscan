@@ -7,6 +7,7 @@ public class CStructField {
   private final Ident name;
   private final CType type;
   private int offset;
+  private int pos;
 
   //TODO:later
   //plain field: but anonymous struct/union, or unnamed bitfield.
@@ -47,6 +48,14 @@ public class CStructField {
 
   public boolean isBitfield() {
     return type.isBitfield();
+  }
+
+  public int getPos() {
+    return pos;
+  }
+
+  public void setPos(int pos) {
+    this.pos = pos;
   }
 
   @Override
