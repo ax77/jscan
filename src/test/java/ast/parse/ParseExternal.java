@@ -71,6 +71,7 @@ public class ParseExternal {
       parser.move();
     }
 
+    @SuppressWarnings("unused")
     AttributesAsmsLists attrs = new ParseAttributesAsms(parser).parse();
 
     boolean hasOpen = false;
@@ -129,7 +130,7 @@ public class ParseExternal {
     }
 
     CSymbol funcSymbol = new CSymbol(CSymbolBase.SYM_FUNC, decl.getName(), type, parser.tok());
-    parser.defineSym(decl.getName(), funcSymbol);
+    parser.defineSym(funcSymbol);
 
     Function fd = new Function(funcSymbol);
     parser.setCurrentFn(fd);
@@ -171,7 +172,7 @@ public class ParseExternal {
 
     for (CFuncParam fparam : parameters) {
       CSymbol paramsym = new CSymbol(CSymbolBase.SYM_LVAR, fparam.name, fparam.type, parser.tok());
-      parser.defineSym(fparam.name, paramsym);
+      parser.defineSym(paramsym);
     }
   }
 

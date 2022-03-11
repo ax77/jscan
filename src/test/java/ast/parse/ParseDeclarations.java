@@ -101,7 +101,7 @@ public class ParseDeclarations {
       }
 
       CSymbol tentative = new CSymbol(symBase, decl.getName(), type, saved);
-      parser.defineSym(decl.getName(), tentative);
+      parser.defineSym(tentative);
 
       return tentative;
     }
@@ -114,7 +114,7 @@ public class ParseDeclarations {
     }
 
     CSymbol sym = new CSymbol(CSymbolBase.SYM_LVAR, decl.getName(), type, inits, saved);
-    parser.defineSym(decl.getName(), sym);
+    parser.defineSym(sym);
 
     return sym;
   }

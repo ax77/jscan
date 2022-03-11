@@ -106,8 +106,8 @@ public class Ast5 {
 
   @Test
   public void test() {
-    System.out.println(typespec(new Stream("utest", "int signed signed short").getTokenlist()));
-    System.out.println(typespec(new Stream("utest", "long int unsigned long").getTokenlist()));
+    //System.out.println(typespec(new Stream("utest", "int signed signed short").getTokenlist()));
+    //System.out.println(typespec(new Stream("utest", "long int unsigned long").getTokenlist()));
   }
 
 }

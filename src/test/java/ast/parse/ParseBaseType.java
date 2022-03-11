@@ -9,8 +9,6 @@ import java.util.Set;
 
 import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeCombiner;
-import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.types.CStorageKind;
 import ast.types.CType;
 import ast.types.CTypeImpl;

@@ -93,7 +93,7 @@ public class ParseEnum3 {
 
       CSymbol sym = new CSymbol(CSymbolBase.SYM_ENUM_CONST, enm, type, pos);
       sym.enumValue = val;
-      parser.defineSym(enm, sym);
+      parser.defineSym(sym);
       val += 1;
 
       if (parser.is(T.T_COMMA)) {

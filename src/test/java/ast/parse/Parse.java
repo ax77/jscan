@@ -70,14 +70,14 @@ public class Parse {
     return currentFn;
   }
 
-  public void defineSym(Ident key, CSymbol sym) {
+  public void defineSym(CSymbol sym) {
 
     if (sym.base == CSymbolBase.SYM_TYPEDEF) {
-      defineTypedef(key, sym.type);
+      defineTypedef(sym.name, sym.type);
       return;
     }
 
-    CSymbol prevsym = symbols.getsymFromCurrentScope(key);
+    CSymbol prevsym = symbols.getsymFromCurrentScope(sym.name);
     if (prevsym != null) {
 
       if (sym.isFunction() && prevsym.type.isEqualTo(sym.type)) {
@@ -92,7 +92,7 @@ public class Parse {
       currentFn.addLocal(sym);
     }
 
-    symbols.addsym(key, sym);
+    symbols.addsym(sym.name, sym);
   }
 
   public void log(String what) {

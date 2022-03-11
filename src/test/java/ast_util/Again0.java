@@ -214,7 +214,7 @@ public class Again0 {
     rewriteLabels(items);
 
     for (ExecFlowItem item : items) {
-      System.out.println(item);
+      //System.out.println(item);
     }
 
     //    List<BasicBlock> blocks = buildBlocks(items);

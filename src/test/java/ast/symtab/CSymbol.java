@@ -10,8 +10,7 @@ import jscan.symtab.Ident;
 import jscan.tokenize.Token;
 
 public class CSymbol implements Location {
-  public final SourceLocation location;
-  public final Token from;
+  public final Token pos;
 
   // these fields are the base of each symbol
   public final CSymbolBase base;
@@ -27,17 +26,15 @@ public class CSymbol implements Location {
   // offset of a local variable
   public int offset;
 
-  public CSymbol(CSymbolBase base, Ident name, CType type, Token from) {
-    this.location = new SourceLocation(from);
-    this.from = from;
+  public CSymbol(CSymbolBase base, Ident name, CType type, Token pos) {
+    this.pos = pos;
     this.base = base;
     this.name = name;
     this.type = type;
   }
 
-  public CSymbol(CSymbolBase base, Ident name, CType type, List<Initializer> initializer, Token from) {
-    this.location = new SourceLocation(from);
-    this.from = from;
+  public CSymbol(CSymbolBase base, Ident name, CType type, List<Initializer> initializer, Token pos) {
+    this.pos = pos;
     this.base = base;
     this.name = name;
     this.type = type;
@@ -45,29 +42,29 @@ public class CSymbol implements Location {
   }
 
   @Override
-  public String toString() {
-    String ret = String.format("off=%d, loc=%d, name=%s, type=%s, base=%s", offset, location.getLine(), name.getName(),
-        type.toString(), base.toString());
-    return ret;
-  }
-
-  @Override
   public SourceLocation getLocation() {
-    return location;
+    return pos.getLocation();
   }
 
   @Override
   public String getLocationToString() {
-    return location.toString();
+    return pos.loc();
   }
 
   @Override
   public Token getBeginPos() {
-    return from;
+    return pos;
   }
 
   public boolean isFunction() {
     return base == CSymbolBase.SYM_FUNC;
+  }
+
+  @Override
+  public String toString() {
+    String ret = String.format("off=%d, loc=%d, name=%s, type=%s, base=%s", offset, pos.getLine(), name.getName(),
+        type.toString(), base.toString());
+    return ret;
   }
 
 }

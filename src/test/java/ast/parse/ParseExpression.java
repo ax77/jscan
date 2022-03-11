@@ -143,7 +143,7 @@ public class ParseExpression {
     initlist.add(initializer);
 
     CSymbol sym = new CSymbol(CSymbolBase.SYM_GVAR, varname, new CType(arrtype), initlist, saved);
-    parser.defineSym(varname, sym);
+    parser.defineSym(sym);
 
     return new Expression(sym, saved);
   }
