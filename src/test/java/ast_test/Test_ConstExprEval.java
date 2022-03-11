@@ -4,17 +4,20 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
 
 import ast.builders.ConstexprEval;
-import ast.main.ParserMain;
+import ast.main.ParseMainNew;
+import ast.main.ParseOpts;
 import ast.parse.Parse;
 import ast.parse.ParseExpression;
 import ast.tree.Expression;
 import jscan.parse.Tokenlist;
+import jscan.tokenize.Token;
 
 public class Test_ConstExprEval {
 
@@ -251,8 +254,8 @@ public class Test_ConstExprEval {
       String str = ent.getKey();
       long expected = ent.getValue().longValue();
 
-      Tokenlist it = new ParserMain(new StringBuilder(str)).preprocess();
-      Parse p = new Parse(it);
+      List<Token> tokens = new ParseMainNew(new ParseOpts[]{}).preprocessString(str);
+      Parse p = new Parse(tokens);
 
       Expression expr = new ParseExpression(p).e_expression();
       long actual = new ConstexprEval(p).ce(expr);

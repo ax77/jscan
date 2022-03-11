@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ast.main.ParserMain;
+import ast.main.ParseMainNew;
+import ast.main.ParseOpts;
 import ast.parse.Parse;
 import ast.tree.TranslationUnit;
 import jscan.parse.Tokenlist;
+import jscan.tokenize.Token;
 
 class UtilTestDto {
   private final boolean ignoge;
@@ -1495,7 +1497,7 @@ public class Test_Simple2 {
         continue;
       }
 
-      Tokenlist it = new ParserMain(new StringBuilder(dto.getSource())).preprocess();
+      List<Token> it = new ParseMainNew(new ParseOpts[]{ParseOpts.CONCAT_STRINGS}).preprocessString(dto.getSource());
       Parse p = new Parse(it);
 
       TranslationUnit unit = p.parse_unit();

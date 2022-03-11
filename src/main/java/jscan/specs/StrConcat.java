@@ -9,9 +9,9 @@ import jscan.tokenize.T;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
 
-public class StrConcat {
+public abstract class StrConcat {
 
-  public List<Token> preprocessInput(List<Token> input) throws IOException {
+  public static List<Token> concatenate(List<Token> input) throws IOException {
 
     final List<Token> clean = new ArrayList<Token>(0);
 
@@ -28,7 +28,7 @@ public class StrConcat {
 
         // maybe strings are before EOF
         if (!strings.isEmpty()) {
-          clean.add(concatStrings(strings));
+          clean.add(concatStringsInternal(strings));
           strings = new ArrayList<Token>(0);
         }
 
@@ -45,7 +45,7 @@ public class StrConcat {
 
         // merge string-list, add new string token, and add current token
         if (!strings.isEmpty()) {
-          clean.add(concatStrings(strings));
+          clean.add(concatStringsInternal(strings));
           strings = new ArrayList<Token>(0);
 
           clean.add(t);
@@ -60,7 +60,7 @@ public class StrConcat {
     return clean;
   }
 
-  private Token concatStrings(List<Token> strings) {
+  private static Token concatStringsInternal(List<Token> strings) {
     if (strings.isEmpty()) {
       throw new AstParseException("empty strings list");
     }

@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import ast.flat.ExecFlowItem;
 import ast.flat.RewriteStmt;
-import ast.main.ParserMain;
-import ast.parse.Parse;
+import ast.main.ParseMainNew;
+import ast.main.ParseOpts;
 import ast.symtab.CSymbol;
 import ast.tree.Function;
 import ast.tree.TranslationUnit;
@@ -201,8 +201,7 @@ public class Again0 {
     String dir = System.getProperty("user.dir");
     String txt = new FileWrapper(dir + "/cc_tests/01.c").readToString(FileReadKind.APPEND_LF);
 
-    Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = new ParseMainNew(new ParseOpts[] {}).parseString(txt);
 
     final Function func = unit.getExternalDeclarations().get(0).functionDefinition;
     int locals = applyLocalOffset(func);

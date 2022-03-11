@@ -6,7 +6,6 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ast.main.ParserMain;
 import ast.parse.Parse;
 import ast.parse.ParseExpression;
 import ast.tree.Expression;
@@ -286,13 +285,13 @@ public class SourcePosTest {
 
   @Test
   public void inits() throws IOException {
-    String dir = System.getProperty("user.dir");
-    String txt = "{ .a.b.c = {1,2,3,}, [1].f = 2, .a[1] = 3, { }, [11][22][33] = {11,22, .a={11,22,33}} }";
-    Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
-    p.pushscope(ScopeLevels.FILE_SCOPE);
-
-    Initializer init = parseInit(p);
-    System.out.println(init);
+//    String dir = System.getProperty("user.dir");
+//    String txt = "{ .a.b.c = {1,2,3,}, [1].f = 2, .a[1] = 3, { }, [11][22][33] = {11,22, .a={11,22,33}} }";
+//    Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
+//    p.pushscope(ScopeLevels.FILE_SCOPE);
+//
+//    Initializer init = parseInit(p);
+//    System.out.println(init);
   }
 
 }

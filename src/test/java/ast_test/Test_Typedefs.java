@@ -12,24 +12,21 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import ast.builders.ConstexprEval;
-import ast.main.ParserMain;
+import ast.main.ParseMainNew;
+import ast.main.ParseOpts;
 import ast.parse.Parse;
 import ast.parse.ParseExpression;
 import ast.tree.Expression;
 import ast.tree.TranslationUnit;
-import jscan.parse.Tokenlist;
-import jscan.tokenize.Stream;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
 
 public class Test_Typedefs {
 
-  private Tokenlist getTokenlist(StringBuilder sb) throws IOException {
-    return new ParserMain(sb).preprocess();
-  }
-
-  private static Stream getHashedStream(String source) throws IOException {
-    return new Stream("", source);
+  private TranslationUnit parseUnit(StringBuilder sb) throws IOException {
+    ParseOpts opts[] = new ParseOpts[] {};
+    TranslationUnit unit = new ParseMainNew(opts).parseString(sb.toString());
+    return unit;
   }
 
   @Test
@@ -40,13 +37,7 @@ public class Test_Typedefs {
     sb.append("pi32 y = &x;\n");
     sb.append("static int z = -1;\n");
 
-    String methodName = new Object() {
-    }.getClass().getEnclosingMethod().getName();
-
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -68,10 +59,7 @@ public class Test_Typedefs {
     sb.append(" /*018*/  signed short int typedef i16, *pi16, HWORD;      \n");
     sb.append(" /*019*/  unsigned typedef char i8, *pi8, BYTE, *PBYTE;    \n");
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -115,10 +103,7 @@ public class Test_Typedefs {
     sb.append(" /*035*/  }                                                     \n");
     //@formatter:on
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -176,10 +161,7 @@ public class Test_Typedefs {
     sb.append(" /*049*/  }                                                            \n");
     //@formatter:on
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -198,10 +180,7 @@ public class Test_Typedefs {
     sb.append(" /*011*/  ptoken_t ptok;                                        \n");
     sb.append(" /*012*/  i32 typedef i32, int32_ht, *pi32;                     \n");
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test(expected = AstParseException.class)
@@ -215,10 +194,7 @@ public class Test_Typedefs {
     sb.append(" /*006*/  typedef int test_t;           \n");
     sb.append(" /*007*/  test_t x;                     \n");
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -277,10 +253,7 @@ public class Test_Typedefs {
     sb.append(" /*048*/  }                                                                                    \n");
     //@formatter:on
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -315,10 +288,7 @@ public class Test_Typedefs {
     sb.append(" /*026*/  }                                                                       \n");
     //@formatter:on
 
-    Tokenlist tokenlist = getTokenlist(sb);
-
-    Parse p = new Parse(tokenlist);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -346,9 +316,7 @@ public class Test_Typedefs {
     sb.append(" /*032*/  }                                             \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
   }
 
   @Test
@@ -371,9 +339,7 @@ public class Test_Typedefs {
     sb11.append(" /*013*/  }                                \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(new StringBuilder(sb11)).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb11);
 
   }
 
@@ -402,9 +368,7 @@ public class Test_Typedefs {
     sb.append(" /*018*/  }                                                               \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -425,9 +389,7 @@ public class Test_Typedefs {
     sb9.append(" /*010*/  }                     \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(new StringBuilder(sb9)).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb9);
 
   }
 
@@ -452,9 +414,7 @@ public class Test_Typedefs {
     sb_044.append(" /*014*/  }                             \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(new StringBuilder(sb_044)).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb_044);
 
   }
 
@@ -487,9 +447,7 @@ public class Test_Typedefs {
     sb.append(" /*022*/  }                                                               \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -509,9 +467,7 @@ public class Test_Typedefs {
     sb.append(" /*010*/  }                              \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -539,9 +495,7 @@ public class Test_Typedefs {
     sb.append(" /*018*/  }                              \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -555,9 +509,7 @@ public class Test_Typedefs {
     sb.append(" /*004*/  }                                                                  \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -571,9 +523,7 @@ public class Test_Typedefs {
     sb.append(" /*004*/  }                                                                  \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1024,14 +974,7 @@ public class Test_Typedefs {
     tests.add(sb22);
 
     for (StringBuilder sb : tests) {
-      Tokenlist it = new ParserMain(sb).preprocess();
-      Parse p = new Parse(it);
-      TranslationUnit unit = p.parse_unit();
-
-      //      final List<CSymbol> locals = unit.getExternalDeclarations().get(0).getFunctionDefinition().getLocals();
-      //      for(CSymbol sym : locals) {
-      //        System.out.println(sym.toString());
-      //      }
+      TranslationUnit unit = parseUnit(sb);
     }
 
   }
@@ -1047,9 +990,7 @@ public class Test_Typedefs {
     sb.append(" /*005*/  }                          \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1064,9 +1005,7 @@ public class Test_Typedefs {
     sb.append(" /*005*/  }                          \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1132,9 +1071,7 @@ public class Test_Typedefs {
     sb.append(" /*012*/  }                         \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1182,9 +1119,7 @@ public class Test_Typedefs {
     sb.append(" /*038*/  }                                          \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1253,9 +1188,7 @@ public class Test_Typedefs {
     sb.append(" /*059*/  }                                             \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1269,9 +1202,7 @@ public class Test_Typedefs {
     sb.append(" /*004*/  }                                \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1302,9 +1233,7 @@ public class Test_Typedefs {
     sb.append(" /*021*/  }                                                                   \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1337,9 +1266,7 @@ public class Test_Typedefs {
     sb.append(" /*023*/  }                                                                                \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1360,10 +1287,7 @@ public class Test_Typedefs {
     sb.append(" /*011*/  int a9[_Generic(i, int: 1, default: 2) == 1 ? 1 : -1];                        \n");
     //@formatter:on
 
-    List<Token> tokenlist = getHashedStream(sb.toString()).getTokenlist();
-    Parse p = new Parse(tokenlist);
-
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1394,10 +1318,7 @@ public class Test_Typedefs {
     sb.append(" /*021*/  }                                                 \n");
     //@formatter:on
 
-    List<Token> tokenlist = getHashedStream(sb.toString()).getTokenlist();
-    Parse p = new Parse(tokenlist);
-
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1457,10 +1378,7 @@ public class Test_Typedefs {
     sb.append(" /*052*/  }                                                                                                                     \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1498,10 +1416,7 @@ public class Test_Typedefs {
     sb.append(" /*028*/  }                                                                                    \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1550,9 +1465,9 @@ public class Test_Typedefs {
     for (Entry<String, Integer> entry : s.entrySet()) {
 
       String source = entry.getKey();
-      Tokenlist it = new ParserMain(new StringBuilder(source)).preprocess();
+      List<Token> tokens = new ParseMainNew(new ParseOpts[]{}).preprocessString(source);
 
-      Parse p = new Parse(it);
+      Parse p = new Parse(tokens);
       Expression expr = new ParseExpression(p).e_expression();
 
       long ce = new ConstexprEval(p).ce(expr);
@@ -1582,9 +1497,7 @@ public class Test_Typedefs {
     sb.append(" /*009*/  }                           \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
@@ -1604,9 +1517,7 @@ public class Test_Typedefs {
     sb.append(" /*009*/  }                           \n");
     //@formatter:on
 
-    Tokenlist it = new ParserMain(sb).preprocess();
-    Parse p = new Parse(it);
-    TranslationUnit unit = p.parse_unit();
+    TranslationUnit unit = parseUnit(sb);
 
   }
 
