@@ -398,7 +398,7 @@ public class ParseExpression {
         CType typename = parser.parseTypename();
         parser.rparen();
 
-        return build_usize(typename.getSize(), id);
+        return build_usize(typename.size, id);
 
       } else {
 
@@ -412,7 +412,7 @@ public class ParseExpression {
           parser.perror("unimplemented sizeof for: " + sizeofexpr.toString());
         }
 
-        return build_usize(sizeofexpr.getResultType().getSize(), id);
+        return build_usize(sizeofexpr.getResultType().size, id);
 
       }
 
@@ -427,7 +427,7 @@ public class ParseExpression {
       parser.perror("unimplemented sizeof for: " + sizeofexpr.toString());
     }
 
-    return build_usize(sizeofexpr.getResultType().getSize(), id);
+    return build_usize(sizeofexpr.getResultType().size, id);
 
   }
 
@@ -448,7 +448,7 @@ public class ParseExpression {
       if (parser.tp() == T.T_LEFT_BRACE) {
         Token saved = parser.tok();
 
-        List<Initializer> initializerList = new InitReader(parser).parse(typename);
+        List<Initializer> initializerList = new ParseInitializer(parser).parse(typename);
         return build_compliteral(typename, initializerList, saved);
       }
 
@@ -550,7 +550,7 @@ public class ParseExpression {
       parser.perror("expect pointer to struct or union for '->' operator");
     }
 
-    final CStructType tpStruct = tp.getTpPointer().getPointerTo().getTpStruct();
+    final CStructType tpStruct = tp.tpPointer.subtype.tpStruct;
 
     if (tpStruct.isIncomplete()) {
       parser.perror("field selection [a->b] from incomplete struct/union");
@@ -571,11 +571,11 @@ public class ParseExpression {
       parser.perror("expect struct or union for '.' operator");
     }
 
-    if (tp.getTpStruct() == null || tp.getTpStruct().isIncomplete()) {
+    if (tp.tpStruct == null || tp.tpStruct.isIncomplete()) {
       parser.perror("field selection [a.b] from incomplete struct/union");
     }
 
-    CStructField field = tp.getTpStruct().findField(fieldName);
+    CStructField field = tp.tpStruct.findField(fieldName);
     if (field == null) {
       parser.perror("error: struct has no field: " + fieldName.getName());
     }

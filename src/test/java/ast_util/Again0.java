@@ -183,15 +183,15 @@ public class Again0 {
 
   int applyLocalOffset(FunctionDefinition fn) {
     int curoffset = 0;
-    for (CSymbol sym : fn.getLocals()) {
-      CType tp = sym.getType();
-      int tsz = tp.getSize();
+    for (CSymbol sym : fn.locals) {
+      CType tp = sym.type;
+      int tsz = tp.size;
       if (tsz <= 8) {
         tsz = 8;
       }
       curoffset += tsz;
-      curoffset = Aligner.align(curoffset, tp.getAlign());
-      sym.setOffset(-curoffset);
+      curoffset = Aligner.align(curoffset, tp.align);
+      sym.offset = (-curoffset);
     }
     return Aligner.align(curoffset, 16);
   }
@@ -205,12 +205,11 @@ public class Again0 {
     Parse p = new Parse(new ParserMain(new StringBuilder(txt)).preprocess());
     TranslationUnit unit = p.parse_unit();
 
-    final FunctionDefinition func = unit.getExternalDeclarations().get(0).getFunctionDefinition();
+    final FunctionDefinition func = unit.getExternalDeclarations().get(0).functionDefinition;
     int locals = applyLocalOffset(func);
 
-    final Statement block = func.getBlock();
     RewriteStmt stmt = new RewriteStmt();
-    stmt.genStmt(block);
+    stmt.genStmt(func.block);
 
     List<ExecFlowItem> items = stmt.getItems();
     identifyLeaders(items);

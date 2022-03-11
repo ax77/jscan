@@ -8,7 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ast.builders.TypeMerger;
-import ast.parse.InitReader;
+import ast.parse.ParseInitializer;
 import ast.parse.Parse;
 import ast.parse.ParseBaseType;
 import ast.parse.ParseDeclarator;
@@ -23,13 +23,12 @@ import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
 public class InitReaderTest {
-  
+
   @Test
   public void testStructs() throws IOException {
 
     List<String> list = new ArrayList<>();
     list.add(" struct x { int a; int b[2][3]; } var = { .a = 32, .b[0][0] = 1, .b = { 11,22,33,44,55,66, }, }; \n");
-
 
     KeywordsInits.initIdents();
 
@@ -59,9 +58,9 @@ public class InitReaderTest {
 
       parser.checkedMove(T.T_ASSIGN);
 
-      List<Initializer> inits = new InitReader(parser).parse(type);
+      List<Initializer> inits = new ParseInitializer(parser).parse(type);
       System.out.println();
-      System.out.println(decl.getName() + " " + type.getSize());
+      System.out.println(decl.getName() + " " + type.size);
       for (Initializer init : inits) {
         System.out.println(init);
       }
@@ -131,9 +130,9 @@ public class InitReaderTest {
 
       parser.checkedMove(T.T_ASSIGN);
 
-      List<Initializer> inits = new InitReader(parser).parse(type);
+      List<Initializer> inits = new ParseInitializer(parser).parse(type);
       System.out.println();
-      System.out.println(decl.getName() + " " + type.getSize());
+      System.out.println(decl.getName() + " " + type.size);
       for (Initializer init : inits) {
         System.out.println(init);
       }

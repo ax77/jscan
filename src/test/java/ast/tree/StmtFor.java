@@ -2,11 +2,11 @@ package ast.tree;
 
 public class StmtFor {
 
-  private final Declaration decl;
-  private final Expression init;
-  private final Expression test;
-  private final Expression step;
-  private final Statement loop;
+  public final Declaration decl;
+  public final Expression init;
+  public final Expression test;
+  public final Expression step;
+  public final Statement loop;
 
   public StmtFor(Declaration decl, Expression init, Expression test, Expression step, Statement loop) {
     this.decl = decl;
@@ -14,26 +14,6 @@ public class StmtFor {
     this.test = test;
     this.step = step;
     this.loop = loop;
-  }
-
-  public Declaration getDecl() {
-    return decl;
-  }
-
-  public Expression getInit() {
-    return init;
-  }
-
-  public Expression getTest() {
-    return test;
-  }
-
-  public Expression getStep() {
-    return step;
-  }
-
-  public Statement getLoop() {
-    return loop;
   }
 
 }

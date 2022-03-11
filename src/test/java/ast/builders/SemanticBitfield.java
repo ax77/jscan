@@ -19,7 +19,7 @@ public class SemanticBitfield {
       parser.perror("negative bitfield-width");
     }
 
-    CTypeKind kind = base.getKind();
+    CTypeKind kind = base.kind;
 
     // TODO: warning about enum
     // 
@@ -27,7 +27,7 @@ public class SemanticBitfield {
       parser.perror("bitfield type error.");
     }
 
-    int maxbits = TypeSizes.get(kind) * 8; // TODO: settings __CHAR_BIT__
+    int maxbits = TypeSizes.getSize(kind) * 8; // TODO: settings __CHAR_BIT__
     if (width > maxbits) {
       parser.perror("width exceeds its type");
     }

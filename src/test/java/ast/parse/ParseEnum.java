@@ -65,7 +65,7 @@ public class ParseEnum {
     if (tag != null) {
       if (parser.tok().is(T.T_SEMI_COLON)) {
         if (parser.isHasTag(tag.getIdent())) {
-          CType type = parser.getTag(tag.getIdent()).getType();
+          CType type = parser.getTag(tag.getIdent()).type;
           return type;
         } else {
           final CType incomplete = new CType(new CEnumType(tag.getIdent()));
@@ -84,7 +84,7 @@ public class ParseEnum {
         // tag was in symtab
         //
         if (parser.tp() == T.T_LEFT_BRACE) {
-          CType type = parser.getTag(tag.getIdent()).getType();
+          CType type = parser.getTag(tag.getIdent()).type;
 
           // TODO:
           // 1) this is warning: declaration was not declare anything???
@@ -99,7 +99,7 @@ public class ParseEnum {
 
           if (type.isIncomplete()) {
             // TODO: max size, align.
-            type.getTpEnum().setEnumerators(dto.getEnumerators());
+            type.tpEnum.setEnumerators(dto.getEnumerators());
           }
 
           // is complete.
@@ -125,7 +125,7 @@ public class ParseEnum {
         // not a brace '{'
         //
         else {
-          CType type = parser.getTag(tag.getIdent()).getType();
+          CType type = parser.getTag(tag.getIdent()).type;
 
           if (paranoia) {
             System.out.println("2");
@@ -152,8 +152,8 @@ public class ParseEnum {
           // rewrite...???
 
           ApplyEnumInfo dto = parseEnumeratorList();
-          CType type = parser.getTag(tag.getIdent()).getType();
-          type.getTpEnum().setEnumerators(dto.getEnumerators());
+          CType type = parser.getTag(tag.getIdent()).type;
+          type.tpEnum.setEnumerators(dto.getEnumerators());
 
           if (paranoia) {
             System.out.println("3");
@@ -242,7 +242,7 @@ public class ParseEnum {
 
     if (parser.tp() != T.T_ASSIGN) {
       final CSymbol symbol = new CSymbol(CSymbolBase.SYM_ENUM_CONST, identifier, CTypeImpl.TYPE_INT, saved); // TODO:Storage
-      symbol.setEnumvalue(enumvalue);
+      symbol.enumValue = (enumvalue);
 
       parser.defineSym(identifier, symbol);
       enumdto.addEnumerator(identifier, enumvalue);
@@ -256,7 +256,7 @@ public class ParseEnum {
     enumvalue = (int) new ConstexprEval(parser).ce(constexpr);
 
     final CSymbol symbol = new CSymbol(CSymbolBase.SYM_ENUM_CONST, identifier, CTypeImpl.TYPE_INT, saved); // TODO:Storage
-    symbol.setEnumvalue(enumvalue);
+    symbol.enumValue = (enumvalue);
 
     parser.defineSym(identifier, symbol);
     enumdto.addEnumerator(identifier, enumvalue);

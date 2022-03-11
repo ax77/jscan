@@ -28,7 +28,7 @@ public class CStructType {
   public boolean isHasConstFields() {
     checkHasFields();
     for (CStructField f : fields) {
-      final CType type = f.getType();
+      final CType type = f.type;
       if (type.isConst()) {
         return true;
       }
@@ -38,10 +38,6 @@ public class CStructType {
 
   public boolean isIncomplete() {
     return isIncomplete;
-  }
-
-  public void setIncomplete(boolean isIncomplete) {
-    this.isIncomplete = isIncomplete;
   }
 
   public boolean isUnion() {
@@ -84,7 +80,7 @@ public class CStructType {
       if (!f.isHasName()) {
         continue;
       }
-      if (f.getName().getName().equals(s)) {
+      if (f.name.getName().equals(s)) {
         return true;
       }
     }
@@ -97,19 +93,11 @@ public class CStructType {
       if (!f.isHasName()) {
         continue; // unnamed bf. TODO:
       }
-      if (f.getName().equals(fieldName)) {
+      if (f.name.equals(fieldName)) {
         return f;
       }
     }
     return null;
-  }
-
-  public void setUnion(boolean isUnion) {
-    this.isUnion = isUnion;
-  }
-
-  public void setTag(Ident tag) {
-    this.tag = tag;
   }
 
   public void setFields(List<CStructField> fields) {

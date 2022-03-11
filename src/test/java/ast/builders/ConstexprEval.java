@@ -152,7 +152,7 @@ public class ConstexprEval {
 
     if (base == ExpressionBase.EPRIMARY_IDENT) {
       //TODO:
-      return expression.getSymbol().getEnumvalue();
+      return expression.getSymbol().enumValue;
     }
 
     // try expand _Generic

@@ -7,9 +7,9 @@ import jscan.utils.NullChecker;
 
 public class CFunctionType {
 
-  private final CType returnType;
-  private final List<CFuncParam> parameters;
-  private final boolean isVariadic;
+  public final CType returnType;
+  public final List<CFuncParam> parameters;
+  public final boolean isVariadic;
 
   public CFunctionType(CType type, List<CFuncParam> parameters, boolean isVariadic) {
     NullChecker.check(type, parameters);
@@ -19,20 +19,8 @@ public class CFunctionType {
     this.isVariadic = isVariadic;
   }
 
-  public CType getReturnType() {
-    return returnType;
-  }
-
-  public List<CFuncParam> getParameters() {
-    return parameters;
-  }
-
   public boolean isVariadic() {
     return isVariadic;
-  }
-
-  public int getArgc() {
-    return parameters.size();
   }
 
   @Override

@@ -101,8 +101,8 @@ public class ExecFlowItem {
       return id + opc.toString() + " " + label;
     }
     if (opc == ExecFlowBase.sym) {
-      String base = var.getType().toString() + " " + var.getName();
-      String init = var.getInitializer() == null ? "" : " = " + var.getInitializer().get(0).toString();
+      String base = var.type.toString() + " " + var.name;
+      String init = var.initializer == null ? "" : " = " + var.initializer.get(0).toString();
       return base + init;
     }
     if (opc == ExecFlowBase.test) {

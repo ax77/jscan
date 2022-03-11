@@ -104,8 +104,8 @@ public class ParseBaseType {
         // we'he got an identifier, which may be a typedefed-alias
         final CSymbol symbol = parser.getSym(tok.getIdent());
         if (symbol != null) {
-          final CType typeFromStab = symbol.getType();
-          if (symbol.getBase() == CSymbolBase.SYM_TYPEDEF) {
+          final CType typeFromStab = symbol.type;
+          if (symbol.base == CSymbolBase.SYM_TYPEDEF) {
             parser.move(); // move the identifier, and assign the type we've found by this id.
             result = typeFromStab;
           } else {
@@ -254,8 +254,8 @@ public class ParseBaseType {
     if (parser.isUserDefinedId()) {
       CSymbol symbol = parser.getSym(parser.tok().getIdent());
       if (symbol != null) {
-        CType typeFromStab = symbol.getType();
-        if (symbol.getBase() == CSymbolBase.SYM_TYPEDEF) {
+        CType typeFromStab = symbol.type;
+        if (symbol.base == CSymbolBase.SYM_TYPEDEF) {
           parser.move();
 
           List<Token> ts = new ArrayList<Token>();

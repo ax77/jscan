@@ -38,7 +38,7 @@ public class ParseDeclarator {
   private void parseDeclInternal(Declarator out) {
     List<Integer> pointers = new ArrayList<Integer>(0);
 
-    while (parser.tok().is(T.T_TIMES)) {
+    while (parser.is(T.T_TIMES)) {
       parser.move();
 
       Set<Ident> ptrTypeQuals = new HashSet<Ident>();
@@ -62,7 +62,7 @@ public class ParseDeclarator {
       int p = pointers.remove(0);
       DeclaratorEntry e = new DeclaratorEntry(CTypeKind.TP_POINTER_TO);
       if (p == 2) {
-        e.setConstPointer(true);
+        e.isConstPointer = true;
       }
       out.add(e);
     }
@@ -74,38 +74,34 @@ public class ParseDeclarator {
   }
 
   private void parseDirectDeclarator(Declarator out) {
-    if (parser.tok().is(T.T_LEFT_PAREN)) {
+    if (parser.is(T.T_LEFT_PAREN)) {
       parser.lparen();
       parseDeclInternal(out);
       parser.rparen();
-    } else if (parser.tok().is(T.TOKEN_IDENT)) {
+    } else if (parser.is(T.TOKEN_IDENT)) {
       Token saved = parser.tok();
       parser.move();
       out.setName(saved.getIdent());
-    } else {
-      //p.perror("no-name");
     }
-    while (parser.tok().is(T.T_LEFT_PAREN) || parser.tok().is(T.T_LEFT_BRACKET)) {
+    while (parser.is(T.T_LEFT_PAREN) || parser.is(T.T_LEFT_BRACKET)) {
       Token saved = parser.tok();
       parser.move();
       if (saved.is(T.T_LEFT_PAREN)) {
 
-        DeclaratorEntry e = new DeclaratorEntry(CTypeKind.TP_FUNCTION);
-        List<CFuncParam> params = parseParams(e);
-        e.setParameters(params);
+        final DeclaratorEntry ent = new DeclaratorEntry(CTypeKind.TP_FUNCTION);
+        ent.parameters = parseParams(ent);
 
-        out.add(e);
+        out.add(ent);
       } else {
-        DeclaratorEntry e = new DeclaratorEntry(CTypeKind.TP_ARRAY_OF);
-
-        Expression arrinit = parseArrayInit();
+        final DeclaratorEntry ent = new DeclaratorEntry(CTypeKind.TP_ARRAY_OF);
+        final Expression arrinit = parseArrayInit();
 
         if (arrinit != null) {
           int arrlen = (int) new ConstexprEval(parser).ce(arrinit);
-          e.setArrayLen(arrlen);
+          ent.arrlen = arrlen;
         }
 
-        out.add(e);
+        out.add(ent);
       }
       if (saved.is(T.T_LEFT_PAREN)) {
         parser.rparen();
@@ -119,19 +115,19 @@ public class ParseDeclarator {
 
     // int x[]
     //       ^
-    if (parser.tok().is(T.T_RIGHT_BRACKET)) {
+    if (parser.is(T.T_RIGHT_BRACKET)) {
       return null;
     }
 
     return new ParseExpression(parser).e_expression();
   }
 
-  private List<CFuncParam> parseParams(DeclaratorEntry e) {
+  private List<CFuncParam> parseParams(final DeclaratorEntry ent) {
     List<CFuncParam> params = new ArrayList<CFuncParam>();
 
     // int x()
     //       ^
-    if (parser.tok().is(T.T_RIGHT_PAREN)) {
+    if (parser.is(T.T_RIGHT_PAREN)) {
       return params;
     }
 
@@ -143,7 +139,7 @@ public class ParseDeclarator {
       return params;
     }
 
-    CFuncParam param = parseOneParam(e);
+    CFuncParam param = parseOneParam(ent);
     params.add(param);
 
     while (parser.tp() == T.T_COMMA) {
@@ -154,15 +150,15 @@ public class ParseDeclarator {
       if (parser.tp() == T.T_DOT_DOT_DOT) {
 
         parser.move(); // [...]
-        if (!parser.tok().is(T_RIGHT_PAREN)) {
+        if (!parser.is(T_RIGHT_PAREN)) {
           parser.perror("expect `)` after `...`");
         }
 
-        e.setVariadicFunction(true);
+        ent.isVariadicFunction = true;
         break;
       }
 
-      CFuncParam paramSeq = parseOneParam(e);
+      CFuncParam paramSeq = parseOneParam(ent);
       params.add(paramSeq);
     }
 

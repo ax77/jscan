@@ -9,20 +9,18 @@ import java.util.List;
 import ast.builders.TypePrinter;
 import jscan.utils.AstParseException;
 
-public class CType implements CTypeApi {
+public class CType {
 
-  private final CTypeKind kind;
-  private int qualifiers;
-
-  private int size;
-  private int align;
-
-  private CPointerType tpPointer;
-  private CArrayType tpArray;
-  private CFunctionType tpFunction;
-  private CStructType tpStruct;
-  private CEnumType tpEnum;
-  private CBitfieldType tpBitfield;
+  public final CTypeKind kind;
+  public int qualifiers;
+  public int size;
+  public int align;
+  public CPointerType tpPointer;
+  public CArrayType tpArray;
+  public CFunctionType tpFunction;
+  public CStructType tpStruct;
+  public CEnumType tpEnum;
+  public CBitfieldType tpBitfield;
 
   public void applyTqual(int f) {
     qualifiers |= f;
@@ -31,7 +29,7 @@ public class CType implements CTypeApi {
   // for primitives
   public CType(CTypeKind kind) {
     this.kind = kind;
-    this.size = TypeSizes.get(kind);
+    this.size = TypeSizes.getSize(kind);
     this.align = this.size;
 
   }
@@ -39,7 +37,7 @@ public class CType implements CTypeApi {
   public CType(CPointerType tpPointer) {
     this.kind = CTypeKind.TP_POINTER_TO;
     this.tpPointer = tpPointer;
-    this.size = TypeSizes.get(CTypeKind.TP_POINTER_TO);
+    this.size = TypeSizes.getSize(CTypeKind.TP_POINTER_TO);
     this.align = this.size;
 
   }
@@ -47,7 +45,7 @@ public class CType implements CTypeApi {
   public CType(CFunctionType cFunctionType) {
     this.kind = CTypeKind.TP_FUNCTION;
     this.tpFunction = cFunctionType;
-    this.size = TypeSizes.get(CTypeKind.TP_FUNCTION);
+    this.size = TypeSizes.getSize(CTypeKind.TP_FUNCTION);
     this.align = this.size;
 
   }
@@ -55,8 +53,8 @@ public class CType implements CTypeApi {
   public CType(CArrayType cArrayType) {
     this.kind = CTypeKind.TP_ARRAY_OF;
     this.tpArray = cArrayType;
-    this.size = cArrayType.getArrayLen() * cArrayType.getArrayOf().getSize();
-    this.align = cArrayType.getArrayOf().getAlign();
+    this.size = cArrayType.len * cArrayType.subtype.size;
+    this.align = cArrayType.subtype.align;
 
   }
 
@@ -71,7 +69,7 @@ public class CType implements CTypeApi {
   public CType(CEnumType tpEnum) {
     this.kind = CTypeKind.TP_ENUM;
     this.tpEnum = tpEnum;
-    this.size = TypeSizes.get(CTypeKind.TP_ENUM);
+    this.size = TypeSizes.getSize(CTypeKind.TP_ENUM);
     this.align = this.size;
 
   }
@@ -81,14 +79,8 @@ public class CType implements CTypeApi {
     this.tpBitfield = tpBitfield;
 
     //TODO:
-    this.size = tpBitfield.getBase().getSize();
+    this.size = tpBitfield.basetype.size;
     this.align = 1;
-  }
-
-  private void assertGetType(CTypeKind need) {
-    if (need != kind) {
-      throw new AstParseException("internal error: you want get type " + need.toString() + " from " + kind.toString());
-    }
   }
 
   public boolean isPrimitive() {
@@ -104,53 +96,6 @@ public class CType implements CTypeApi {
     default:
       return true;
     }
-  }
-
-  public CTypeKind getKind() {
-    return kind;
-  }
-
-  public CArrayType getTpArray() {
-    assertGetType(CTypeKind.TP_ARRAY_OF);
-    return tpArray;
-  }
-
-  public CFunctionType getTpFunction() {
-    assertGetType(CTypeKind.TP_FUNCTION);
-    return tpFunction;
-  }
-
-  public CStructType getTpStruct() {
-    if (!isStrUnion()) {
-      throw new AstParseException("you want get fields from something not a struct or union.");
-    }
-    return tpStruct;
-  }
-
-  public CEnumType getTpEnum() {
-    assertGetType(CTypeKind.TP_ENUM);
-    return tpEnum;
-  }
-
-  public int chainLength() {
-    int r = 0;
-    if (isPrimitive()) {
-      r++;
-    } else {
-      if (kind == CTypeKind.TP_POINTER_TO) {
-        r++;
-        r += tpPointer.getPointerTo().chainLength();
-      }
-      if (kind == CTypeKind.TP_ARRAY_OF) {
-        r++;
-        r += tpArray.getArrayOf().chainLength();
-      }
-      if (kind == CTypeKind.TP_FUNCTION) {
-        r++;
-        r += tpFunction.getReturnType().chainLength();
-      }
-    }
-    return r;
   }
 
   @Override
@@ -189,145 +134,111 @@ public class CType implements CTypeApi {
     }
   }
 
-  @Override
   public boolean isStrUnion() {
     return isStruct() || isUnion();
   }
 
-  @Override
-  public int getSize() {
-    return size;
-  }
-
-  @Override
-  public int getAlign() {
-    return align;
-  }
-
-  @Override
   public boolean isUnion() {
     return kind == CTypeKind.TP_UNION;
   }
 
-  @Override
   public boolean isFunction() {
     return kind == CTypeKind.TP_FUNCTION;
   }
 
-  @Override
   public boolean isObject() {
     return isScalar() || isNoScalar();
   }
 
-  @Override
   public boolean isScalar() {
     return isPointer() || isArithmetic();
   }
 
-  @Override
   public boolean isNoScalar() {
     return isStruct() || isUnion() || isArray();
   }
 
-  @Override
   public boolean isStruct() {
     return kind == CTypeKind.TP_STRUCT;
   }
 
-  @Override
   public boolean isArray() {
     return kind == CTypeKind.TP_ARRAY_OF;
   }
 
-  @Override
   public boolean isArithmetic() {
     return isInteger() || isFloatingType();
   }
 
-  @Override
   public boolean isInteger() {
     return isBool() || isChar() || isUchar() || isShort() || isUshort() || isInt() || isUint() || isLong() || isUlong()
-        || isLongLong() || isUlongLong()
-        //
-        || isBitfield() || isEnumeration();
+        || isLongLong() || isUlongLong() || isBitfield() || isEnumeration();
   }
 
-  @Override
   public boolean isBitfield() {
     return kind == CTypeKind.TP_BITFIELD;
   }
 
-  @Override
   public boolean isPlainBitfield() {
     return isBitfield();
   }
 
-  @Override
   public boolean isSignedBitfield() {
-    return isBitfield() && !tpBitfield.getBase().isUnsigned();
+    return isBitfield() && !tpBitfield.basetype.isUnsigned();
   }
 
-  @Override
   public boolean isUnsignedBitfield() {
-    return isBitfield() && tpBitfield.getBase().isUnsigned();
+    return isBitfield() && tpBitfield.basetype.isUnsigned();
   }
 
-  @Override
   public boolean isEnumeration() {
     return kind == CTypeKind.TP_ENUM;
   }
 
-  @Override
   public boolean isFloatingType() {
     return isFloat() || isDouble() || isLongDouble();
   }
 
-  @Override
   public boolean isVoid() {
     return kind == CTypeKind.TP_VOID;
   }
 
-  @Override
   public boolean isIncompleteStruct() {
     return isStruct() && tpStruct.isIncomplete();
   }
 
-  @Override
   public boolean isIncompleteUnion() {
     return isUnion() && tpStruct.isIncomplete();
   }
 
-  @Override
   public boolean isIncompleteArray() {
-    return isArray() && tpArray.isIncomplete();
+    return isArray() && tpArray.isIncomplete;
   }
 
   public boolean isIncompleteEnum() {
     return isEnumeration() && tpEnum.isIncomplete();
   }
 
-  @Override
   public boolean isIncomplete() {
     return isVoid() || isIncompleteArray() || isIncompleteStruct() || isIncompleteUnion() || isIncompleteEnum();
   }
 
-  @Override
   public boolean isEqualTo(CType another) {
 
-    if (kind != another.getKind()) {
+    if (kind != another.kind) {
       return false;
     }
 
     if (isPointer()) {
-      return cmpPointers(another.getTpPointer());
+      return cmpPointers(another.tpPointer);
     }
 
     if (isFunction()) {
-      return cmpFunctions(another.getTpFunction());
+      return cmpFunctions(another.tpFunction);
     }
 
     if (isArray()) {
-      return cmpArrays(another.getTpArray());
+      return cmpArrays(another.tpArray);
     }
 
     return true;
@@ -335,12 +246,12 @@ public class CType implements CTypeApi {
 
   private boolean cmpPointers(CPointerType another) {
 
-    if (!tpPointer.getPointerTo().isEqualTo(another.getPointerTo())) {
+    if (!tpPointer.subtype.isEqualTo(another.subtype)) {
       return false;
     }
 
-    if (tpPointer.isConst()) {
-      if (!another.isConst()) {
+    if (tpPointer.isConst) {
+      if (!another.isConst) {
         return false;
       }
     }
@@ -350,17 +261,17 @@ public class CType implements CTypeApi {
 
   private boolean cmpArrays(CArrayType another) {
 
-    if (!tpArray.getArrayOf().isEqualTo(another.getArrayOf())) {
+    if (!tpArray.subtype.isEqualTo(another.subtype)) {
       return false;
     }
 
-    if (tpArray.isIncomplete()) {
-      if (!another.isIncomplete()) {
+    if (tpArray.isIncomplete) {
+      if (!another.isIncomplete) {
         return false;
       }
     }
 
-    if (tpArray.getArrayLen() != another.getArrayLen()) {
+    if (tpArray.len != another.len) {
       return false;
     }
 
@@ -369,8 +280,8 @@ public class CType implements CTypeApi {
 
   private boolean cmpFunctions(CFunctionType another) {
 
-    final CType lhsRtype = tpFunction.getReturnType();
-    final CType rhsRtype = another.getReturnType();
+    final CType lhsRtype = tpFunction.returnType;
+    final CType rhsRtype = another.returnType;
     if (!lhsRtype.isEqualTo(rhsRtype)) {
       return false;
     }
@@ -381,8 +292,8 @@ public class CType implements CTypeApi {
       }
     }
 
-    final List<CFuncParam> lhsParams = tpFunction.getParameters();
-    final List<CFuncParam> rhsParams = another.getParameters();
+    final List<CFuncParam> lhsParams = tpFunction.parameters;
+    final List<CFuncParam> rhsParams = another.parameters;
     if (lhsParams.size() != rhsParams.size()) {
       return false;
     }
@@ -390,7 +301,7 @@ public class CType implements CTypeApi {
     for (int i = 0; i < lhsParams.size(); ++i) {
       CFuncParam lhsParam = lhsParams.get(i);
       CFuncParam rhsParam = rhsParams.get(i);
-      if (!lhsParam.getType().isEqualTo(rhsParam.getType())) {
+      if (!lhsParam.type.isEqualTo(rhsParam.type)) {
         return false;
       }
     }
@@ -398,11 +309,6 @@ public class CType implements CTypeApi {
     return true;
   }
 
-  public CPointerType getTpPointer() {
-    return tpPointer;
-  }
-
-  @Override
   public boolean isConst() {
     if (isStrUnion()) {
       return tpStruct.isHasConstFields();
@@ -410,82 +316,70 @@ public class CType implements CTypeApi {
     return (qualifiers & QCONST) == QCONST;
   }
 
-  @Override
   public boolean isHasSignedness() {
     return isInteger();
   }
 
-  @Override
   public boolean isUnsigned() {
     return isUchar() || isUshort() || isUint() || isUlong() || isUlongLong() || isUnsignedBitfield();
   }
 
-  @Override
   public boolean isSigned() {
     return isHasSignedness() && !isUnsigned();
   }
 
-  @Override
   public boolean isInline() {
     return (qualifiers & FINLIN) == FINLIN;
   }
 
-  @Override
   public boolean isNoreturn() {
     return (qualifiers & FNORET) == FNORET;
   }
 
 //@formatter:off
-  @Override public boolean isBool() { return kind == CTypeKind.TP_BOOL; }
-  @Override public boolean isChar() { return kind == CTypeKind.TP_CHAR; }
-  @Override public boolean isUchar() { return kind == CTypeKind.TP_UCHAR; }
-  @Override public boolean isShort() { return kind == CTypeKind.TP_SHORT; }
-  @Override public boolean isUshort() { return kind == CTypeKind.TP_USHORT; }
-  @Override public boolean isInt() { return kind == CTypeKind.TP_INT; }
-  @Override public boolean isUint() { return kind == CTypeKind.TP_UINT; }
-  @Override public boolean isLong() { return kind == CTypeKind.TP_LONG; }
-  @Override public boolean isUlong() { return kind == CTypeKind.TP_ULONG; }
-  @Override public boolean isLongLong() { return kind == CTypeKind.TP_LONG_LONG; }
-  @Override public boolean isUlongLong() { return kind == CTypeKind.TP_ULONG_LONG; }
-  @Override public boolean isFloat() { return kind == CTypeKind.TP_FLOAT; }
-  @Override public boolean isDouble() { return kind == CTypeKind.TP_DOUBLE; }
-  @Override public boolean isLongDouble() { return kind == CTypeKind.TP_LONG_DOUBLE; }
+   public boolean isBool() { return kind == CTypeKind.TP_BOOL; }
+   public boolean isChar() { return kind == CTypeKind.TP_CHAR; }
+   public boolean isUchar() { return kind == CTypeKind.TP_UCHAR; }
+   public boolean isShort() { return kind == CTypeKind.TP_SHORT; }
+   public boolean isUshort() { return kind == CTypeKind.TP_USHORT; }
+   public boolean isInt() { return kind == CTypeKind.TP_INT; }
+   public boolean isUint() { return kind == CTypeKind.TP_UINT; }
+   public boolean isLong() { return kind == CTypeKind.TP_LONG; }
+   public boolean isUlong() { return kind == CTypeKind.TP_ULONG; }
+   public boolean isLongLong() { return kind == CTypeKind.TP_LONG_LONG; }
+   public boolean isUlongLong() { return kind == CTypeKind.TP_ULONG_LONG; }
+   public boolean isFloat() { return kind == CTypeKind.TP_FLOAT; }
+   public boolean isDouble() { return kind == CTypeKind.TP_DOUBLE; }
+   public boolean isLongDouble() { return kind == CTypeKind.TP_LONG_DOUBLE; }
 //@formatter:on
 
-  @Override
   public boolean isPointerToCompat(CType lhsRT) {
     // TODO: XXX
     return true;
   }
 
-  @Override
   public boolean isPointer() {
     return kind == CTypeKind.TP_POINTER_TO;
   }
 
-  @Override
   public boolean isPointerToFunction() {
-    return isPointer() && tpPointer.getPointerTo().isFunction();
+    return isPointer() && tpPointer.subtype.isFunction();
   }
 
-  @Override
   public boolean isPointerToObject() {
-    return isPointer() && tpPointer.getPointerTo().isObject();
+    return isPointer() && tpPointer.subtype.isObject();
   }
 
-  @Override
   public boolean isPointerToIncomplete() {
-    return isPointer() && tpPointer.getPointerTo().isIncomplete();
+    return isPointer() && tpPointer.subtype.isIncomplete();
   }
 
-  @Override
   public boolean isPointerToVoid() {
-    return isPointer() && tpPointer.getPointerTo().isVoid();
+    return isPointer() && tpPointer.subtype.isVoid();
   }
 
-  @Override
   public boolean isPointerToStructUnion() {
-    return isPointer() && tpPointer.getPointerTo().isStrUnion();
+    return isPointer() && tpPointer.subtype.isStrUnion();
   }
 
   public boolean isAnObjectExceptBitField() {

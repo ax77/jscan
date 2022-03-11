@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import ast.parse.Parse;
 import ast.tree.TranslationUnit;
-import jscan.parse.Tokenlist;
-import jscan.preproc.TokenPrint;
 import jscan.preproc.preprocess.Scan;
 import jscan.symtab.KeywordsInits;
 import jscan.tokenize.Stream;

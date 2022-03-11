@@ -3,26 +3,14 @@ package ast.tree;
 import ast.types.CType;
 
 public class Initializer implements Comparable<Initializer> {
-  private final Expression init;
-  private final int offset;
-  private final CType type;
+  public final Expression init;
+  public final int offset;
+  public final CType type;
 
   public Initializer(Expression init, CType type, int offset) {
     this.init = init;
     this.type = type;
     this.offset = offset;
-  }
-
-  public Expression getInit() {
-    return init;
-  }
-
-  public int getOffset() {
-    return offset;
-  }
-
-  public CType getType() {
-    return type;
   }
 
   @Override
@@ -32,10 +20,10 @@ public class Initializer implements Comparable<Initializer> {
 
   @Override
   public int compareTo(Initializer o) {
-    if (offset < o.getOffset()) {
+    if (offset < o.offset) {
       return -1;
     }
-    if (offset > o.getOffset()) {
+    if (offset > o.offset) {
       return 1;
     }
     return 0;

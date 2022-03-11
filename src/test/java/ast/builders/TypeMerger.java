@@ -40,21 +40,20 @@ public abstract class TypeMerger {
   }
 
   private static CType buildFromDeclaratorEntry(DeclaratorEntry e, CType type) {
-    CTypeKind base = e.getBase();
+    CTypeKind base = e.base;
     if (base == CTypeKind.TP_ARRAY_OF) {
-      CArrayType arr = new CArrayType(type, e.getArrlen());
+      CArrayType arr = new CArrayType(type, e.arrlen);
       return new CType(arr);
     }
     if (base == CTypeKind.TP_POINTER_TO) {
-      final CPointerType ptrTo = new CPointerType(type, e.isConstPointer());
+      final CPointerType ptrTo = new CPointerType(type, e.isConstPointer);
       return new CType(ptrTo);
     }
     if (base == CTypeKind.TP_FUNCTION) {
-      CFunctionType fn = new CFunctionType(type, e.getParameters(), e.isVariadicFunction());
+      CFunctionType fn = new CFunctionType(type, e.parameters, e.isVariadicFunction);
       return new CType(fn);
     }
-    throw new AstParseException(
-        "build from declarator fail: entry=" + e.getBase().toString() + "; type=" + type.toString());
+    throw new AstParseException("build from declarator fail: entry=" + e.base.toString() + "; type=" + type.toString());
   }
 
   public static void checkTagNotNullForReference(Token tag) {

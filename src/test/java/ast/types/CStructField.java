@@ -4,10 +4,10 @@ import jscan.symtab.Ident;
 import jscan.utils.NullChecker;
 
 public class CStructField {
-  private final Ident name;
-  private final CType type;
-  private int offset;
-  private int pos;
+  public final Ident name;
+  public final CType type;
+  public int offset;
+  public int pos;
 
   //TODO:later
   //plain field: but anonymous struct/union, or unnamed bitfield.
@@ -26,36 +26,12 @@ public class CStructField {
     this.type = type;
   }
 
-  public int getOffset() {
-    return offset;
-  }
-
-  public void setOffset(int offset) {
-    this.offset = offset;
-  }
-
-  public Ident getName() {
-    return name;
-  }
-
-  public CType getType() {
-    return type;
-  }
-
   public boolean isHasName() {
     return name != null;
   }
 
   public boolean isBitfield() {
     return type.isBitfield();
-  }
-
-  public int getPos() {
-    return pos;
-  }
-
-  public void setPos(int pos) {
-    this.pos = pos;
   }
 
   @Override

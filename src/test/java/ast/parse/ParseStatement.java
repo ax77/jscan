@@ -234,9 +234,7 @@ public class ParseStatement {
       StmtSwitch nodeSwitch = new StmtSwitch(expr);
       pushSwitch(nodeSwitch);
 
-      Statement stmt = parseStatement();
-      nodeSwitch.setStmt(stmt);
-
+      nodeSwitch.stmt = parseStatement();
       popSwitch();
       return new Statement(from, nodeSwitch);
     }
@@ -256,9 +254,7 @@ public class ParseStatement {
       StmtCase caselab = new StmtCase(parent, expr);
       parent.pushcase(caselab);
 
-      Statement stmt = parseStatement();
-      caselab.setCasestmt(stmt);
-
+      caselab.casestmt = parseStatement();
       return new Statement(from, caselab);
     }
 

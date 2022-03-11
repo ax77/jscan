@@ -73,13 +73,13 @@ public class Parse {
 
     CSymbol prevsym = symbols.getsymFromCurrentScope(key);
     if (prevsym != null) {
-      if (prevsym.getBase() == CSymbolBase.SYM_TYPEDEF) {
-        if (!prevsym.getType().isEqualTo(sym.getType())) {
+      if (prevsym.base == CSymbolBase.SYM_TYPEDEF) {
+        if (!prevsym.type.isEqualTo(sym.type)) {
           perror("redefinition, previous defined here: " + prevsym.getLocationToString());
         }
       } else {
 
-        if (sym.isFunction() && prevsym.getType().isEqualTo(sym.getType())) {
+        if (sym.isFunction() && prevsym.type.isEqualTo(sym.type)) {
           // TODO: normal prototype logic.
         } else {
           perror("redefinition, previous defined here: " + prevsym.getLocationToString());
@@ -369,7 +369,7 @@ public class Parse {
       return false;
     }
     CSymbol s = getSym(tok.getIdent());
-    return s != null && s.getBase() == CSymbolBase.SYM_TYPEDEF;
+    return s != null && s.base == CSymbolBase.SYM_TYPEDEF;
   }
 
   public boolean isEof() {

@@ -209,10 +209,6 @@ public class Expression {
     return initializerList;
   }
 
-  public void setInitializerList(List<Initializer> initializerList) {
-    this.initializerList = initializerList;
-  }
-
   public CStructField getField() {
     return field;
   }
@@ -221,16 +217,8 @@ public class Expression {
     return symbol;
   }
 
-  public void setSymbol(CSymbol symbol) {
-    this.symbol = symbol;
-  }
-
   public List<Expression> getArglist() {
     return arglist;
-  }
-
-  public void setArglist(List<Expression> arglist) {
-    this.arglist = arglist;
   }
 
   public Expression[] getTree() {
@@ -268,7 +256,7 @@ public class Expression {
     }
 
     case ECOMPSEL: {
-      return "(" + getLhs().toString() + getToken().getValue() + field.getName().getName() + ")";
+      return "(" + getLhs().toString() + getToken().getValue() + field.name.getName() + ")";
     }
 
     case ECAST: {
@@ -305,7 +293,7 @@ public class Expression {
     }
 
     case EPRIMARY_IDENT: {
-      return symbol.getName().getName();
+      return symbol.name.getName();
     }
 
     case EPRIMARY_NUMBER: {

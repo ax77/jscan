@@ -3,7 +3,6 @@ package ast.parse;
 import static jscan.tokenize.T.T_LEFT_BRACE;
 
 import java.util.List;
-import java.util.Set;
 
 import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeMerger;
@@ -13,7 +12,6 @@ import ast.tree.Declaration;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;
 import ast.tree.FunctionDefinition;
-import ast.tree.Statement;
 import ast.types.CFuncParam;
 import ast.types.CType;
 import jscan.symtab.Ident;
@@ -137,11 +135,10 @@ public class ParseExternal {
     parser.setCurrentFn(fd);
     parser.pushscope(ScopeLevels.METHOD_SCOPE);
 
-    defineParameters(fd.getSignature().getType());
-    define__func__(fd.getSignature().getName());
+    defineParameters(fd.symbol.type);
+    define__func__(fd.symbol.name);
 
-    Statement cst = new ParseStatement(parser).parseCompoundStatement(true);
-    fd.setBlock(cst);
+    fd.block = new ParseStatement(parser).parseCompoundStatement(true);
 
     parser.setCurrentFn(null);
     parser.popscope();
@@ -151,11 +148,8 @@ public class ParseExternal {
   }
 
   private void checkLabels(FunctionDefinition fd) {
-    Set<Ident> gotos = fd.getGotos();
-    Set<Ident> labels = fd.getLabels();
-
-    for (Ident id : gotos) {
-      if (!labels.contains(id)) {
+    for (Ident id : fd.gotos) {
+      if (!fd.labels.contains(id)) {
         parser.perror("goto " + id.getName() + " has no target label");
       }
     }
@@ -166,18 +160,18 @@ public class ParseExternal {
 
   private void defineParameters(CType signature) {
 
-    final List<CFuncParam> parameters = signature.getTpFunction().getParameters();
+    final List<CFuncParam> parameters = signature.tpFunction.parameters;
 
     if (parameters.size() == 1) {
       CFuncParam first = parameters.get(0);
-      if (first.getType().isVoid() && first.getName() == null) {
+      if (first.type.isVoid() && first.name == null) {
         return;
       }
     }
 
     for (CFuncParam fparam : parameters) {
-      CSymbol paramsym = new CSymbol(CSymbolBase.SYM_LVAR, fparam.getName(), fparam.getType(), parser.tok());
-      parser.defineSym(fparam.getName(), paramsym);
+      CSymbol paramsym = new CSymbol(CSymbolBase.SYM_LVAR, fparam.name, fparam.type, parser.tok());
+      parser.defineSym(fparam.name, paramsym);
     }
   }
 

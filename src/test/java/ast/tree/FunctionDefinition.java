@@ -10,13 +10,11 @@ import jscan.symtab.Ident;
 
 public class FunctionDefinition {
 
-  private final CSymbol symbol;
-  private Statement block;
-
-  // TODO: location for this two
-  private final Set<Ident> gotos;
-  private final Set<Ident> labels;
-  private final List<CSymbol> locals;
+  public final CSymbol symbol;
+  public Statement block;
+  public final Set<Ident> gotos;
+  public final Set<Ident> labels;
+  public final List<CSymbol> locals;
 
   public FunctionDefinition(CSymbol symbol) {
     this.symbol = symbol;
@@ -33,32 +31,8 @@ public class FunctionDefinition {
     labels.add(label);
   }
 
-  public void setBlock(Statement compoundStatement) {
-    this.block = compoundStatement;
-  }
-
-  public CSymbol getSignature() {
-    return symbol;
-  }
-
-  public Statement getBlock() {
-    return block;
-  }
-
-  public Set<Ident> getGotos() {
-    return gotos;
-  }
-
-  public Set<Ident> getLabels() {
-    return labels;
-  }
-
   public void addLocal(CSymbol sym) {
     locals.add(sym);
-  }
-
-  public List<CSymbol> getLocals() {
-    return locals;
   }
 
 }

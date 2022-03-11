@@ -107,7 +107,7 @@ public class ParseDeclarations {
     }
 
     parser.checkedMove(T.T_ASSIGN);
-    List<Initializer> inits = new InitReader(parser).parse(type);
+    List<Initializer> inits = new ParseInitializer(parser).parse(type);
 
     if (storagespec == CStorageKind.ST_TYPEDEF) {
       parser.perror("typedef with initializer.");

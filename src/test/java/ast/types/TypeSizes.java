@@ -6,7 +6,7 @@ import java.util.Map;
 public abstract class TypeSizes {
 
   //@formatter:off
-  private static Map<CTypeKind, Integer> BSIZES = new HashMap<CTypeKind, Integer>();
+  public static Map<CTypeKind, Integer> BSIZES = new HashMap<CTypeKind, Integer>();
   static {
     BSIZES.put(CTypeKind.TP_VOID           , 1);
     BSIZES.put(CTypeKind.TP_BOOL           , 1);
@@ -30,7 +30,8 @@ public abstract class TypeSizes {
   }
   //@formatter:on
 
-  public static int get(CTypeKind b) {
+  public static int getSize(CTypeKind b) {
     return BSIZES.get(b);
   }
+
 }

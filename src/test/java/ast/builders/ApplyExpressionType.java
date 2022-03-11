@@ -117,7 +117,7 @@ public abstract class ApplyExpressionType {
 
     else if (base == EPRIMARY_IDENT) {
 
-      final CType symtype = e.getSymbol().getType();
+      final CType symtype = e.getSymbol().type;
       e.setResultType(symtype);
 
       if (stage == TypeApplierStage.generic_control_expr) {
@@ -137,7 +137,7 @@ public abstract class ApplyExpressionType {
       applytype(e.getLhs(), TypeApplierStage.compsel_postfix);
 
       assertType(e.getLhs());
-      e.setResultType(e.getField().getType());
+      e.setResultType(e.getField().type);
     }
 
     else if (base == EFCALL) {
@@ -217,9 +217,9 @@ public abstract class ApplyExpressionType {
     }
 
     if (isFunction) {
-      e.setResultType(resultType.getTpFunction().getReturnType());
+      e.setResultType(resultType.tpFunction.returnType);
     } else {
-      e.setResultType(resultType.getTpPointer().getPointerTo().getTpFunction().getReturnType());
+      e.setResultType(resultType.tpPointer.subtype.tpFunction.returnType);
     }
   }
 
@@ -291,7 +291,7 @@ public abstract class ApplyExpressionType {
       CType resRT = null;
 
       if (lhsRT.isPointerToObject()) {
-        resRT = lhsRT.getTpPointer().getPointerTo(); // XXX:
+        resRT = lhsRT.tpPointer.subtype; // XXX:
       }
 
       // result is function-designator.
@@ -302,7 +302,7 @@ public abstract class ApplyExpressionType {
       // you need to call a function or determine its address.
 
       else if (lhsRT.isPointerToFunction()) {
-        resRT = lhsRT.getTpPointer().getPointerTo();
+        resRT = lhsRT.tpPointer.subtype;
       }
 
       else if (lhsRT.isPointerToVoid()) {
@@ -513,7 +513,7 @@ public abstract class ApplyExpressionType {
     final CType origType = inputExpr.getResultType();
 
     if (origType.isArray()) {
-      CType arrtype = origType.getTpArray().getArrayOf();
+      CType arrtype = origType.tpArray.subtype;
       CType ptrtype = new CType(new CPointerType(arrtype, false));
       inputExpr.setResultType(ptrtype);
     }
@@ -570,9 +570,9 @@ public abstract class ApplyExpressionType {
     } else {
       CType prom_1 = ipromote(lhsRt);
       CType prom_2 = ipromote(rhsRt);
-      if (prom_1.getSize() > prom_2.getSize()) {
+      if (prom_1.size > prom_2.size) {
         return prom_1;
-      } else if (prom_2.getSize() > prom_1.getSize()) {
+      } else if (prom_2.size > prom_1.size) {
         return prom_2;
       } else {
         if (prom_1.isUnsigned()) {

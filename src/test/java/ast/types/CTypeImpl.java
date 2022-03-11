@@ -5,7 +5,8 @@ import java.util.Map;
 
 import jscan.literals.IntLiteralType;
 
-public class CTypeImpl {
+public abstract class CTypeImpl {
+
   public static final CType TYPE_VOID = new CType(CTypeKind.TP_VOID);
   public static final CType TYPE_BOOL = new CType(CTypeKind.TP_BOOL);
   public static final CType TYPE_CHAR = new CType(CTypeKind.TP_CHAR);
@@ -41,4 +42,5 @@ public class CTypeImpl {
   public static final int QVOLAT = 1 << 2;
   public static final int FINLIN = 1 << 3;
   public static final int FNORET = 1 << 4;
+
 }

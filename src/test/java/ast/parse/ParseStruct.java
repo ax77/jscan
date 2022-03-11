@@ -40,7 +40,7 @@ public class ParseStruct {
 
     int i = 0;
     for (CStructField f : tpStruct.getFields()) {
-      f.setPos(i);
+      f.pos = i;
       i += 1;
     }
     return sinfo;
@@ -102,7 +102,7 @@ public class ParseStruct {
       sym = parser.getTag(name);
     }
     if (sym != null) {
-      type = sym.getType();
+      type = sym.type;
     }
 
     if (type == null) {
@@ -112,9 +112,9 @@ public class ParseStruct {
     if (parser.tp() == T.T_LEFT_BRACE) {
 
       List<CStructField> fields = parseFields(parser);
-      type.getTpStruct().setFields(fields);
+      type.tpStruct.setFields(fields);
 
-      ApplyStructInfo sizeAlignDto = finalizeStructType(type.getTpStruct());
+      ApplyStructInfo sizeAlignDto = finalizeStructType(type.tpStruct);
 
       type.setSize(sizeAlignDto.getSize());
       type.setAlign(sizeAlignDto.getAlign());
@@ -226,9 +226,9 @@ public class ParseStruct {
           return r;
         }
 
-        boolean isAnonymousDeclaration = !basetype.getTpStruct().isHasTag();
+        boolean isAnonymousDeclaration = !basetype.tpStruct.isHasTag();
         if (isAnonymousDeclaration) {
-          List<CStructField> fieldsInside = basetype.getTpStruct().getFields();
+          List<CStructField> fieldsInside = basetype.tpStruct.getFields();
           r.addAll(fieldsInside);
           return r;
         } else {
@@ -264,7 +264,7 @@ public class ParseStruct {
 
     CStructField structDeclarator = parseStructDeclarator(parser, specqual);
 
-    if (structDeclarator.getType().isIncomplete()) {
+    if (structDeclarator.type.isIncomplete()) {
       parser.perror("incomplete struct field");
     }
 
@@ -274,7 +274,7 @@ public class ParseStruct {
       parser.move();
       CStructField structDeclaratorSeq = parseStructDeclarator(parser, specqual);
 
-      if (structDeclaratorSeq.getType().isIncomplete()) {
+      if (structDeclaratorSeq.type.isIncomplete()) {
         parser.perror("incomplete struct field");
       }
 

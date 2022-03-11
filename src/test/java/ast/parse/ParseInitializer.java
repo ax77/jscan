@@ -15,11 +15,11 @@ import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
-public class InitReader {
+public class ParseInitializer {
 
   private final Parse parser;
 
-  public InitReader(Parse parser) {
+  public ParseInitializer(Parse parser) {
     this.parser = parser;
   }
 
@@ -69,7 +69,7 @@ public class InitReader {
       parser.perror("expect struct-type");
     }
 
-    CStructType compound = type.getTpStruct();
+    CStructType compound = type.tpStruct;
     List<CStructField> fields = compound.getFields();
     int fieldidx = 0;
 
@@ -95,7 +95,7 @@ public class InitReader {
         if (cursor == null) {
           parser.perror("no such field: " + fieldname.getName());
         }
-        fieldidx = cursor.getPos();
+        fieldidx = cursor.pos;
         designated = true;
       }
 
@@ -109,7 +109,7 @@ public class InitReader {
         parser.perror("internal error...");
       }
 
-      read_initializer_elem(inits, cursor.getType(), offset + cursor.getOffset(), designated);
+      read_initializer_elem(inits, cursor.type, offset + cursor.offset, designated);
       designated = false;
 
     }
@@ -124,17 +124,17 @@ public class InitReader {
       parser.perror("expect array-type");
     }
 
-    final CArrayType compound = type.getTpArray();
-    final int arrlen = compound.getArrayLen();
-    final int elemsz = compound.getArrayOf().getSize();
+    final CArrayType compound = type.tpArray;
+    final int arrlen = compound.len;
+    final int elemsz = compound.subtype.size;
     final boolean flexible = arrlen <= 0;
 
     int cursor = 0;
 
     for (cursor = 0; !parser.isEof() /*index < arrlen || flexible*/; cursor++) {
       if (parser.is(T.T_RIGHT_BRACE)) {
-        if (compound.getArrayLen() <= 0) {
-          compound.setArrayLen(cursor);
+        if (compound.len <= 0) {
+          compound.len = cursor;
           type.setSize(elemsz * cursor);
         }
         return;
@@ -162,7 +162,7 @@ public class InitReader {
         break;
       }
 
-      read_initializer_elem(inits, compound.getArrayOf(), offset + elemsz * cursor, designated);
+      read_initializer_elem(inits, compound.subtype, offset + elemsz * cursor, designated);
       designated = false;
     }
 
@@ -194,10 +194,10 @@ public class InitReader {
     if (len < 0) {
       size = -1;
     } else {
-      size = ty.getSize() * len;
+      size = ty.size * len;
     }
     final CType arr = new CType(new CArrayType(ty, len));
-    arr.setAlign(ty.getAlign());
+    arr.setAlign(ty.align);
     arr.setSize(size);
     return arr;
   }

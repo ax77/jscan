@@ -18,24 +18,4 @@ public class TranslationUnit {
     externalDeclarations.add(ed);
   }
 
-  public int countOfDeclarations() {
-    int n = 0;
-    for (ExternalDeclaration ed : externalDeclarations) {
-      if (ed.isDeclaration()) {
-        n++;
-      }
-    }
-    return n;
-  }
-
-  public int countOfFunctionDefinitions() {
-    int n = 0;
-    for (ExternalDeclaration ed : externalDeclarations) {
-      if (ed.isFunctionDefinition()) {
-        n++;
-      }
-    }
-    return n;
-  }
-
 }

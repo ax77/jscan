@@ -4,8 +4,8 @@ import jscan.symtab.Ident;
 import jscan.utils.NullChecker;
 
 public class CFuncParam {
-  private final Ident name;
-  private CType type; // we apply the type, when build old-style function identifier-list+declarations
+  public final Ident name;
+  public CType type; // we apply the type, when build old-style function identifier-list+declarations
 
   public CFuncParam(Ident name, CType type) {
     NullChecker.check(name, type);
@@ -29,18 +29,10 @@ public class CFuncParam {
 
   private CType genpointer(CType from) {
     if (from.isArray()) {
-      CPointerType ptr = new CPointerType(from.getTpArray().getArrayOf(), false);
+      CPointerType ptr = new CPointerType(from.tpArray.subtype, false);
       return new CType(ptr);
     }
     return from;
-  }
-
-  public Ident getName() {
-    return name;
-  }
-
-  public CType getType() {
-    return type;
   }
 
   public boolean isHasName() {
@@ -49,10 +41,6 @@ public class CFuncParam {
 
   public boolean isHasType() {
     return type != null;
-  }
-
-  public void setType(CType type) {
-    this.type = type;
   }
 
   @Override

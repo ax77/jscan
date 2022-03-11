@@ -33,7 +33,7 @@ public class ApplyStructInfo {
 
   private void applyAlignment() {
     for (CStructField f : fields) {
-      align = Aligner.align(align, f.getType().getAlign());
+      align = Aligner.align(align, f.type.align);
     }
   }
 
@@ -41,7 +41,7 @@ public class ApplyStructInfo {
     Set<Ident> toCheckUnique = new HashSet<Ident>();
     for (CStructField f : fields) {
       if (f.isHasName()) {
-        final Ident name = f.getName();
+        final Ident name = f.name;
         if (toCheckUnique.contains(name)) {
           throw new AstParseException("duplicate struct/union field: " + name.getName());
         }
@@ -53,7 +53,7 @@ public class ApplyStructInfo {
   private int getMaxFieldSize(List<CStructField> fields) {
     int msize = 0;
     for (CStructField f : fields) {
-      final int size = f.getType().getSize();
+      final int size = f.type.size;
       if (msize < size) {
         msize = size;
       }
@@ -67,9 +67,9 @@ public class ApplyStructInfo {
   private void calcStructFieldsOffsets() {
     int offset = 0;
     for (CStructField f : fields) {
-      offset = Aligner.align(offset, f.getType().getAlign());
-      f.setOffset(offset);
-      offset += f.getType().getSize();
+      offset = Aligner.align(offset, f.type.align);
+      f.offset = offset;
+      offset += f.type.size;
     }
     size = offset;
   }
@@ -77,7 +77,7 @@ public class ApplyStructInfo {
   private void calcUnionFieldsOffsets() {
     size = getMaxFieldSize(fields);
     for (CStructField f : fields) {
-      f.setOffset(0);
+      f.offset = 0;
     }
   }
 

@@ -57,10 +57,10 @@ public class RewriteStmt {
       todo("why?");
     }
 
-    StatementBase base = s.getBase();
+    StatementBase base = s.base;
 
     if (base == StatementBase.SCOMPOUND) {
-      for (BlockItem item : s.getBlock()) {
+      for (BlockItem item : s.block) {
         if (item.isDeclaration()) {
           genDeclaration(item.getDeclaration());
         } else {
@@ -73,10 +73,10 @@ public class RewriteStmt {
       String elseLabel = label("else");
       String endLabel = label("out");
 
-      StmtSelect select = s.getStmtSelect();
-      Expression cond = select.getCondition();
-      Statement ifStmt = select.getIfStmt();
-      Statement elseStmt = select.getElseStmt();
+      StmtSelect select = s.stmtSelect;
+      Expression cond = select.condition;
+      Statement ifStmt = select.ifStmt;
+      Statement elseStmt = select.elseStmt;
 
       if (elseStmt != null) {
 
@@ -107,7 +107,7 @@ public class RewriteStmt {
     }
 
     else if (base == SEXPR) {
-      push(new ExecFlowItem(ExecFlowBase.expr, s.getStmtExpr()));
+      push(new ExecFlowItem(ExecFlowBase.expr, s.stmtExpr));
     }
 
     else if (base == SBREAK) {
@@ -129,19 +129,19 @@ public class RewriteStmt {
     }
 
     else if (base == SRETURN) {
-      push(new ExecFlowItem(ExecFlowBase.ret, s.getStmtExpr()));
+      push(new ExecFlowItem(ExecFlowBase.ret, s.stmtExpr));
     }
 
     else if (base == SGOTO) {
-      final StmtLabel stmtLabel = s.getStmtLabel();
-      final Ident label = stmtLabel.getLabel();
+      final StmtLabel stmtLabel = s.stmtLabel;
+      final Ident label = stmtLabel.label;
       push(new ExecFlowItem(ExecFlowBase.jmp, label.getName()));
     }
 
     else if (base == SLABEL) {
-      final StmtLabel stmtLabel = s.getStmtLabel();
-      push(new ExecFlowItem(stmtLabel.getLabel().getName()));
-      genStmt(stmtLabel.getStmt());
+      final StmtLabel stmtLabel = s.stmtLabel;
+      push(new ExecFlowItem(stmtLabel.label.getName()));
+      genStmt(stmtLabel.stmt);
     }
 
     else if (base == SDEFAULT) {
@@ -156,9 +156,9 @@ public class RewriteStmt {
   }
 
   private void genSym(CSymbol sym) {
-    CSymbolBase base = sym.getBase();
+    CSymbolBase base = sym.base;
     if (base == CSymbolBase.SYM_LVAR) {
-      if (sym.getInitializer() != null) {
+      if (sym.initializer != null) {
         push(new ExecFlowItem(sym));
       }
     } else {
