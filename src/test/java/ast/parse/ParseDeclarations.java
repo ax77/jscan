@@ -46,7 +46,7 @@ public class ParseDeclarations {
 
       boolean isStructUnionEnum = basetype.isStrUnion() || basetype.isEnumeration();
       if (!isStructUnionEnum) {
-        parser.perror("expect struct/union/enum declaration. but was: " + basetype.toString());
+        //parser.perror("expect struct/union/enum declaration. but was: " + basetype.toString());
       }
 
       // semicolon after mean: this declaration has no name, no declarator after...

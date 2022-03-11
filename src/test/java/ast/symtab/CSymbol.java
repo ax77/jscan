@@ -16,7 +16,7 @@ public class CSymbol implements Location {
   // these fields are the base of each symbol
   public final CSymbolBase base;
   public final Ident name;
-  public final CType type;
+  public CType type;
 
   // enum value, associated with the 'name'
   public int enumValue;

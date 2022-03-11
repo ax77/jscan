@@ -76,13 +76,8 @@ public class CStructType {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    final String str = tag == null ? "<no-tag>" : "tag=" + tag.getName() + " ";
-    sb.append((isUnion ? "UNION " : "STRUCT ") + str);
-    if (isComplete) {
-      sb.append(fields.toString());
-    }
-    return sb.toString();
+    final String strun = isUnion ? "union" : "struct";
+    return "(" + strun + " " + (hasTag() ? tag.getName() : "<no-tag>") + ")";
   }
 
 }

@@ -36,6 +36,7 @@ public class Parse {
 
   // symbol-tables
   private Symtab<Ident, CSymbol> symbols;
+  private Symtab<Ident, CType> typedefs;
   private Symtab<Ident, CSymbol> tags;
 
   // location, error-handling
@@ -71,21 +72,20 @@ public class Parse {
 
   public void defineSym(Ident key, CSymbol sym) {
 
+    if (sym.base == CSymbolBase.SYM_TYPEDEF) {
+      defineTypedef(key, sym.type);
+      return;
+    }
+
     CSymbol prevsym = symbols.getsymFromCurrentScope(key);
     if (prevsym != null) {
-      if (prevsym.base == CSymbolBase.SYM_TYPEDEF) {
-        if (!prevsym.type.isEqualTo(sym.type)) {
-          perror("redefinition, previous defined here: " + prevsym.getLocationToString());
-        }
+
+      if (sym.isFunction() && prevsym.type.isEqualTo(sym.type)) {
+        // TODO: normal prototype logic.
       } else {
-
-        if (sym.isFunction() && prevsym.type.isEqualTo(sym.type)) {
-          // TODO: normal prototype logic.
-        } else {
-          perror("redefinition, previous defined here: " + prevsym.getLocationToString());
-        }
-
+        perror("redefinition, previous defined here: " + prevsym.getLocationToString());
       }
+
     }
 
     if (currentFn != null) {
@@ -93,6 +93,22 @@ public class Parse {
     }
 
     symbols.addsym(key, sym);
+  }
+
+  public void log(String what) {
+    // TODO:
+  }
+
+  private void defineTypedef(Ident key, CType type) {
+    //System.out.println("typedef " + type.toString() + " " + key.getName());
+
+    CType prevsym = typedefs.getsymFromCurrentScope(key);
+    if (prevsym != null) {
+      if (!prevsym.isEqualTo(type)) {
+        perror("typedefed-name redefinition with different kind of type");
+      }
+    }
+    typedefs.addsym(key, type);
   }
 
   public void defineTag(Ident key, CSymbol sym) {
@@ -115,6 +131,10 @@ public class Parse {
     return symbols.getsym(name);
   }
 
+  public CType getTypedefName(Ident id) {
+    return typedefs.getsym(id);
+  }
+
   public CSymbol getTag(Ident name) {
     return tags.getsym(name);
   }
@@ -124,11 +144,13 @@ public class Parse {
   public void pushscope(ScopeLevels level) {
     tags.pushscope(level);
     symbols.pushscope(level);
+    typedefs.pushscope(level);
   }
 
   public void popscope() {
     tags.popscope();
     symbols.popscope();
+    typedefs.popscope();
   }
 
   public boolean isFileScope() {
@@ -152,8 +174,9 @@ public class Parse {
   }
 
   private void initScopes() {
-    this.symbols = new Symtab<Ident, CSymbol>();
-    this.tags = new Symtab<Ident, CSymbol>();
+    this.symbols = new Symtab<>();
+    this.tags = new Symtab<>();
+    this.typedefs = new Symtab<>();
   }
 
   public String getLastLoc() {
@@ -219,7 +242,7 @@ public class Parse {
     sb.append("warning: " + m + "\n");
     sb.append("  --> " + lastloc + "\n\n");
     sb.append(RingBuf.ringBufferToStringLines(ringBuffer) + "\n");
-    System.out.println(sb.toString());
+    //System.out.println(sb.toString());
   }
 
   public Token checkedMove(Ident expect) {
@@ -368,8 +391,8 @@ public class Parse {
     if (!isUserDefinedId(tok)) {
       return false;
     }
-    CSymbol s = getSym(tok.getIdent());
-    return s != null && s.base == CSymbolBase.SYM_TYPEDEF;
+    CType tp = typedefs.getsym(tok.getIdent());
+    return tp != null;
   }
 
   public boolean isEof() {

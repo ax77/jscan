@@ -102,15 +102,10 @@ public class ParseBaseType {
         }
 
         // we'he got an identifier, which may be a typedefed-alias
-        final CSymbol symbol = parser.getSym(tok.getIdent());
-        if (symbol != null) {
-          final CType typeFromStab = symbol.type;
-          if (symbol.base == CSymbolBase.SYM_TYPEDEF) {
-            parser.move(); // move the identifier, and assign the type we've found by this id.
-            result = typeFromStab;
-          } else {
-            parser.perror("cannot decide the type");
-          }
+        final CType typedefed = parser.getTypedefName(tok.getIdent());
+        if (typedefed != null) {
+          result = typedefed;
+          parser.move(); // move the identifier, and assign the type we've found by this id.
         } else {
           // specifiers-list is empty, and we have an identifier.
           // it means - that the type-specifier is omitted, and the default type is 'int'
@@ -148,7 +143,7 @@ public class ParseBaseType {
           attributes = new ParseAttributesAsms(parser).parse();
         }
 
-        result = new ParseEnum(parser).parse();
+        result = new ParseEnum3(parser).parse();
       }
     }
 
@@ -184,161 +179,6 @@ public class ParseBaseType {
   private void checkResultAndSpecsAreEmpty(CType result, List<Token> specifiers) {
     if (hasResultOrSpecs(result, specifiers)) {
       parser.perror("incorrect combination between primitive and compound type-specifiers");
-    }
-  }
-
-  private CType findTypeAgain() {
-
-    attributes = new ParseAttributesAsms(parser).parse();
-
-    List<Token> storage = new ArrayList<Token>();
-    List<Token> compoundKeywords = new ArrayList<Token>();
-    Set<Token> qualifiers = new HashSet<Token>();
-    cut(storage, compoundKeywords, qualifiers);
-
-    // new storage present always...
-    storageSpec = TypeCombiner.combine_storage(storage);
-
-    // const typedef struct x tdname;
-    // typedef const struct x tdname;
-    // struct ...
-    // enum  ...
-    // union ...
-
-    // if found struct/union/enum with|without typedef: one case
-    // if not found: another case
-    // if found typedefed-alias from symtab: another-another case
-    // if found one more one variant: another-another-another case ... 
-
-    // 1) compound
-    if (!compoundKeywords.isEmpty()) {
-      Token first = compoundKeywords.remove(0);
-      if (first.isIdent(Keywords.enum_ident)) {
-        final CType enumTypeSpec = new ParseEnum(parser).parse();
-        return enumTypeSpec;
-      }
-
-      else {
-        boolean isUnion = (first.isIdent(Keywords.union_ident));
-        final CType strUnionTypeSpec = new ParseStruct(parser, isUnion).parse();
-        return strUnionTypeSpec;
-      }
-    }
-
-    if (Pcheckers.isTypeSpec(parser.tok())) {
-      // int typedef i32;
-      // int x;
-      // int const static x;
-      // int const typedef i32;
-      // ... ... ...
-      //
-
-      List<Token> ts = new ArrayList<Token>();
-      cut2(storage, ts, qualifiers);
-      storageSpec = TypeCombiner.combine_storage(storage);
-
-      CTypeKind bts = TypeCombiner.combine_typespec(ts);
-      CType basetype = new CType(bts);
-
-      return basetype;
-    }
-
-    // if we here: it guarantee us that the typedef-name must be present.
-    // because if we are here: we still not found the type...
-    // but: it also may be a typedef-redeclaration (1) or typedef-usage (2):
-    // 1) i32 typedef i32;
-    // 2) i32 varname;
-    // i32 int ... :: error
-    //
-
-    if (parser.isUserDefinedId()) {
-      CSymbol symbol = parser.getSym(parser.tok().getIdent());
-      if (symbol != null) {
-        CType typeFromStab = symbol.type;
-        if (symbol.base == CSymbolBase.SYM_TYPEDEF) {
-          parser.move();
-
-          List<Token> ts = new ArrayList<Token>();
-          cut2(storage, ts, qualifiers);
-          if (!ts.isEmpty()) {
-            parser.perror("error_1");
-          }
-
-          storageSpec = TypeCombiner.combine_storage(storage);
-          return typeFromStab;
-        }
-      }
-    }
-
-    // 'int' by default
-    parser.pwarning("default type-int... if type not specified.");
-    return CTypeImpl.TYPE_INT;
-  }
-
-  private void cut2(List<Token> st, List<Token> ts, Set<Token> tq) {
-    for (;;) {
-
-      attributes = new ParseAttributesAsms(parser).parse();
-
-      if (Pcheckers.isStorageClassSpec(parser.tok())) {
-        Token saved = parser.tok();
-        parser.move();
-        st.add(saved);
-      }
-
-      else if (Pcheckers.isTypeSpec(parser.tok())) {
-        Token saved = parser.tok();
-        parser.move();
-        ts.add(saved);
-      }
-
-      else if (Pcheckers.isTypeQual(parser.tok())) {
-        Token saved = parser.tok();
-        parser.move();
-        tq.add(saved);
-      }
-
-      else if (Pcheckers.isFuncSpec(parser.tok())) {
-        parser.move(); // TODO: inline, noreturn
-      }
-
-      else {
-        break;
-      }
-    }
-  }
-
-  private void cut(List<Token> storage, List<Token> compoundKeywords, Set<Token> qualifiers) {
-    while (!parser.isEof()) {
-
-      attributes = new ParseAttributesAsms(parser).parse();
-
-      if (Pcheckers.isStorageClassSpec(parser.tok())) {
-        Token saved = parser.tok();
-        parser.move();
-        storage.add(saved);
-      }
-
-      else if (Pcheckers.isTypeQual(parser.tok())) {
-        Token saved = parser.tok();
-        parser.move();
-        qualifiers.add(saved);
-      }
-
-      else if (Pcheckers.isFuncSpec(parser.tok())) {
-        parser.move(); // TODO: inline, noreturn
-      }
-
-      else if (Pcheckers.isStructOrUnionSpecStart(parser.tok()) || Pcheckers.isEnumSpecStart(parser.tok())) {
-        Token saved = parser.tok();
-        parser.move();
-        compoundKeywords.add(saved);
-        break; // XXX: nothing else.
-      }
-
-      else {
-        break;
-      }
     }
   }
 
