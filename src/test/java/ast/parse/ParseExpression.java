@@ -137,7 +137,7 @@ public class ParseExpression {
     final CArrayType arrtype = new CArrayType(CTypeImpl.TYPE_CHAR, str.length() + 1);
 
     final Expression initexpr = new Expression(saved.getStrconstant(), saved);
-    final Initializer initializer = new Initializer(initexpr, 0);
+    final Initializer initializer = new Initializer(initexpr, new CType(arrtype), 0);
 
     List<Initializer> initlist = new ArrayList<Initializer>();
     initlist.add(initializer);
@@ -448,7 +448,7 @@ public class ParseExpression {
       if (parser.tp() == T.T_LEFT_BRACE) {
         Token saved = parser.tok();
 
-        List<Initializer> initializerList = new ParseInitializerList(parser, typename).parse();
+        List<Initializer> initializerList = new InitReader(parser).parse(typename);
         return build_compliteral(typename, initializerList, saved);
       }
 

@@ -1,12 +1,10 @@
-package ast_test;
+package ast.parse;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import ast.builders.ConstexprEval;
-import ast.parse.Parse;
-import ast.parse.ParseExpression;
 import ast.tree.Expression;
 import ast.tree.Initializer;
 import ast.types.CArrayType;
@@ -16,7 +14,6 @@ import ast.types.CType;
 import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
-import jscan.utils.NullChecker;
 
 public class InitReader {
 
@@ -84,7 +81,7 @@ public class InitReader {
       // we don't actually know what that means.
       // so - it's an unexpected `something`.
       if ((parser.is(T.T_DOT) || parser.is(T.T_LEFT_BRACKET)) && !brace && !designated) {
-        parser.pwarning("unexpected");
+        //parser.pwarning("unexpected");
         return;
       }
 
@@ -103,27 +100,18 @@ public class InitReader {
       }
 
       else {
-        if (fieldidx >= fields.size()) {
+        if (!designated && fieldidx >= fields.size()) {
           break;
         }
         cursor = fields.get(fieldidx++);
       }
-      NullChecker.check(cursor);
-
-      // We've alredy read all of the elements we need to init this array.
-      // But: designations may overlap each other many times, and we have to cut them all.
-      // That's why we need the `designated` flag here.
-      //
-      if (!designated && fieldidx >= fields.size()) {
-        break;
+      if (cursor == null) {
+        parser.perror("internal error...");
       }
 
       read_initializer_elem(inits, cursor.getType(), offset + cursor.getOffset(), designated);
       designated = false;
 
-      if (!type.isStruct()) {
-        break;
-      }
     }
 
     if (brace) {
@@ -155,7 +143,7 @@ public class InitReader {
       // we don't actually know what that means.
       // so - it's an unexpected `something`.
       if ((parser.is(T.T_DOT) || parser.is(T.T_LEFT_BRACKET)) && !brace && !designated) {
-        parser.pwarning("unexpected");
+        //parser.pwarning("unexpected");
         return;
       }
 

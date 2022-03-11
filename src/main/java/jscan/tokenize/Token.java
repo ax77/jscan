@@ -12,16 +12,29 @@ public class Token {
 
   private int fcategory;
   private int fposition;
-
   private T type;
   private Ident ident;
   private String value;
   private int argnum;
   private SourceLocation location;
-
   private CStr strconstant;
-
   private boolean definedInreplList;
+
+  private void fillProperyValues(Token other) {
+
+    // XXX: very important fill __ALL__ properties...
+    // don't be clever here...
+
+    this.fcategory = other.fcategory;
+    this.fposition = other.fposition;
+    this.type = other.type;
+    this.ident = other.ident;
+    this.value = other.value;
+    this.argnum = other.argnum;
+    this.location = other.location;
+    this.strconstant = other.strconstant;
+    this.definedInreplList = other.definedInreplList;
+  }
 
   public Token() {
     setDefaults();
@@ -85,22 +98,6 @@ public class Token {
 
   public void setLocation(SourceLocation location) {
     this.location = location;
-  }
-
-  private void fillProperyValues(Token other) {
-
-    // XXX: very important fill __ALL__ properties...
-    // don't be clever here...
-
-    this.fcategory = other.fcategory;
-    this.type = other.type;
-    this.ident = other.ident;
-    this.value = other.value;
-    this.argnum = other.argnum;
-    this.strconstant = other.strconstant;
-    this.fposition = other.fposition;
-    this.definedInreplList = other.definedInreplList;
-    this.location = new SourceLocation(other.location);
   }
 
   public int getArgnum() {
@@ -193,8 +190,8 @@ public class Token {
   }
 
   public void setIdent(Ident ident) {
-    type = T.TOKEN_IDENT;
-    value = ident.getName();
+    this.type = T.TOKEN_IDENT;
+    this.value = ident.getName();
     this.ident = ident;
   }
 
@@ -206,9 +203,9 @@ public class Token {
     this.value = value;
   }
 
-  public void set(T _type, String _value) {
-    type = _type;
-    value = _value;
+  public void set(T type, String value) {
+    this.type = type;
+    this.value = value;
   }
 
   @Override

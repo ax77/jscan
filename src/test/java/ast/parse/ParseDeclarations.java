@@ -8,7 +8,6 @@ import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
 import ast.tree.Declarator;
-import ast.tree.Expression;
 import ast.tree.Initializer;
 import ast.types.CStorageKind;
 import ast.types.CType;
@@ -108,7 +107,7 @@ public class ParseDeclarations {
     }
 
     parser.checkedMove(T.T_ASSIGN);
-    List<Initializer> inits = parseInitializer(type);
+    List<Initializer> inits = new InitReader(parser).parse(type);
 
     if (storagespec == CStorageKind.ST_TYPEDEF) {
       parser.perror("typedef with initializer.");
@@ -118,24 +117,6 @@ public class ParseDeclarations {
     parser.defineSym(decl.getName(), sym);
 
     return sym;
-  }
-
-  private List<Initializer> parseInitializer(CType type) {
-
-    // nested list
-
-    if (parser.tok().is(T.T_LEFT_BRACE)) {
-      return new ParseInitializerList(parser, type).parse();
-    }
-
-    // just expression
-
-    List<Initializer> inits = new ArrayList<Initializer>();
-    Expression expr = new ParseExpression(parser).e_assign();
-
-    inits.add(new Initializer(expr, 0));
-    return inits;
-
   }
 
 }

@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ast.builders.TypeMerger;
+import ast.parse.InitReader;
 import ast.parse.Parse;
 import ast.parse.ParseBaseType;
 import ast.parse.ParseDeclarator;
@@ -27,7 +28,7 @@ public class InitReaderTest {
   public void testStructs() throws IOException {
 
     List<String> list = new ArrayList<>();
-    list.add(" struct x { int a; struct y { int x,y,z[3]; } b; } var = { .a = 32, .b = { .x = 128, .y = 256, .z = {11,22,33}, } }; \n");
+    list.add(" struct x { int a; int b[2][3]; } var = { .a = 32, .b[0][0] = 1, .b = { 11,22,33,44,55,66, }, }; \n");
 
 
     KeywordsInits.initIdents();
