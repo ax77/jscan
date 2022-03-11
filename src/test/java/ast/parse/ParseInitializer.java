@@ -91,7 +91,7 @@ public class ParseInitializer {
         parser.move();
 
         Ident fieldname = parser.getIdent();
-        cursor = compound.findField(fieldname);
+        cursor = compound.getFieldByName(fieldname);
         if (cursor == null) {
           parser.perror("no such field: " + fieldname.getName());
         }

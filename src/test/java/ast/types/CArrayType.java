@@ -6,7 +6,7 @@ import jscan.utils.NullChecker;
 public class CArrayType {
   public final CType subtype;
   public int len;
-  public boolean isIncomplete;
+  public boolean isComplete;
 
   public CArrayType(CType subtype, int len) {
     NullChecker.check(subtype); // always must be present. but init-expression - optional, check it later. int x[][2];
@@ -21,7 +21,7 @@ public class CArrayType {
 
     this.subtype = subtype;
     this.len = len;
-    this.isIncomplete = (len == 0);
+    this.isComplete = len > 0;
   }
 
   @Override

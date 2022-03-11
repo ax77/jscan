@@ -14,6 +14,8 @@ import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
+//TODO:rewrite
+
 public class ParseEnum {
   private final Parse parser;
 
@@ -99,7 +101,8 @@ public class ParseEnum {
 
           if (type.isIncomplete()) {
             // TODO: max size, align.
-            type.tpEnum.setEnumerators(dto.getEnumerators());
+            type.tpEnum.enumerators = (dto.getEnumerators());
+            type.tpEnum.isComplete = true;
           }
 
           // is complete.
@@ -110,7 +113,8 @@ public class ParseEnum {
             }
 
             CEnumType newenum = new CEnumType(tag.getIdent());
-            newenum.setEnumerators(dto.getEnumerators());
+            newenum.enumerators = (dto.getEnumerators());
+            newenum.isComplete = true;
 
             CType newtype = new CType(newenum);
 
@@ -153,7 +157,8 @@ public class ParseEnum {
 
           ApplyEnumInfo dto = parseEnumeratorList();
           CType type = parser.getTag(tag.getIdent()).type;
-          type.tpEnum.setEnumerators(dto.getEnumerators());
+          type.tpEnum.enumerators = (dto.getEnumerators());
+          type.tpEnum.isComplete = true;
 
           if (paranoia) {
             System.out.println("3");
@@ -184,7 +189,8 @@ public class ParseEnum {
         ApplyEnumInfo dto = parseEnumeratorList();
         CEnumType newenum = new CEnumType(null);
 
-        newenum.setEnumerators(dto.getEnumerators());
+        newenum.enumerators = (dto.getEnumerators());
+        newenum.isComplete = true;
         CType type = new CType(newenum);
 
         if (paranoia) {

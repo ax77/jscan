@@ -40,7 +40,7 @@ public class ApplyStructInfo {
   private void checkFieldsUnique() {
     Set<Ident> toCheckUnique = new HashSet<Ident>();
     for (CStructField f : fields) {
-      if (f.isHasName()) {
+      if (f.hasName()) {
         final Ident name = f.name;
         if (toCheckUnique.contains(name)) {
           throw new AstParseException("duplicate struct/union field: " + name.getName());

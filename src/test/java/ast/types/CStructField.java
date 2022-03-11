@@ -26,7 +26,7 @@ public class CStructField {
     this.type = type;
   }
 
-  public boolean isHasName() {
+  public boolean hasName() {
     return name != null;
   }
 

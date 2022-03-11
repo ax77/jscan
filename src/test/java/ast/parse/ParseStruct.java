@@ -23,6 +23,8 @@ import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
+//TODO:rewrite
+
 public class ParseStruct {
   private final Parse parser;
   private final boolean isUnion;
@@ -33,10 +35,10 @@ public class ParseStruct {
   }
 
   private ApplyStructInfo finalizeStructType(CStructType tpStruct) {
-    if (tpStruct.isIncomplete()) {
+    if (!tpStruct.isComplete) {
       parser.unimplemented("incomplete struct finalization");
     }
-    final ApplyStructInfo sinfo = new ApplyStructInfo(tpStruct.isUnion(), tpStruct.getFields());
+    final ApplyStructInfo sinfo = new ApplyStructInfo(tpStruct.isUnion, tpStruct.getFields());
 
     int i = 0;
     for (CStructField f : tpStruct.getFields()) {
@@ -172,15 +174,6 @@ public class ParseStruct {
       structDeclarationList.addAll(structDeclarationSeq);
     }
 
-    if (parser.tp() != T.T_RIGHT_BRACE && parser.tok().is(TOKEN_IDENT)) {
-      CSymbol sym = parser.getSym(parser.tok().getIdent());
-      if (sym != null) {
-      }
-    }
-
-    if (parser.tp() != T.T_RIGHT_BRACE) {
-    }
-
     parser.checkedMove(T.T_RIGHT_BRACE);
     return structDeclarationList;
   }
@@ -226,7 +219,7 @@ public class ParseStruct {
           return r;
         }
 
-        boolean isAnonymousDeclaration = !basetype.tpStruct.isHasTag();
+        boolean isAnonymousDeclaration = !basetype.tpStruct.hasTag();
         if (isAnonymousDeclaration) {
           List<CStructField> fieldsInside = basetype.tpStruct.getFields();
           r.addAll(fieldsInside);

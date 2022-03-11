@@ -7,7 +7,6 @@ import static ast.types.CTypeImpl.QCONST;
 import java.util.List;
 
 import ast.builders.TypePrinter;
-import jscan.utils.AstParseException;
 
 public class CType {
 
@@ -59,7 +58,7 @@ public class CType {
   }
 
   public CType(CStructType tpStruct, int size, int align) {
-    this.kind = (tpStruct.isUnion() ? CTypeKind.TP_UNION : CTypeKind.TP_STRUCT);
+    this.kind = (tpStruct.isUnion ? CTypeKind.TP_UNION : CTypeKind.TP_STRUCT);
     this.tpStruct = tpStruct;
     this.size = size;
     this.align = align;
@@ -100,38 +99,22 @@ public class CType {
 
   @Override
   public String toString() {
-
     if (isPrimitive()) {
       return TypePrinter.primitiveToString(kind);
-    }
-
-    if (isBitfield()) {
+    } else if (isBitfield()) {
       return tpBitfield.toString();
-    }
-
-    else if (isPointer()) {
+    } else if (isPointer()) {
       return tpPointer.toString();
-    }
-
-    else if (isArray()) {
+    } else if (isArray()) {
       return tpArray.toString();
-    }
-
-    else if (isFunction()) {
+    } else if (isFunction()) {
       return tpFunction.toString();
-    }
-
-    else if (isStrUnion()) {
+    } else if (isStrUnion()) {
       return tpStruct.toString();
-    }
-
-    else if (isEnumeration()) {
+    } else if (isEnumeration()) {
       return tpEnum.toString();
     }
-
-    else {
-      throw new AstParseException("Unknown type: " + kind.toString());
-    }
+    return kind.toString();
   }
 
   public boolean isStrUnion() {
@@ -204,19 +187,19 @@ public class CType {
   }
 
   public boolean isIncompleteStruct() {
-    return isStruct() && tpStruct.isIncomplete();
+    return isStruct() && !tpStruct.isComplete;
   }
 
   public boolean isIncompleteUnion() {
-    return isUnion() && tpStruct.isIncomplete();
+    return isUnion() && !tpStruct.isComplete;
   }
 
   public boolean isIncompleteArray() {
-    return isArray() && tpArray.isIncomplete;
+    return isArray() && !tpArray.isComplete;
   }
 
   public boolean isIncompleteEnum() {
-    return isEnumeration() && tpEnum.isIncomplete();
+    return isEnumeration() && !tpEnum.isComplete;
   }
 
   public boolean isIncomplete() {
@@ -265,8 +248,8 @@ public class CType {
       return false;
     }
 
-    if (tpArray.isIncomplete) {
-      if (!another.isIncomplete) {
+    if (tpArray.isComplete) {
+      if (!another.isComplete) {
         return false;
       }
     }
@@ -311,7 +294,7 @@ public class CType {
 
   public boolean isConst() {
     if (isStrUnion()) {
-      return tpStruct.isHasConstFields();
+      return tpStruct.hasConstFields();
     }
     return (qualifiers & QCONST) == QCONST;
   }

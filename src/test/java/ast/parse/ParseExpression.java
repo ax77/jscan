@@ -552,11 +552,11 @@ public class ParseExpression {
 
     final CStructType tpStruct = tp.tpPointer.subtype.tpStruct;
 
-    if (tpStruct.isIncomplete()) {
+    if (!tpStruct.isComplete) {
       parser.perror("field selection [a->b] from incomplete struct/union");
     }
 
-    CStructField field = tpStruct.findField(fieldName);
+    CStructField field = tpStruct.getFieldByName(fieldName);
     if (field == null) {
       parser.perror("error: struct has no field: " + fieldName.getName());
     }
@@ -571,11 +571,11 @@ public class ParseExpression {
       parser.perror("expect struct or union for '.' operator");
     }
 
-    if (tp.tpStruct == null || tp.tpStruct.isIncomplete()) {
+    if (tp.tpStruct == null || !tp.tpStruct.isComplete) {
       parser.perror("field selection [a.b] from incomplete struct/union");
     }
 
-    CStructField field = tp.tpStruct.findField(fieldName);
+    CStructField field = tp.tpStruct.getFieldByName(fieldName);
     if (field == null) {
       parser.perror("error: struct has no field: " + fieldName.getName());
     }
