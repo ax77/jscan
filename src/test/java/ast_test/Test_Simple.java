@@ -40,7 +40,7 @@ class UtilTestDto {
 
 }
 
-public class Test_Simple2 {
+public class Test_Simple {
 
   @Test
   public void testJustParse() throws IOException {

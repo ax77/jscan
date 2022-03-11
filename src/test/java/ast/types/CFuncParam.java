@@ -35,11 +35,13 @@ public class CFuncParam {
     return from;
   }
 
-  public boolean isHasName() {
+  // the name in a function proto may be omitted
+  public boolean hasName() {
     return name != null;
   }
 
-  public boolean isHasType() {
+  // the type in KnR function declaration may be omitted
+  public boolean hasType() {
     return type != null;
   }
 

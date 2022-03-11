@@ -84,11 +84,11 @@ public class ParseBaseType {
 
     while (isDeclSpecStart(parser.tok()) || Pcheckers.isAttributeStartGnuc(parser.tok())) {
 
-      final Token tok = parser.tok();
-
       if (Pcheckers.isAttributeStartGnuc(parser.tok())) {
         attributes = new ParseAttributesAsms(parser).parse();
       }
+
+      final Token tok = parser.tok();
 
       // typedef-routine
       // we found an identifier, it may be a var-name, or a typedef-alias
