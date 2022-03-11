@@ -29,7 +29,7 @@ public class ParseStaticAssert {
     Expression ce = new ParseExpression(parser).e_const_expr();
     long result = new ConstexprEval(parser).ce(ce);
 
-    if (parser.tok().ofType(T.T_RIGHT_PAREN)) {
+    if (parser.tok().is(T.T_RIGHT_PAREN)) {
 
       // c2x
       if (result == 0) {

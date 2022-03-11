@@ -88,7 +88,7 @@ public class ParseBalancedTokenlist {
   }
 
   private void checkOf(Token token, T need) {
-    if (!token.ofType(need)) {
+    if (!token.is(need)) {
       parser.perror("gcc-attribute list incomplete form");
     }
   }

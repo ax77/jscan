@@ -232,7 +232,7 @@ public class PP_expr2 {
 
     for (Token t : expression) {
 
-      boolean flag = t.ofType(T.TOKEN_EOF) || CPP_CORRECT_OPERATORS.contains(t.getType())
+      boolean flag = t.is(T.TOKEN_EOF) || CPP_CORRECT_OPERATORS.contains(t.getType())
           || CPP_CORRECT_SPECIALS.contains(t.getType());
 
       if (!flag) {
@@ -429,10 +429,10 @@ public class PP_expr2 {
 
   //@formatter:off
   private boolean isUnaryOperator() {
-    return tok.ofType(T.T_PLUS)
-        || tok.ofType(T_MINUS) 
-        || tok.ofType(T_TILDE)
-        || tok.ofType(T.T_EXCLAMATION);
+    return tok.is(T.T_PLUS)
+        || tok.is(T_MINUS) 
+        || tok.is(T_TILDE)
+        || tok.is(T.T_EXCLAMATION);
   }
   //@formatter:on
 

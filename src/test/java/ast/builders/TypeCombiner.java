@@ -50,7 +50,7 @@ public class TypeCombiner {
     String lastLoc = "";
 
     for (Token tok : list) {
-      if (!tok.ofType(T.TOKEN_IDENT)) {
+      if (!tok.is(T.TOKEN_IDENT)) {
         throw new AstParseException(tok.loc() + " error: expect id, but was: " + tok.getValue());
       }
       Ident id = tok.getIdent();
@@ -148,7 +148,7 @@ public class TypeCombiner {
     String lastLoc = "";
 
     for (Token tok : list) {
-      if (!tok.ofType(T.TOKEN_IDENT)) {
+      if (!tok.is(T.TOKEN_IDENT)) {
         throw new AstParseException(tok.loc() + " error: expect id, but was: " + tok.getValue());
       }
       Ident id = tok.getIdent();

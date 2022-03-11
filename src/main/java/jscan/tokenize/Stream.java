@@ -496,7 +496,7 @@ public class Stream {
     for (;;) {
       Token t = nex2();
 
-      if (t.ofType(TOKEN_EOF)) {
+      if (t.is(TOKEN_EOF)) {
 
         tokenlist.addAll(line);
         markend(); // eostream

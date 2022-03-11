@@ -74,11 +74,11 @@ public class ParseInitializerList {
         checkOverflow(DEFAULT_UNKNOWN_ARLEN, count);
 
         Token tok = parser.tok();
-        if (tok.ofType(T.T_RIGHT_BRACE)) {
+        if (tok.is(T.T_RIGHT_BRACE)) {
           break;
         }
 
-        if (tok.ofType(T.T_LEFT_BRACKET)) {
+        if (tok.is(T.T_LEFT_BRACKET)) {
           parser.lbracket();
 
           Expression expr = new ParseExpression(parser).e_const_expr();
@@ -146,7 +146,7 @@ public class ParseInitializerList {
         checkOverflow(DEFAULT_UNKNOWN_ARLEN, fieldIdx);
 
         Token tok = parser.tok();
-        if (tok.ofType(T.T_RIGHT_BRACE)) {
+        if (tok.is(T.T_RIGHT_BRACE)) {
           break;
         }
 
@@ -156,7 +156,7 @@ public class ParseInitializerList {
 
         // .a = 3
         CStructField field = null;
-        if (tok.ofType(T.T_DOT)) {
+        if (tok.is(T.T_DOT)) {
           parser.move();
 
           Ident fieldname = parser.getIdent();
@@ -219,13 +219,13 @@ public class ParseInitializerList {
   private void warningExcessElements(String where) {
     while (!parser.isEof()) {
       Token tok = parser.tok();
-      if (tok.ofType(T.T_RIGHT_BRACE)) {
+      if (tok.is(T.T_RIGHT_BRACE)) {
         return;
       }
-      if (tok.ofType(T.TOKEN_EOF)) {
+      if (tok.is(T.TOKEN_EOF)) {
         parser.perror("unexpected EOF in initializer-list");
       }
-      if (tok.ofType(T.T_DOT)) {
+      if (tok.is(T.T_DOT)) {
         parser.perror("unimpl. skip designations.");
       }
       Expression expr = new ParseExpression(parser).e_assign();
@@ -241,7 +241,7 @@ public class ParseInitializerList {
   }
 
   private void addInit(List<Initializer> where, int withOffset) {
-    if (parser.tok().ofType(T.T_LEFT_BRACE)) {
+    if (parser.tok().is(T.T_LEFT_BRACE)) {
       parser.perror("braces around scalar initializer");
     }
     Expression expr = new ParseExpression(parser).e_assign();
@@ -255,10 +255,10 @@ public class ParseInitializerList {
     // [1][2].a = ...
     // etc.
 
-    if (parser.tok().ofType(T.T_DOT)) {
+    if (parser.tok().is(T.T_DOT)) {
       parser.unimplemented("nested struct designators .a.b.c.d.e = ...");
     }
-    if (parser.tok().ofType(T.T_LEFT_BRACKET)) {
+    if (parser.tok().is(T.T_LEFT_BRACKET)) {
       parser.unimplemented("nested array designators [1][2] = ...");
     }
   }

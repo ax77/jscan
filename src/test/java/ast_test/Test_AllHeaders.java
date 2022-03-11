@@ -2080,7 +2080,7 @@ public class Test_AllHeaders {
     Scan s = new Scan(tokens);
     for (;;) {
       Token tok = s.get();
-      if (tok.ofType(T.TOKEN_EOF)) {
+      if (tok.is(T.TOKEN_EOF)) {
         pp.add(tok);
         break;
       }

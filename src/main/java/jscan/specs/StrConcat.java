@@ -24,7 +24,7 @@ public class StrConcat {
     while (!buffer.isEmpty()) {
       Token t = buffer.removeFirst();
 
-      if (t.ofType(T.TOKEN_EOF)) {
+      if (t.is(T.TOKEN_EOF)) {
 
         // maybe strings are before EOF
         if (!strings.isEmpty()) {
@@ -38,7 +38,7 @@ public class StrConcat {
       }
 
       // collect all strings, this, and all after this...
-      if (t.ofType(T.TOKEN_STRING)) {
+      if (t.is(T.TOKEN_STRING)) {
         strings.add(t);
         continue;
       } else {

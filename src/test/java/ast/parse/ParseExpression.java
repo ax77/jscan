@@ -171,7 +171,7 @@ public class ParseExpression {
   }
 
   private boolean isCompoundAssign(Token what) {
-    return Pcheckers.isAssignOperator(what) && !what.ofType(T.T_ASSIGN);
+    return Pcheckers.isAssignOperator(what) && !what.is(T.T_ASSIGN);
   }
 
   public Expression e_assign() {
@@ -492,7 +492,7 @@ public class ParseExpression {
         ApplyExpressionType.applytype(lhs, TypeApplierStage.stage_start);
 
         // a->b :: (*a).b
-        if (operator.ofType(T_ARROW)) {
+        if (operator.is(T_ARROW)) {
 
           final Token operatorDeref = ExprUtil.derefOperator(operator);
           final Token operatorDot = ExprUtil.dotOperator(operator);
@@ -602,7 +602,7 @@ public class ParseExpression {
       Token saved = parser.tok();
       parser.move();
 
-      if (saved.ofType(TOKEN_STRING)) {
+      if (saved.is(TOKEN_STRING)) {
         return build_strconst(saved);
       }
 
@@ -610,7 +610,7 @@ public class ParseExpression {
 
         //TODO:NUMBERS
         String toeval = "";
-        if (saved.ofType(TOKEN_CHAR)) {
+        if (saved.is(TOKEN_CHAR)) {
           toeval = String.format("%d", saved.getStrconstant().getV()[0]);
         } else {
           toeval = saved.getValue();

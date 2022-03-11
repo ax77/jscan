@@ -124,7 +124,7 @@ public class ParseDeclarations {
 
     // nested list
 
-    if (parser.tok().ofType(T.T_LEFT_BRACE)) {
+    if (parser.tok().is(T.T_LEFT_BRACE)) {
       return new ParseInitializerList(parser, type).parse();
     }
 

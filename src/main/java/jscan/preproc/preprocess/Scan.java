@@ -61,7 +61,7 @@ public final class Scan {
 
   public Token pop() {
     Token t = pop_noppdirective();
-    if (t.ofType(T.T_SHARP) && t.isAtBol()) {
+    if (t.is(T.T_SHARP) && t.isAtBol()) {
       if (t.isNewLine()) {
         t.setType(T.PT_HEOL);
         return t;
@@ -93,15 +93,15 @@ public final class Scan {
 
   public boolean dline(Token pp) throws IOException {
 
-    if (pp.ofType(T.PT_HDEFINE)) {
+    if (pp.is(T.PT_HDEFINE)) {
       checkLF(pp);
       return new PP_define(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HUNDEF)) {
+    } else if (pp.is(T.PT_HUNDEF)) {
       checkLF(pp);
       return new PP_undef(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HINCLUDE)) {
+    } else if (pp.is(T.PT_HINCLUDE)) {
       checkLF(pp);
       return new PP_include(this).scan(pp);
 
@@ -109,23 +109,23 @@ public final class Scan {
       checkLF(pp);
       return new PP_if2(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HERROR)) {
+    } else if (pp.is(T.PT_HERROR)) {
       checkLF(pp);
       return new PP_error(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HPRAGMA)) {
+    } else if (pp.is(T.PT_HPRAGMA)) {
       checkLF(pp);
       return new PP_pragma(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HINCLUDE_NEXT)) {
+    } else if (pp.is(T.PT_HINCLUDE_NEXT)) {
       checkLF(pp);
       return new PP_include_next(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HWARNING)) {
+    } else if (pp.is(T.PT_HWARNING)) {
       checkLF(pp);
       return new PP_warning(this).scan(pp);
 
-    } else if (pp.ofType(T.PT_HEOL)) {
+    } else if (pp.is(T.PT_HEOL)) {
       return true;
 
     } else {
@@ -137,7 +137,7 @@ public final class Scan {
   private boolean goThroughStreamMarkers(Token t) {
 
     // stack to avoid too nested include recursion...
-    if (t.ofType(T.TOKEN_STREAMBEGIN)) {
+    if (t.is(T.TOKEN_STREAMBEGIN)) {
       String beginStreamName = t.getFilename();
 
       // TODO: env-limits...
@@ -153,7 +153,7 @@ public final class Scan {
       return true;
     }
 
-    if (t.ofType(T.TOKEN_STREAMEND)) {
+    if (t.is(T.TOKEN_STREAMEND)) {
       incLevelVisual--;
       String endStreamName = incstack.pop();
       if (PpEnv.DUMP_STREAM_INFO) {
@@ -167,7 +167,7 @@ public final class Scan {
 
   public boolean makeBuiltinToken(Token t) {
 
-    if (!t.ofType(T.TOKEN_IDENT)) {
+    if (!t.is(T.TOKEN_IDENT)) {
       return false;
     }
 
@@ -223,10 +223,10 @@ public final class Scan {
     */
 
     Token nx = pop();
-    for (; nx.ofType(T.T_SPEC_UNHIDE); nx = pop()) {
+    for (; nx.is(T.T_SPEC_UNHIDE); nx = pop()) {
       nx.getIdent().getSym().unhide();
     }
-    if (nx.ofType(T.T_LEFT_PAREN)) {
+    if (nx.is(T.T_LEFT_PAREN)) {
       Token id = pop();
       id.checkId();
       Sym mac = id.getIdent().getSym();
@@ -234,7 +234,7 @@ public final class Scan {
       ntok.setType(T.TOKEN_NUMBER);
       ntok.setValue(mac == null ? "0" : "1");
       Token rparen = pop();
-      if (!rparen.ofType(T.T_RIGHT_PAREN)) {
+      if (!rparen.is(T.T_RIGHT_PAREN)) {
         throw new ScanExc(t.loc() + " error: missing rparen in defined operator");
       }
       return ntok;
@@ -280,7 +280,7 @@ public final class Scan {
 
       // 2
       //
-      if (!t.ofType(T.TOKEN_IDENT)) {
+      if (!t.is(T.TOKEN_IDENT)) {
         return t;
       }
       if (t.isPainted()) {
@@ -324,7 +324,7 @@ public final class Scan {
           continue;
         }
 
-        if (!u.ofType(T.T_LEFT_PAREN)) {
+        if (!u.is(T.T_LEFT_PAREN)) {
           push(u);
           return t; // XXX
         }
@@ -335,7 +335,7 @@ public final class Scan {
             u = pop();
             if (unhide(u)) {
               continue;
-            } else if (u.ofType(T.T_RIGHT_PAREN)) {
+            } else if (u.is(T.T_RIGHT_PAREN)) {
               replaceSimple(macros, macros.getRepl(), t, null);
               continue restart;
             } else {
@@ -472,7 +472,7 @@ public final class Scan {
       }
 
       // XXX: II)
-      if (u.ofType(T.TOKEN_IDENT)) {
+      if (u.is(T.TOKEN_IDENT)) {
         Sym sym = u.getIdent().getSym();
         if (sym != null && sym.isHidden()) {
           u.setNoexpand();
@@ -490,7 +490,7 @@ public final class Scan {
       List<Token> oneparm = args.get(arg);
       if (isNoOp(u.getType())) {
         oneparm.add(u);
-      } else if (u.ofType(T.T_COMMA)) {
+      } else if (u.is(T.T_COMMA)) {
         if (nesting == 0) {
           if (arg + 1 == args.size()) {
             if (!isVararg) {
@@ -504,10 +504,10 @@ public final class Scan {
         } else {
           oneparm.add(u);
         }
-      } else if (u.ofType(T.T_LEFT_PAREN)) {
+      } else if (u.is(T.T_LEFT_PAREN)) {
         ++nesting;
         oneparm.add(u);
-      } else if (!u.ofType(T.T_RIGHT_PAREN)) {
+      } else if (!u.is(T.T_RIGHT_PAREN)) {
         oneparm.add(u);
       } else if (nesting != 0) {
         --nesting;
@@ -603,11 +603,11 @@ public final class Scan {
           Token RHS = replacement.get(++iter); // we know that: after '##' must be something. we check it when parse define...
 
           boolean needlx = true;
-          if (LHS.ofType(T.T_SPEC_PLACEMARKER)) {
+          if (LHS.is(T.T_SPEC_PLACEMARKER)) {
             needlx = false;
             rv.add(RHS);
           }
-          if (RHS.ofType(T.T_SPEC_PLACEMARKER)) {
+          if (RHS.is(T.T_SPEC_PLACEMARKER)) {
             needlx = false;
             rv.add(LHS);
           }
@@ -667,7 +667,7 @@ public final class Scan {
 
     for (Token t : ts) {
 
-      if (t.ofType(T.TOKEN_STRING) || t.ofType(T.TOKEN_CHAR)) {
+      if (t.is(T.TOKEN_STRING) || t.is(T.TOKEN_CHAR)) {
         if (t.hasLeadingWhitespace() && sb.length() > 0) {
           sb.append(" ");
         }
@@ -705,14 +705,14 @@ public final class Scan {
     List<Token> res = pasteAll(t, replacement, argInfo);
     for (int j = res.size(); --j >= 0;) {
       Token tokp = res.get(j);
-      if (!tokp.ofType(T.T_SPEC_PLACEMARKER)) {
+      if (!tokp.is(T.T_SPEC_PLACEMARKER)) {
         push(tokp);
       }
     }
   }
 
   private boolean unhide(Token u) {
-    if (u.ofType(T.T_SPEC_UNHIDE)) {
+    if (u.is(T.T_SPEC_UNHIDE)) {
       u.getIdent().getSym().unhide();
       return true;
     }

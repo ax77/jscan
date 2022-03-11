@@ -19,7 +19,7 @@ public final class PP_warning implements PP_directive {
     List<Token> errline = new ArrayList<Token>();
     for (;;) {
       Token t1 = scanner.pop();
-      if (t1.ofType(T.TOKEN_EOF) || t1.isNewLine()) {
+      if (t1.is(T.TOKEN_EOF) || t1.isNewLine()) {
         errline.add(t1);
         break;
       }

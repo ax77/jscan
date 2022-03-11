@@ -30,7 +30,7 @@ public final class Sym {
 
   private void checkDefinedInReplList() {
     for (Token t : repl) {
-      if (!t.ofType(T.TOKEN_IDENT)) {
+      if (!t.is(T.TOKEN_IDENT)) {
         continue;
       }
       if (t.getValue().equals("defined")) {
@@ -153,7 +153,7 @@ public final class Sym {
       if (t.hasLeadingWhitespace()) {
         sb.append(" ");
       }
-      if (t.ofType(T.T_SPEC_UNHIDE)) {
+      if (t.is(T.T_SPEC_UNHIDE)) {
         continue;
       }
       sb.append(t.getValue());

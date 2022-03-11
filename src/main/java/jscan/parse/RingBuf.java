@@ -39,7 +39,7 @@ public class RingBuf {
       boolean first = true;
       for (Token t : oneline) {
 
-        if (t.ofType(T.T_RIGHT_BRACE)) {
+        if (t.is(T.T_RIGHT_BRACE)) {
           --level;
         }
 
@@ -53,7 +53,7 @@ public class RingBuf {
         }
         tmp.append(t.getValue());
 
-        if (t.ofType(T.T_LEFT_BRACE)) {
+        if (t.is(T.T_LEFT_BRACE)) {
           level++;
         }
       }

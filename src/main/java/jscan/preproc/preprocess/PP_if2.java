@@ -177,13 +177,13 @@ public class PP_if2 implements PP_directive {
 
     while (!iterator.isEmpty()) {
       Token t = iterator.pop();
-      if (t.ofType(T.TOKEN_EOF)) {
+      if (t.is(T.TOKEN_EOF)) {
         break;
       }
-      if (t.ofType(T.TOKEN_IDENT) && t.getValue().equals("defined")) {
+      if (t.is(T.TOKEN_IDENT) && t.getValue().equals("defined")) {
 
         Token nx = iterator.pop();
-        if (nx.ofType(T.T_LEFT_PAREN)) {
+        if (nx.is(T.T_LEFT_PAREN)) {
           Token id = iterator.pop();
           Sym mac = id.getIdent().getSym();
           Token ntok = new Token(id);
@@ -192,7 +192,7 @@ public class PP_if2 implements PP_directive {
           processed.add(ntok);
 
           Token rparen = iterator.pop();
-          if (!rparen.ofType(T.T_RIGHT_PAREN)) {
+          if (!rparen.is(T.T_RIGHT_PAREN)) {
             throw new ScanExc(t.loc() + " error: missing rparen in defined operator");
           }
           continue;
@@ -213,10 +213,10 @@ public class PP_if2 implements PP_directive {
     Scan sc = new Scan(processed);
     for (;;) {
       Token etok = sc.get();
-      if (etok.ofType(T.TOKEN_EOF)) {
+      if (etok.is(T.TOKEN_EOF)) {
         break;
       }
-      if (etok.ofType(T.TOKEN_IDENT)) {
+      if (etok.is(T.TOKEN_IDENT)) {
         etok.setType(T.TOKEN_NUMBER);
         etok.setValue("0");
       }
@@ -251,13 +251,13 @@ public class PP_if2 implements PP_directive {
 
     PP_ifline firstCondition = new PP_ifline();
 
-    if (pp.ofType(T.PT_HIF)) {
+    if (pp.is(T.PT_HIF)) {
       firstCondition.setLkind(PP_ifline_kind.K_IF);
 
-    } else if (pp.ofType(T.PT_HIFDEF)) {
+    } else if (pp.is(T.PT_HIFDEF)) {
       firstCondition.setLkind(PP_ifline_kind.K_IFDEF);
 
-    } else if (pp.ofType(T.PT_HIFNDEF)) {
+    } else if (pp.is(T.PT_HIFNDEF)) {
       firstCondition.setLkind(PP_ifline_kind.K_IFNDEF);
     }
 
@@ -281,7 +281,7 @@ public class PP_if2 implements PP_directive {
       //    * if see '#' + bol + "ifndef" -> ++level
       //    * if see '#' + bol + "endif"  -> if (--level ==0) -> end
 
-      if (first.ofType(T.T_SHARP) && first.isAtBol()) {
+      if (first.is(T.T_SHARP) && first.isAtBol()) {
 
         if (first.isNewLine()) {
           continue; // just sharp is ok
@@ -364,7 +364,7 @@ public class PP_if2 implements PP_directive {
 
       }
 
-      if (first.ofType(T.TOKEN_EOF)) {
+      if (first.is(T.TOKEN_EOF)) {
         if (!ifstack.isEmpty()) {
           String location = "\n";
           for (Token tmptok : ifstack) {

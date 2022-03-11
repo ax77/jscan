@@ -45,7 +45,7 @@ public class ParseStruct {
     //struct ...
     //       ^
 
-    boolean iscorrect = parser.isUserDefinedId() || parser.tok().ofType(T.T_LEFT_BRACE);
+    boolean iscorrect = parser.isUserDefinedId() || parser.tok().is(T.T_LEFT_BRACE);
     if (!iscorrect) {
       parser.perror("expect identifier or { for enum type-specifier");
     }
@@ -54,7 +54,7 @@ public class ParseStruct {
     AttributesAsmsLists attributesAsmsLists = new ParseAttributesAsms(parser).parse();
 
     Token tag = null;
-    if (parser.tok().ofType(TOKEN_IDENT)) {
+    if (parser.tok().is(TOKEN_IDENT)) {
       tag = parser.tok();
       parser.move();
     }
@@ -165,7 +165,7 @@ public class ParseStruct {
       structDeclarationList.addAll(structDeclarationSeq);
     }
 
-    if (parser.tp() != T.T_RIGHT_BRACE && parser.tok().ofType(TOKEN_IDENT)) {
+    if (parser.tp() != T.T_RIGHT_BRACE && parser.tok().is(TOKEN_IDENT)) {
       CSymbol sym = parser.getSym(parser.tok().getIdent());
       if (sym != null) {
       }

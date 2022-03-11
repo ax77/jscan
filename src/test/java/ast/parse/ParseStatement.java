@@ -101,7 +101,7 @@ public class ParseStatement {
 
     // null-statement
 
-    if (parser.tok().ofType(T_SEMI_COLON)) {
+    if (parser.tok().is(T_SEMI_COLON)) {
       Token from = parser.semicolon();
       return new Statement(from, StatementBase.SSEMICOLON);
     }
@@ -328,7 +328,7 @@ public class ParseStatement {
 
     // {  }
 
-    if (parser.tok().ofType(T.T_LEFT_BRACE)) {
+    if (parser.tok().is(T.T_LEFT_BRACE)) {
       return parseCompoundStatement(false);
     }
 
@@ -399,7 +399,7 @@ public class ParseStatement {
   private boolean isLabel() {
     if (parser.isUserDefinedId()) {
       Token peek = parser.peek();
-      if (peek.ofType(T_COLON)) {
+      if (peek.is(T_COLON)) {
         return true;
       }
     }

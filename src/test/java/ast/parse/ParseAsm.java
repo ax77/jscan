@@ -37,7 +37,7 @@ public class ParseAsm {
       tokens.add(saved);
     }
 
-    if (!parser.tok().ofType(T_LEFT_PAREN)) {
+    if (!parser.tok().is(T_LEFT_PAREN)) {
       parser.perror("expect `(` after __asm");
     }
 

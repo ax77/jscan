@@ -38,7 +38,7 @@ public class ParseDeclarator {
   private void parseDeclInternal(Declarator out) {
     List<Integer> pointers = new ArrayList<Integer>(0);
 
-    while (parser.tok().ofType(T.T_TIMES)) {
+    while (parser.tok().is(T.T_TIMES)) {
       parser.move();
 
       Set<Ident> ptrTypeQuals = new HashSet<Ident>();
@@ -74,21 +74,21 @@ public class ParseDeclarator {
   }
 
   private void parseDirectDeclarator(Declarator out) {
-    if (parser.tok().ofType(T.T_LEFT_PAREN)) {
+    if (parser.tok().is(T.T_LEFT_PAREN)) {
       parser.lparen();
       parseDeclInternal(out);
       parser.rparen();
-    } else if (parser.tok().ofType(T.TOKEN_IDENT)) {
+    } else if (parser.tok().is(T.TOKEN_IDENT)) {
       Token saved = parser.tok();
       parser.move();
       out.setName(saved.getIdent());
     } else {
       //p.perror("no-name");
     }
-    while (parser.tok().ofType(T.T_LEFT_PAREN) || parser.tok().ofType(T.T_LEFT_BRACKET)) {
+    while (parser.tok().is(T.T_LEFT_PAREN) || parser.tok().is(T.T_LEFT_BRACKET)) {
       Token saved = parser.tok();
       parser.move();
-      if (saved.ofType(T.T_LEFT_PAREN)) {
+      if (saved.is(T.T_LEFT_PAREN)) {
 
         DeclaratorEntry e = new DeclaratorEntry(CTypeKind.TP_FUNCTION);
         List<CFuncParam> params = parseParams(e);
@@ -107,7 +107,7 @@ public class ParseDeclarator {
 
         out.add(e);
       }
-      if (saved.ofType(T.T_LEFT_PAREN)) {
+      if (saved.is(T.T_LEFT_PAREN)) {
         parser.rparen();
       } else {
         parser.rbracket();
@@ -119,7 +119,7 @@ public class ParseDeclarator {
 
     // int x[]
     //       ^
-    if (parser.tok().ofType(T.T_RIGHT_BRACKET)) {
+    if (parser.tok().is(T.T_RIGHT_BRACKET)) {
       return null;
     }
 
@@ -131,7 +131,7 @@ public class ParseDeclarator {
 
     // int x()
     //       ^
-    if (parser.tok().ofType(T.T_RIGHT_PAREN)) {
+    if (parser.tok().is(T.T_RIGHT_PAREN)) {
       return params;
     }
 
@@ -154,7 +154,7 @@ public class ParseDeclarator {
       if (parser.tp() == T.T_DOT_DOT_DOT) {
 
         parser.move(); // [...]
-        if (!parser.tok().ofType(T_RIGHT_PAREN)) {
+        if (!parser.tok().is(T_RIGHT_PAREN)) {
           parser.perror("expect `)` after `...`");
         }
 

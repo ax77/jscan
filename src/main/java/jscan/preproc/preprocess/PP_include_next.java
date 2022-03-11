@@ -17,7 +17,7 @@ public class PP_include_next implements PP_directive {
   public boolean scan(Token start) throws IOException {
     for (;;) {
       Token t = scanner.pop();
-      if (t.isNewLine() || t.ofType(T.TOKEN_EOF)) {
+      if (t.isNewLine() || t.is(T.TOKEN_EOF)) {
         break;
       }
     }

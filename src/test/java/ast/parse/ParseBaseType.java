@@ -36,7 +36,7 @@ public class ParseBaseType {
 
   //@formatter:off
   public boolean isUserDefinedId(Token what) {
-    return what.ofType(TOKEN_IDENT) && !what.isBuiltinIdent();
+    return what.is(TOKEN_IDENT) && !what.isBuiltinIdent();
   }
   
   public boolean isDeclSpecStart(Token what) {

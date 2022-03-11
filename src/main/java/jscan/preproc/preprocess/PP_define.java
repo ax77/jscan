@@ -29,7 +29,7 @@ public final class PP_define implements PP_directive {
     int bound = repl.size() - 1;
     int index = 0;
     for (Token t : repl) {
-      if (t.ofType(T.T_SHARP_SHARP)) {
+      if (t.is(T.T_SHARP_SHARP)) {
         if (index == 0 || index == bound) {
           Error.error((index == 0 ? E_HASH_HASH_AT_BEGIN_REPL : E_HASH_HASH_AT_END_REPL), t.loc());
         }
@@ -62,11 +62,11 @@ public final class PP_define implements PP_directive {
       Token prev = (i > 0) ? replacementIN.get(i - 1) : null;
       Token next = (i + 1 < size) ? replacementIN.get(i + 1) : null;
 
-      if (curr.ofType(T.T_SHARP)) {
+      if (curr.is(T.T_SHARP)) {
         if (next == null) {
           throw new RuntimeException("TODO");
         }
-        if (!next.ofType(T.TOKEN_IDENT)) {
+        if (!next.is(T.TOKEN_IDENT)) {
           throw new RuntimeException("TODO");
         }
         if (!parm.contains(next)) {
@@ -74,7 +74,7 @@ public final class PP_define implements PP_directive {
         }
         next.setCategory(Fcategory.formal | Fcategory.stringized);
 
-      } else if (curr.ofType(T.T_SHARP_SHARP)) {
+      } else if (curr.is(T.T_SHARP_SHARP)) {
         if (i == 0) {
           throw new RuntimeException("TODO"); // at begin of repl-list
         }
@@ -82,10 +82,10 @@ public final class PP_define implements PP_directive {
           throw new RuntimeException("TODO"); // at end of repl-list
         }
 
-        if (next.ofType(T.TOKEN_IDENT)) {
+        if (next.is(T.TOKEN_IDENT)) {
 
           //MARK:{,##__VA_ARGS__}
-          if (prev != null && prev.ofType(T.T_COMMA) && next.getValue().equals(__VA_ARGS__)) {
+          if (prev != null && prev.is(T.T_COMMA) && next.getValue().equals(__VA_ARGS__)) {
             curr.setCategory(Fcategory.commaopt);
           }
 
@@ -96,13 +96,13 @@ public final class PP_define implements PP_directive {
           }
         }
 
-        if (prev != null && prev.ofType(T.TOKEN_IDENT)) {
+        if (prev != null && prev.is(T.TOKEN_IDENT)) {
           if (parm.contains(prev)) {
             prev.setCategory(Fcategory.formal | Fcategory.unscanned);
           }
         }
 
-      } else if (curr.ofType(T.TOKEN_IDENT)) {
+      } else if (curr.is(T.TOKEN_IDENT)) {
         if (parm.contains(curr)) {
           int c = curr.getCategory();
           boolean isScanned = true;
@@ -121,7 +121,7 @@ public final class PP_define implements PP_directive {
     }
 
     for (Token t : replacementIN) {
-      if (!t.ofType(T.T_SHARP)) {
+      if (!t.is(T.T_SHARP)) {
         replacementOUT.add(t);
       }
     }
@@ -171,7 +171,7 @@ public final class PP_define implements PP_directive {
     List<Token> line = new ArrayList<Token>();
     for (;;) {
       Token linetok = scanner.pop();
-      if (linetok.isNewLine() || linetok.ofType(T.TOKEN_EOF)) {
+      if (linetok.isNewLine() || linetok.is(T.TOKEN_EOF)) {
         line.add(linetok);
         break;
       }
@@ -186,7 +186,7 @@ public final class PP_define implements PP_directive {
 
     Tokenlist iterator = new Tokenlist(line);
     Token firstAfterMacroName = iterator.peek();
-    isFlike = firstAfterMacroName.ofType(T.T_LEFT_PAREN) && !firstAfterMacroName.hasLeadingWhitespace();
+    isFlike = firstAfterMacroName.is(T.T_LEFT_PAREN) && !firstAfterMacroName.hasLeadingWhitespace();
 
     if (isFlike) {
       Token next = iterator.next(); // (
@@ -195,7 +195,7 @@ public final class PP_define implements PP_directive {
         next = iterator.next();
         Token nextpeek = iterator.peek();
 
-        if (next.ofType(T.T_RIGHT_PAREN)) {
+        if (next.is(T.T_RIGHT_PAREN)) {
 
           // [#define x()]
           // NOTE: this have no replacement, but also may have parameters [#define xxx(...)]
@@ -211,10 +211,10 @@ public final class PP_define implements PP_directive {
           break;
         }
 
-        if (next.ofType(T.TOKEN_IDENT)) {
+        if (next.is(T.TOKEN_IDENT)) {
 
           // GNU variadic macros
-          if (nextpeek.ofType(T.T_DOT_DOT_DOT)) {
+          if (nextpeek.is(T.T_DOT_DOT_DOT)) {
 
             // save name and flag
             //
@@ -227,7 +227,7 @@ public final class PP_define implements PP_directive {
             next = iterator.next(); // eat nextpeek -> [...]
             next = iterator.next(); // must be rparen
 
-            if (!next.ofType(T.T_RIGHT_PAREN)) {
+            if (!next.is(T.T_RIGHT_PAREN)) {
               throw new ScanExc(
                   next.loc() + "error: named vararg parameter must be last parameter: " + next.getValue());
             }
@@ -249,7 +249,7 @@ public final class PP_define implements PP_directive {
 
         // ISO variadic macros...
         //
-        if (next.ofType(T.T_DOT_DOT_DOT)) {
+        if (next.is(T.T_DOT_DOT_DOT)) {
           isVararg = true;
           parm.add(makeVariadicParameter(next));
         }
@@ -262,8 +262,8 @@ public final class PP_define implements PP_directive {
     Token prevreptok = null;
     for (;;) {
       Token reptok = iterator.next();
-      if (reptok.isNewLine() || reptok.ofType(T.TOKEN_EOF)) {
-        if (!reptok.ofType(T.TOKEN_EOF)) {
+      if (reptok.isNewLine() || reptok.is(T.TOKEN_EOF)) {
+        if (!reptok.is(T.TOKEN_EOF)) {
           repl.add(reptok);
         }
         break;
@@ -271,7 +271,7 @@ public final class PP_define implements PP_directive {
 
       // ignore duplicate... [#define glue(a,b) a ## ## ## b]
       // 
-      if (prevreptok != null && prevreptok.ofType(T.T_SHARP_SHARP) && reptok.ofType(T.T_SHARP_SHARP)) {
+      if (prevreptok != null && prevreptok.is(T.T_SHARP_SHARP) && reptok.is(T.T_SHARP_SHARP)) {
         continue;
       }
 

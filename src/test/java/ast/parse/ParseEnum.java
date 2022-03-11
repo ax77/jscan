@@ -26,13 +26,13 @@ public class ParseEnum {
     //enum ...
     //     ^
 
-    boolean iscorrect = parser.isUserDefinedId() || parser.tok().ofType(T.T_LEFT_BRACE);
+    boolean iscorrect = parser.isUserDefinedId() || parser.tok().is(T.T_LEFT_BRACE);
     if (!iscorrect) {
       parser.perror("expect identifier or { for enum type-specifier");
     }
 
     Token tag = null;
-    if (parser.tok().ofType(TOKEN_IDENT)) {
+    if (parser.tok().is(TOKEN_IDENT)) {
       tag = parser.tok();
       parser.move();
     }
@@ -63,7 +63,7 @@ public class ParseEnum {
     boolean paranoia = false;
 
     if (tag != null) {
-      if (parser.tok().ofType(T.T_SEMI_COLON)) {
+      if (parser.tok().is(T.T_SEMI_COLON)) {
         if (parser.isHasTag(tag.getIdent())) {
           CType type = parser.getTag(tag.getIdent()).getType();
           return type;

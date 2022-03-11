@@ -188,7 +188,7 @@ public abstract class ApplyExpressionType {
     final CType Rtype = rhs.getResultType();
     CType tpOfResult = Ltype;
 
-    if (operator.ofType(T_ASSIGN)) {
+    if (operator.is(T_ASSIGN)) {
       if (Ltype.isArithmetic() && Rtype.isArithmetic()) {
       } else if (Ltype.isPointer() && rhs.isIntegerZero()) {
       } else if (Ltype.isPointer() && Rtype.isEqualTo(Ltype)) {
@@ -227,13 +227,13 @@ public abstract class ApplyExpressionType {
     final Token operator = e.getToken();
     final Expression operand = e.getLhs();
 
-    if (!operator.ofType(T_AND)) {
+    if (!operator.is(T_AND)) {
       genPointer(operand);
     }
 
     // !
     //
-    if (operator.ofType(T_EXCLAMATION)) {
+    if (operator.is(T_EXCLAMATION)) {
       CType lhsRT = ipromote(operand.getResultType());
       CType resRT = null;
       if (lhsRT.isScalar()) {
@@ -247,7 +247,7 @@ public abstract class ApplyExpressionType {
 
     // [- + ~]
     //
-    else if (operator.ofType(T_MINUS) || operator.ofType(T_PLUS) || operator.ofType(T_TILDE)) {
+    else if (operator.is(T_MINUS) || operator.is(T_PLUS) || operator.is(T_TILDE)) {
       CType lhsRT = ipromote(operand.getResultType());
       CType resRT = null;
       if (lhsRT.isArithmetic()) {
@@ -261,7 +261,7 @@ public abstract class ApplyExpressionType {
 
     // address-of
     //
-    else if (operator.ofType(T_AND)) {
+    else if (operator.is(T_AND)) {
       CType lhsRT = operand.getResultType();
       CType resRT = null;
 
@@ -286,7 +286,7 @@ public abstract class ApplyExpressionType {
 
     // dereference
     //
-    else if (operator.ofType(T_TIMES)) {
+    else if (operator.is(T_TIMES)) {
       CType lhsRT = operand.getResultType();
       CType resRT = null;
 
@@ -340,7 +340,7 @@ public abstract class ApplyExpressionType {
 
     // T_PLUS
     //
-    if (operator.ofType(T_PLUS)) {
+    if (operator.is(T_PLUS)) {
       if (Ltype.isArithmetic() && Rtype.isArithmetic()) {
         tpOfResult = balanced(lhs, rhs);
       } else if (Ltype.isPointerToObject() && Rtype.isInteger()) {
@@ -354,7 +354,7 @@ public abstract class ApplyExpressionType {
 
     // T_MINUS
     //
-    else if (operator.ofType(T_MINUS)) {
+    else if (operator.is(T_MINUS)) {
       if (Ltype.isArithmetic() && Rtype.isArithmetic()) {
         tpOfResult = balanced(lhs, rhs);
       } else if (Ltype.isPointerToObject() && Rtype.isInteger()) {
@@ -368,7 +368,7 @@ public abstract class ApplyExpressionType {
 
     // * /
     //
-    else if (operator.ofType(T_DIVIDE) || operator.ofType(T_TIMES)) {
+    else if (operator.is(T_DIVIDE) || operator.is(T_TIMES)) {
       if (Ltype.isArithmetic() && Rtype.isArithmetic()) {
         tpOfResult = balanced(lhs, rhs);
       } else {
@@ -378,7 +378,7 @@ public abstract class ApplyExpressionType {
 
     // % & | ^
     //
-    else if (operator.ofType(T_PERCENT) || operator.ofType(T_AND) || operator.ofType(T_OR) || operator.ofType(T_XOR)) {
+    else if (operator.is(T_PERCENT) || operator.is(T_AND) || operator.is(T_OR) || operator.is(T_XOR)) {
       if (Ltype.isInteger() && Rtype.isInteger()) {
         tpOfResult = balanced(lhs, rhs);
       } else {
@@ -388,7 +388,7 @@ public abstract class ApplyExpressionType {
 
     // && ||
     //
-    else if (operator.ofType(T_AND_AND) || operator.ofType(T_OR_OR)) {
+    else if (operator.is(T_AND_AND) || operator.is(T_OR_OR)) {
       if (Ltype.isScalar() && Rtype.isScalar()) {
         tpOfResult = TYPE_INT;
       } else {
@@ -398,7 +398,7 @@ public abstract class ApplyExpressionType {
 
     // <  <=  >  >=
     //
-    else if (operator.ofType(T_LT) || operator.ofType(T_LE) || operator.ofType(T_GT) || operator.ofType(T_GE)) {
+    else if (operator.is(T_LT) || operator.is(T_LE) || operator.is(T_GT) || operator.is(T_GE)) {
       tpOfResult = TYPE_INT;
       if (Ltype.isArithmetic() && Rtype.isArithmetic()) {
       } else if (Ltype.isPointer() && Rtype.isPointerToCompat(Ltype)) {
@@ -409,7 +409,7 @@ public abstract class ApplyExpressionType {
 
     // ==  !=
     //
-    else if (operator.ofType(T_EQ) || operator.ofType(T_NE)) {
+    else if (operator.is(T_EQ) || operator.is(T_NE)) {
       tpOfResult = TYPE_INT;
       if (Ltype.isArithmetic() && Rtype.isArithmetic()) {
       } else if (Ltype.isPointer() && rhs.isIntegerZero()) {
@@ -426,7 +426,7 @@ public abstract class ApplyExpressionType {
 
     // T_LSHIFT
     //
-    else if (operator.ofType(T_LSHIFT)) {
+    else if (operator.is(T_LSHIFT)) {
       if (Ltype.isInteger() && Rtype.isInteger()) {
         tpOfResult = Ltype;
       } else {
@@ -436,7 +436,7 @@ public abstract class ApplyExpressionType {
 
     // T_RSHIFT
     //
-    else if (operator.ofType(T_RSHIFT)) {
+    else if (operator.is(T_RSHIFT)) {
       if (Ltype.isInteger() && Rtype.isInteger()) {
         tpOfResult = balanced(lhs, rhs);
       } else {

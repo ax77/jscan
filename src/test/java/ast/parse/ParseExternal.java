@@ -86,24 +86,24 @@ public class ParseExternal {
       parser.move();
 
       if (!hasOpen) {
-        hasOpen = t.ofType(T.T_LEFT_PAREN);
+        hasOpen = t.is(T.T_LEFT_PAREN);
       }
       if (!hasClose) {
-        hasClose = t.ofType(T.T_RIGHT_PAREN);
+        hasClose = t.is(T.T_RIGHT_PAREN);
       }
 
-      if (t.ofType(T.T_ASSIGN)) {
+      if (t.is(T.T_ASSIGN)) {
         return false;
       }
 
-      else if (t.ofType(T.T_SEMI_COLON)) {
-        if (parser.tok().ofType(T.T_LEFT_BRACE)) {
+      else if (t.is(T.T_SEMI_COLON)) {
+        if (parser.tok().is(T.T_LEFT_BRACE)) {
           return hasOpen && hasClose; // KnR - style declaration
         }
         return false; // end of normal declaration
       }
 
-      else if (t.ofType(T.T_LEFT_BRACE)) {
+      else if (t.is(T.T_LEFT_BRACE)) {
         return hasOpen && hasClose;
       }
     }

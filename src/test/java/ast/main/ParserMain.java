@@ -176,7 +176,7 @@ public class ParserMain implements ParserMainApi {
       for (;;) {
         Token t = s.get();
         clean.add(t);
-        if (t.ofType(T.TOKEN_EOF)) {
+        if (t.is(T.TOKEN_EOF)) {
           break;
         }
       }

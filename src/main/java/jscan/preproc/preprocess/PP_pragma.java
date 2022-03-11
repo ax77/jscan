@@ -19,11 +19,11 @@ public class PP_pragma implements PP_directive {
     for (;;) {
       Token t = scanner.pop();
 
-      if (t.ofType(T.TOKEN_IDENT) && t.isNewLine() && t.getValue().equals("once")) {
+      if (t.is(T.TOKEN_IDENT) && t.isNewLine() && t.getValue().equals("once")) {
         Hash_once.push_once(t.getFilename());
       }
 
-      if (t.isNewLine() || t.ofType(T.TOKEN_EOF)) {
+      if (t.isNewLine() || t.is(T.TOKEN_EOF)) {
         break;
       }
 

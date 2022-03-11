@@ -111,8 +111,8 @@ public class Token {
     this.argnum = argnum;
   }
 
-  public boolean ofType(T _type) {
-    return type.equals(_type);
+  public boolean is(T t) {
+    return type.equals(t);
   }
 
   // preprocessor - flags routine
@@ -171,11 +171,11 @@ public class Token {
   }
 
   public boolean typeIsSpecialStreamMarks() {
-    return this.ofType(T.TOKEN_EOF) || this.ofType(T.TOKEN_STREAMBEGIN) || this.ofType(T.TOKEN_STREAMEND);
+    return this.is(T.TOKEN_EOF) || this.is(T.TOKEN_STREAMBEGIN) || this.is(T.TOKEN_STREAMEND);
   }
 
   public void checkId() {
-    if (!ofType(T.TOKEN_IDENT)) {
+    if (!is(T.TOKEN_IDENT)) {
       throw new RuntimeException(loc() + " error : expect id, but was: " + getValue());
     }
   }
@@ -285,14 +285,14 @@ public class Token {
   }
 
   public boolean isIdent(Ident what) {
-    if (!ofType(T.TOKEN_IDENT)) {
+    if (!is(T.TOKEN_IDENT)) {
       return false;
     }
     return getIdent().equals(what);
   }
 
   public boolean isBuiltinIdent() {
-    return ofType(T.TOKEN_IDENT) && (ident.getNs() != 0);
+    return is(T.TOKEN_IDENT) && (ident.getNs() != 0);
   }
 
 }

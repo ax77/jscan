@@ -16,27 +16,27 @@ public abstract class Pcheckers {
   //@formatter:off
   
   public static boolean isAssignOperator(Token what) {
-    return what.ofType(T.T_ASSIGN)
-        || what.ofType(T.T_TIMES_EQUAL)
-        || what.ofType(T.T_PERCENT_EQUAL)
-        || what.ofType(T.T_DIVIDE_EQUAL)
-        || what.ofType(T.T_PLUS_EQUAL)
-        || what.ofType(T.T_MINUS_EQUAL)
-        || what.ofType(T.T_LSHIFT_EQUAL)
-        || what.ofType(T.T_RSHIFT_EQUAL)
-        || what.ofType(T.T_AND_EQUAL)
-        || what.ofType(T.T_XOR_EQUAL)
-        || what.ofType(T.T_OR_EQUAL);
+    return what.is(T.T_ASSIGN)
+        || what.is(T.T_TIMES_EQUAL)
+        || what.is(T.T_PERCENT_EQUAL)
+        || what.is(T.T_DIVIDE_EQUAL)
+        || what.is(T.T_PLUS_EQUAL)
+        || what.is(T.T_MINUS_EQUAL)
+        || what.is(T.T_LSHIFT_EQUAL)
+        || what.is(T.T_RSHIFT_EQUAL)
+        || what.is(T.T_AND_EQUAL)
+        || what.is(T.T_XOR_EQUAL)
+        || what.is(T.T_OR_EQUAL);
   }
 
   // & * + - ~ !
   public static boolean isUnaryOperator(Token what) {
-    return what.ofType(T_AND)
-        || what.ofType(T_TIMES)
-        || what.ofType(T_PLUS)
-        || what.ofType(T_MINUS)
-        || what.ofType(T_TILDE)
-        || what.ofType(T_EXCLAMATION);
+    return what.is(T_AND)
+        || what.is(T_TIMES)
+        || what.is(T_PLUS)
+        || what.is(T_MINUS)
+        || what.is(T_TILDE)
+        || what.is(T_EXCLAMATION);
   }
 
   public static boolean isStorageClassSpec(Token what) {

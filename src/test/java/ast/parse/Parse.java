@@ -179,7 +179,7 @@ public class Parse {
   public void move() {
 
     tok = tokenlist.next();
-    if (tok.ofType(T.TOKEN_STREAMBEGIN) || tok.ofType(T.TOKEN_STREAMEND)) {
+    if (tok.is(T.TOKEN_STREAMBEGIN) || tok.is(T.TOKEN_STREAMEND)) {
       tok = tokenlist.next();
     }
 
@@ -232,7 +232,7 @@ public class Parse {
   }
 
   public Ident getIdent() {
-    if (!tok.ofType(TOKEN_IDENT)) {
+    if (!tok.is(TOKEN_IDENT)) {
       perror("expect ident, but was: " + tok.getValue());
     }
     Token saved = tok;
@@ -262,7 +262,7 @@ public class Parse {
   }
 
   public void unexpectedEof() {
-    if (tok.ofType(TOKEN_EOF)) {
+    if (tok.is(TOKEN_EOF)) {
       perror("EOF unexpected at this context");
     }
   }
@@ -280,7 +280,7 @@ public class Parse {
   }
 
   public boolean is(T t) {
-    return tok.ofType(t);
+    return tok.is(t);
   }
 
   public Token lparen() {
@@ -349,7 +349,7 @@ public class Parse {
     Token currtok = tok();
     Token nexttok = peek();
     // [[  ...  ]]
-    return currtok.ofType(T.T_LEFT_BRACKET) && nexttok.ofType(T.T_LEFT_BRACKET);
+    return currtok.is(T.T_LEFT_BRACKET) && nexttok.is(T.T_LEFT_BRACKET);
   }
 
   public boolean isAsmStart() {
@@ -357,11 +357,11 @@ public class Parse {
   }
 
   public boolean isUserDefinedId() {
-    return tok.ofType(TOKEN_IDENT) && !tok.isBuiltinIdent();
+    return tok.is(TOKEN_IDENT) && !tok.isBuiltinIdent();
   }
 
   public boolean isUserDefinedId(Token what) {
-    return what.ofType(TOKEN_IDENT) && !what.isBuiltinIdent();
+    return what.is(TOKEN_IDENT) && !what.isBuiltinIdent();
   }
 
   private boolean isTypedefName(Token tok) {
@@ -373,7 +373,7 @@ public class Parse {
   }
 
   public boolean isEof() {
-    return tok.ofType(T.TOKEN_EOF);
+    return tok.is(T.TOKEN_EOF);
   }
 
   public CType parseTypename() {
@@ -422,7 +422,7 @@ public class Parse {
     // top-level
     moveStraySemicolon();
 
-    while (!tok.ofType(TOKEN_EOF)) {
+    while (!tok.is(TOKEN_EOF)) {
 
       // before each function or global declaration
       moveStraySemicolon();

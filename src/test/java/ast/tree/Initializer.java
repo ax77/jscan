@@ -1,8 +1,17 @@
 package ast.tree;
 
+import ast.types.CType;
+
 public class Initializer implements Comparable<Initializer> {
   private final Expression init;
   private final int offset;
+  private CType type;
+
+  public Initializer(Expression init, CType type, int offset) {
+    this.init = init;
+    this.type = type;
+    this.offset = offset;
+  }
 
   public Initializer(Expression init, int offset) {
     this.init = init;

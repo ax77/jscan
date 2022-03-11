@@ -47,7 +47,7 @@ public final class PP_include implements PP_directive {
 
     List<Token> includeLineNoExpanded = getIncludeLine(pp);
     Token firstInIncludeLineTmp = includeLineNoExpanded.get(0);
-    boolean needExpansion = firstInIncludeLineTmp.ofType(T.TOKEN_IDENT);
+    boolean needExpansion = firstInIncludeLineTmp.is(T.TOKEN_IDENT);
 
     List<Token> includeLineExpanded = new ArrayList<Token>();
     if (needExpansion) {

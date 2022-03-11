@@ -36,7 +36,7 @@ public class Parse {
     // for sure!
     if (!tokens.isEmpty()) {
       Token last = tokens.get(tokens.size() - 1);
-      if (!last.ofType(T.TOKEN_EOF)) {
+      if (!last.is(T.TOKEN_EOF)) {
         throw new AstParseException("token-list without EOF");
       }
     }
@@ -58,7 +58,7 @@ public class Parse {
 
   public void move() {
     tok = tokenlist.next();
-    while (tok.ofType(T.TOKEN_COMMENT)) {
+    while (tok.is(T.TOKEN_COMMENT)) {
       tok = tokenlist.next();
     }
     addLoc();
@@ -88,7 +88,7 @@ public class Parse {
   // PRE-SYMTAB
 
   public boolean isUserDefinedIdentNoKeyword(Token what) {
-    return what.ofType(T.TOKEN_IDENT) && !what.isBuiltinIdent();
+    return what.is(T.TOKEN_IDENT) && !what.isBuiltinIdent();
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ public class Parse {
   }
 
   public boolean is(Ident ident) {
-    return tok.ofType(T.TOKEN_IDENT) && ident.equals(tok.getIdent());
+    return tok.is(T.TOKEN_IDENT) && ident.equals(tok.getIdent());
   }
 
   public T tp() {
@@ -175,7 +175,7 @@ public class Parse {
   }
 
   public Ident getIdent() {
-    if (!tok.ofType(TOKEN_IDENT)) {
+    if (!tok.is(TOKEN_IDENT)) {
       perror("expect ident, but was: " + tok.getValue());
     }
     Token saved = tok;
@@ -205,7 +205,7 @@ public class Parse {
   }
 
   public void unexpectedEof() {
-    if (tok.ofType(TOKEN_EOF)) {
+    if (tok.is(TOKEN_EOF)) {
       perror("EOF unexpected at this context");
     }
   }
@@ -269,7 +269,7 @@ public class Parse {
   //////////////////////////////////////////////////////////////////////
 
   public boolean isEof() {
-    return tok.ofType(T.TOKEN_EOF);
+    return tok.is(T.TOKEN_EOF);
   }
 
   public void restoreState(ParseState state) {

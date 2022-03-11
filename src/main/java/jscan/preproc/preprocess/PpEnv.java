@@ -62,7 +62,7 @@ public abstract class PpEnv {
   }
 
   public static boolean isIfs(Token tok) {
-    return tok.ofType(T.PT_HIF) || tok.ofType(T.PT_HIFDEF) || tok.ofType(T.PT_HIFNDEF);
+    return tok.is(T.PT_HIF) || tok.is(T.PT_HIFDEF) || tok.is(T.PT_HIFNDEF);
   }
 
 }
