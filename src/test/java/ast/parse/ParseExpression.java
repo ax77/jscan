@@ -39,7 +39,6 @@ import ast.builders.ExprUtil;
 import ast.builders.TypeApplierStage;
 import ast.symtab.CSymGlobalVar;
 import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;
 import ast.tree.Initializer;

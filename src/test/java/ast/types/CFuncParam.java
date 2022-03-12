@@ -6,7 +6,7 @@ import jscan.utils.NullChecker;
 public class CFuncParam {
   public final Ident name;
   public CType type; // we apply the type, when build old-style function identifier-list+declarations
-  
+
   public CFuncParam(Ident name, CType type) {
     NullChecker.check(name, type);
     this.name = name;

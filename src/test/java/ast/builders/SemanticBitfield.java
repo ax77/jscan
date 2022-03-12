@@ -37,10 +37,16 @@ public class SemanticBitfield {
   }
 
   private boolean isPrimitiveInteger(CTypeKind kind) {
-    return kind == CTypeKind.TP_CHAR || kind == CTypeKind.TP_UCHAR || kind == CTypeKind.TP_SHORT
-        || kind == CTypeKind.TP_USHORT || kind == CTypeKind.TP_INT || kind == CTypeKind.TP_UINT
-        || kind == CTypeKind.TP_LONG || kind == CTypeKind.TP_ULONG || kind == CTypeKind.TP_LONG_LONG
-        || kind == CTypeKind.TP_ULONG_LONG;
+    return kind == CTypeKind.TP_CHAR
+      || kind == CTypeKind.TP_UCHAR
+      || kind == CTypeKind.TP_SHORT
+      || kind == CTypeKind.TP_USHORT
+      || kind == CTypeKind.TP_INT
+      || kind == CTypeKind.TP_UINT
+      || kind == CTypeKind.TP_LONG
+      || kind == CTypeKind.TP_ULONG
+      || kind == CTypeKind.TP_LONG_LONG
+      || kind == CTypeKind.TP_ULONG_LONG;
   }
 
 }

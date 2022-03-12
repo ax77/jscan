@@ -10,7 +10,6 @@ import java.util.List;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymTag;
 import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;
 import ast.tree.Function;
@@ -83,7 +82,7 @@ public class Parse {
     }
 
     if (currentFn != null) {
-      if (sym.base == CSymbolBase.SYM_LVAR) {
+      if (!isFileScope()) {
         currentFn.addLocal(sym.localVar);
       }
     }

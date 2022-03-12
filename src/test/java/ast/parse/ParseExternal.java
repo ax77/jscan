@@ -9,7 +9,6 @@ import ast.builders.TypeMerger;
 import ast.symtab.CSymGlobalVar;
 import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;

@@ -12,7 +12,6 @@ import ast.flat.RewriteStmt;
 import ast.main.ParseMainNew;
 import ast.main.ParseOpts;
 import ast.symtab.CSymLocalVar;
-import ast.symtab.CSymbol;
 import ast.tree.Function;
 import ast.tree.TranslationUnit;
 import ast.types.CType;

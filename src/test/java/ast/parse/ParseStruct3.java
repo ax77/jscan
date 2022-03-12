@@ -13,8 +13,6 @@ import ast.builders.ConstexprEval;
 import ast.builders.SemanticBitfield;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymTag;
-import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
 import ast.tree.Expression;
 import ast.types.CStructField;

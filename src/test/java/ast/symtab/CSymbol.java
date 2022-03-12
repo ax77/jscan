@@ -7,7 +7,6 @@ import jscan.utils.AstParseException;
 
 public class CSymbol {
 
-  public final CSymbolBase base;
   public final Token pos;
 
   public CSymEnumConst enumConst;
@@ -15,34 +14,43 @@ public class CSymbol {
   public CSymLocalVar localVar;
 
   public CSymbol(CSymEnumConst enumConst, Token pos) {
-    this.base = CSymbolBase.SYM_ENUM_CONST;
     this.enumConst = enumConst;
     this.pos = pos;
   }
 
   public CSymbol(CSymGlobalVar globalVar, Token pos) {
-    this.base = CSymbolBase.SYM_GVAR;
     this.globalVar = globalVar;
     this.pos = pos;
   }
 
   public CSymbol(CSymLocalVar localVar, Token pos) {
-    this.base = CSymbolBase.SYM_LVAR;
     this.localVar = localVar;
     this.pos = pos;
   }
 
   public CType getType() {
-    if (base == CSymbolBase.SYM_ENUM_CONST) {
+    if (isEnumConst()) {
       return enumConst.type;
     }
-    if (base == CSymbolBase.SYM_GVAR) {
+    if (isGlobalVar()) {
       return globalVar.type;
     }
-    if (base == CSymbolBase.SYM_LVAR) {
+    if (isLocalVar()) {
       return localVar.type;
     }
     throw new AstParseException("there's no type");
+  }
+
+  public boolean isLocalVar() {
+    return localVar != null;
+  }
+
+  public boolean isGlobalVar() {
+    return globalVar != null;
+  }
+
+  public boolean isEnumConst() {
+    return enumConst != null;
   }
 
   public String getNameStr() {
@@ -50,24 +58,24 @@ public class CSymbol {
     if (id != null) {
       return id.getName();
     }
-    return "???";
+    throw new AstParseException("there's no name");
   }
 
   public Ident getNameId() {
-    if (base == CSymbolBase.SYM_ENUM_CONST) {
+    if (isEnumConst()) {
       return enumConst.name;
     }
-    if (base == CSymbolBase.SYM_GVAR) {
+    if (isGlobalVar()) {
       return globalVar.name;
     }
-    if (base == CSymbolBase.SYM_LVAR) {
+    if (isLocalVar()) {
       return localVar.name;
     }
     throw new AstParseException("there's no name");
   }
 
   public boolean isFunction() {
-    return (base == CSymbolBase.SYM_GVAR || base == CSymbolBase.SYM_LVAR) && getType().isFunction();
+    return getType().isFunction();
   }
 
 }

@@ -3,10 +3,9 @@ package ast.parse;
 import static jscan.tokenize.T.TOKEN_IDENT;
 
 import ast.builders.ConstexprEval;
-import ast.symtab.CSymTag;
 import ast.symtab.CSymEnumConst;
+import ast.symtab.CSymTag;
 import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.Expression;
 import ast.types.CEnumType;
 import ast.types.CType;

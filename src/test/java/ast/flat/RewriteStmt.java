@@ -21,7 +21,6 @@ import java.util.List;
 
 import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.BlockItem;
 import ast.tree.Declaration;
 import ast.tree.Expression;
@@ -157,14 +156,13 @@ public class RewriteStmt {
   }
 
   private void genSym(CSymbol sym) {
-    CSymbolBase base = sym.base;
-    if (base == CSymbolBase.SYM_LVAR) {
+    if (sym.isLocalVar()) {
       CSymLocalVar lvar = sym.localVar;
       if (lvar.initializer != null) {
         push(new ExecFlowItem(sym));
       }
     } else {
-      todo("symbol: " + base.toString());
+      todo("symbol: " + sym.toString());
     }
   }
 

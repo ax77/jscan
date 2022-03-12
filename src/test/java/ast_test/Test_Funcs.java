@@ -15,7 +15,7 @@ public class Test_Funcs {
     TranslationUnit unit = new ParseMainNew(opts).parseString(sb.toString());
     return unit;
   }
-  
+
   @Test
   public void testfuncs1() throws IOException {
     //@formatter:off
@@ -35,8 +35,7 @@ public class Test_Funcs {
     sb.append(" /*013*/  }                                   \n");
     //@formatter:on
 
-
     TranslationUnit unit = parseUnit(sb);
   }
-  
+
 }

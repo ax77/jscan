@@ -7,7 +7,6 @@ import ast.builders.TypeMerger;
 import ast.symtab.CSymGlobalVar;
 import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
-import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
 import ast.tree.Declarator;
 import ast.tree.Initializer;
@@ -120,19 +119,16 @@ public class ParseDeclarations {
     final Ident name = decl.getName();
 
     if (parser.tp() != T.T_ASSIGN) {
-      CSymbolBase symBase = parser.isFileScope() ? CSymbolBase.SYM_GVAR : CSymbolBase.SYM_LVAR;
-      if (type.isFunction()) {
-        symBase = CSymbolBase.SYM_FUNC;
-      }
+      boolean isGlobal = parser.isFileScope();
 
-      if (symBase == CSymbolBase.SYM_LVAR) {
+      if (!isGlobal) {
         final CSymLocalVar lvar = new CSymLocalVar(name, type);
         final CSymbol sym = new CSymbol(lvar, saved);
         parser.defineSym(sym);
         return sym;
       }
 
-      if (symBase == CSymbolBase.SYM_GVAR || symBase == CSymbolBase.SYM_FUNC) {
+      if (isGlobal) {
         final CSymGlobalVar gvar = new CSymGlobalVar(name, type);
         final CSymbol sym = new CSymbol(gvar, saved);
         parser.defineSym(sym);
