@@ -207,6 +207,8 @@ public class ParseInitializer {
       return;
     }
 
+    Token pos = parser.tok();
+
     StringBuilder sb = new StringBuilder();
     while (!parser.isEof()) {
       if (parser.is(T.T_RIGHT_BRACE)) {
@@ -222,6 +224,7 @@ public class ParseInitializer {
       }
     }
     System.out.printf("excessive initializer: %s\n", sb.toString());
+    System.out.println(pos.loc());
   }
 
 }
