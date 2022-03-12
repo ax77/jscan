@@ -9,7 +9,6 @@ import java.util.List;
 
 import ast.builders.TypeMerger;
 import ast.symtab.CSymTag;
-import ast.symtab.CSymTypedef;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
@@ -38,7 +37,7 @@ public class Parse {
 
   // symbol-tables
   private Symtab<Ident, CSymbol> symbols;
-  private Symtab<Ident, CSymTypedef> typedefs;
+  private Symtab<Ident, CType> typedefs;
   private Symtab<Ident, CSymTag> tags;
 
   // location, error-handling
@@ -101,16 +100,16 @@ public class Parse {
   // TODO: defineProto()
   // TODO: saveStrLabel()
 
-  public void defineTypedef(CSymTypedef tpdef) {
+  public void defineTypedef(Ident name, CType type) {
     //System.out.println("typedef " + type.toString() + " " + key.getName());
 
-    CSymTypedef prevsym = typedefs.getsymFromCurrentScope(tpdef.name);
+    CType prevsym = typedefs.getsymFromCurrentScope(name);
     if (prevsym != null) {
-      if (!prevsym.type.isEqualTo(tpdef.type)) {
+      if (!prevsym.isEqualTo(type)) {
         perror("typedefed-name redefinition with different kind of type");
       }
     }
-    typedefs.addsym(tpdef.name, tpdef);
+    typedefs.addsym(name, type);
   }
 
   public void defineTag(CSymTag sym) {
@@ -130,9 +129,9 @@ public class Parse {
   }
 
   public CType getTypedefName(Ident id) {
-    final CSymTypedef sym = typedefs.getsym(id);
-    if (sym != null) {
-      return sym.type;
+    final CType alias = typedefs.getsym(id);
+    if (alias != null) {
+      return alias;
     }
     return null;
   }
@@ -389,7 +388,7 @@ public class Parse {
     if (!isUserDefinedId(tok)) {
       return false;
     }
-    CSymTypedef tp = typedefs.getsym(tok.getIdent());
+    CType tp = typedefs.getsym(tok.getIdent());
     return tp != null;
   }
 

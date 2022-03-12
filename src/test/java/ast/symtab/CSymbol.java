@@ -13,7 +13,6 @@ public class CSymbol {
   public CSymEnumConst enumConst;
   public CSymGlobalVar globalVar;
   public CSymLocalVar localVar;
-  public CSymTypedef typedefname;
 
   public CSymbol(CSymEnumConst enumConst, Token pos) {
     this.base = CSymbolBase.SYM_ENUM_CONST;
@@ -33,12 +32,6 @@ public class CSymbol {
     this.pos = pos;
   }
 
-  public CSymbol(CSymTypedef typedefname, Token pos) {
-    this.base = CSymbolBase.SYM_TYPEDEF;
-    this.typedefname = typedefname;
-    this.pos = pos;
-  }
-
   public CType getType() {
     if (base == CSymbolBase.SYM_ENUM_CONST) {
       return enumConst.type;
@@ -48,9 +41,6 @@ public class CSymbol {
     }
     if (base == CSymbolBase.SYM_LVAR) {
       return localVar.type;
-    }
-    if (base == CSymbolBase.SYM_TYPEDEF) {
-      return typedefname.type;
     }
     throw new AstParseException("there's no type");
   }
@@ -72,9 +62,6 @@ public class CSymbol {
     }
     if (base == CSymbolBase.SYM_LVAR) {
       return localVar.name;
-    }
-    if (base == CSymbolBase.SYM_TYPEDEF) {
-      return typedefname.name;
     }
     throw new AstParseException("there's no name");
   }

@@ -6,7 +6,6 @@ import java.util.List;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymGlobalVar;
 import ast.symtab.CSymLocalVar;
-import ast.symtab.CSymTypedef;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
@@ -55,6 +54,12 @@ public class ParseDeclarations {
       return new Declaration(basetype, startLocation);
     }
 
+    if (storagespec == CStorageKind.ST_TYPEDEF) {
+      parseAndDefineTypedefs();
+      parser.semicolon();
+      return new Declaration(startLocation);
+    }
+
     List<CSymbol> initDeclaratorList = parseInitDeclaratorList();
 
     @SuppressWarnings("unused")
@@ -62,6 +67,26 @@ public class ParseDeclarations {
 
     final Declaration declaration = new Declaration(initDeclaratorList, startLocation);
     return declaration;
+  }
+
+  private void parseAndDefineTypedefs() {
+
+    parseAndDefineOneTypedef();
+    while (parser.tp() == T.T_COMMA) {
+      parser.move();
+      parseAndDefineOneTypedef();
+    }
+
+    if (parser.is(T.T_ASSIGN)) {
+      parser.perror("typedef-name must not have an initializer");
+    }
+  }
+
+  private void parseAndDefineOneTypedef() {
+    final Declarator decl = new ParseDeclarator(parser).parse();
+    final CType type = TypeMerger.build(basetype, decl);
+    final Ident name = decl.getName();
+    parser.defineTypedef(name, type);
   }
 
   // TODO: ignore typedefs here: `initDeclaratorList.add(initDeclarator);` :)
@@ -98,12 +123,6 @@ public class ParseDeclarations {
       CSymbolBase symBase = parser.isFileScope() ? CSymbolBase.SYM_GVAR : CSymbolBase.SYM_LVAR;
       if (type.isFunction()) {
         symBase = CSymbolBase.SYM_FUNC;
-      }
-
-      if (storagespec == CStorageKind.ST_TYPEDEF) {
-        final CSymTypedef sym = new CSymTypedef(name, type);
-        parser.defineTypedef(sym);
-        return new CSymbol(sym, saved);
       }
 
       if (symBase == CSymbolBase.SYM_LVAR) {

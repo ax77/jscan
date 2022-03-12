@@ -30,14 +30,13 @@ public class Test_Funcs {
     sb.append(" /*008*/  }                                   \n");
     sb.append(" /*009*/                                      \n");
     sb.append(" /*010*/  int main(int argc, char **argv) {   \n");
-    sb.append(" /*011*/   struct tok varname;                \n");
+    sb.append(" /*011*/   typedef int i32; struct tok varname;                \n");
     sb.append(" /*012*/   return f(1,2,argc);                \n");
     sb.append(" /*013*/  }                                   \n");
     //@formatter:on
 
 
     TranslationUnit unit = parseUnit(sb);
-    System.out.println(unit);
   }
   
 }
