@@ -8,6 +8,8 @@ import ast.symtab.CSymGlobalVar;
 import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
 import ast.tree.Declaration;
+import ast.tree.Declaration.StaticAssertDeclarationStub;
+import ast.tree.Declaration.TypedefDeclarationStub;
 import ast.tree.Declarator;
 import ast.tree.Initializer;
 import ast.types.CStorageKind;
@@ -31,9 +33,9 @@ public class ParseDeclarations {
 
     Token startLocation = parser.tok();
 
-    boolean skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
-    if (skip) {
-      return new Declaration(startLocation);
+    StaticAssertDeclarationStub skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
+    if (skip != null) {
+      return new Declaration(skip, startLocation);
     }
 
     ParseBaseType pb = new ParseBaseType(parser);
@@ -54,9 +56,10 @@ public class ParseDeclarations {
     }
 
     if (storagespec == CStorageKind.ST_TYPEDEF) {
-      parseAndDefineTypedefs();
+      ArrayList<TypedefDeclarationStub> typedefs = new ArrayList<>();
+      parseAndDefineTypedefs(typedefs);
       parser.semicolon();
-      return new Declaration(startLocation);
+      return new Declaration(typedefs, startLocation);
     }
 
     List<CSymbol> initDeclaratorList = parseInitDeclaratorList();
@@ -68,12 +71,12 @@ public class ParseDeclarations {
     return declaration;
   }
 
-  private void parseAndDefineTypedefs() {
+  private void parseAndDefineTypedefs(ArrayList<TypedefDeclarationStub> typedefs) {
 
-    parseAndDefineOneTypedef();
+    parseAndDefineOneTypedef(typedefs);
     while (parser.tp() == T.T_COMMA) {
       parser.move();
-      parseAndDefineOneTypedef();
+      parseAndDefineOneTypedef(typedefs);
     }
 
     if (parser.is(T.T_ASSIGN)) {
@@ -81,11 +84,12 @@ public class ParseDeclarations {
     }
   }
 
-  private void parseAndDefineOneTypedef() {
+  private void parseAndDefineOneTypedef(ArrayList<TypedefDeclarationStub> typedefs) {
     final Declarator decl = new ParseDeclarator(parser).parse();
     final CType type = TypeMerger.build(basetype, decl);
     final Ident name = decl.getName();
     parser.defineTypedef(name, type);
+    typedefs.add(new TypedefDeclarationStub(name, type));
   }
 
   // TODO: ignore typedefs here: `initDeclaratorList.add(initDeclarator);` :)

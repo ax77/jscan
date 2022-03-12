@@ -1,6 +1,7 @@
 package ast.parse;
 
 import ast.builders.ConstexprEval;
+import ast.tree.Declaration.StaticAssertDeclarationStub;
 import ast.tree.Expression;
 import jscan.symtab.Keywords;
 import jscan.tokenize.T;
@@ -13,14 +14,14 @@ public class ParseStaticAssert {
     this.parser = parser;
   }
 
-  public boolean isStaticAssertAndItsOk() {
+  public StaticAssertDeclarationStub isStaticAssertAndItsOk() {
 
     //  static_assert_declaration
     //    : STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';'
     //    ;
 
     if (!parser.tok().isIdent(Keywords._Static_assert_ident)) {
-      return false;
+      return null;
     }
 
     parser.checkedMove(Keywords._Static_assert_ident);
@@ -29,6 +30,8 @@ public class ParseStaticAssert {
     Expression ce = new ParseExpression(parser).e_const_expr();
     long result = new ConstexprEval(parser).ce(ce);
 
+    StaticAssertDeclarationStub r = new StaticAssertDeclarationStub(ce, "");
+    
     if (parser.is(T.T_RIGHT_PAREN)) {
 
       // c2x
@@ -41,6 +44,7 @@ public class ParseStaticAssert {
       // c99 
       parser.checkedMove(T.T_COMMA);
       Token message = parser.checkedMove(T.TOKEN_STRING);
+      r.msg = message.getValue();
 
       if (result == 0) {
         parser.perror("static-assert fail: " + message.getValue());
@@ -50,7 +54,7 @@ public class ParseStaticAssert {
 
     parser.rparen();
     parser.semicolon();
-    return true;
+    return r;
   }
 
 }

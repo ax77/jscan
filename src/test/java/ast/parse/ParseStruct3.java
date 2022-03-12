@@ -13,6 +13,7 @@ import ast.builders.ConstexprEval;
 import ast.builders.SemanticBitfield;
 import ast.builders.TypeMerger;
 import ast.symtab.CSymTag;
+import ast.tree.Declaration.StaticAssertDeclarationStub;
 import ast.tree.Declarator;
 import ast.tree.Expression;
 import ast.types.CStructField;
@@ -127,13 +128,11 @@ public class ParseStruct3 {
 
   private List<CStructField> parseStructDeclaration() {
 
-    List<CStructField> r = new ArrayList<>();
-
     // static_assert
     //
-    boolean skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
-    if (skip) {
-      return r;
+    StaticAssertDeclarationStub skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
+    if (skip != null) {
+      return new ArrayList<>();
     }
 
     // TODO: this is spec-qual
@@ -144,7 +143,7 @@ public class ParseStruct3 {
       parser.move();
 
       if (basetype.isEnumeration()) {
-        return r;
+        return new ArrayList<>();
       }
 
       /// struct some {                                             
@@ -161,17 +160,19 @@ public class ParseStruct3 {
         boolean isAnonymousDeclaration = !basetype.tpStruct.hasTag();
         if (isAnonymousDeclaration) {
           List<CStructField> fieldsInside = basetype.tpStruct.getFields();
-          r.addAll(fieldsInside);
-          return r;
+          return fieldsInside;
         }
       }
 
+      // int ;
+      // ... ^
       parser.pwarning("declaration does not declare anything");
-      return r;
+      return new ArrayList<>();
 
     }
 
     // otherwise declarator-list like: [int a,b,c;]
+    List<CStructField> r = new ArrayList<>();
     parseStructDeclaratorList(r, basetype);
     parser.checkedMove(T_SEMI_COLON);
 
