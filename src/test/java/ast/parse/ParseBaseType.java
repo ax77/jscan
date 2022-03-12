@@ -110,7 +110,7 @@ public class ParseBaseType {
           attributes = new ParseAttributesAsms(parser).parse();
         }
 
-        result = new ParseStruct(parser, isUnion).parse();
+        result = new ParseStruct3(parser, isUnion).parse();
       }
 
       else if (Pcheckers.isEnumSpecStart(tok)) {

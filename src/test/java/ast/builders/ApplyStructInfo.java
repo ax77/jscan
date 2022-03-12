@@ -29,6 +29,12 @@ public class ApplyStructInfo {
     } else {
       calcStructFieldsOffsets();
     }
+
+    int i = 0;
+    for (CStructField f : fields) {
+      f.pos = i;
+      i += 1;
+    }
   }
 
   private void applyAlignment() {
