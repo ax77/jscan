@@ -37,6 +37,7 @@ import ast.builders.ApplyExpressionType;
 import ast.builders.ApplyGenericResult;
 import ast.builders.ExprUtil;
 import ast.builders.TypeApplierStage;
+import ast.symtab.CSymGlobalVar;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Expression;
@@ -142,7 +143,8 @@ public class ParseExpression {
     List<Initializer> initlist = new ArrayList<>();
     initlist.add(initializer);
 
-    CSymbol sym = new CSymbol(CSymbolBase.SYM_GVAR, varname, new CType(arrtype), initlist, saved);
+    CSymGlobalVar gvar = new CSymGlobalVar(varname, new CType(arrtype), initlist);
+    CSymbol sym = new CSymbol(gvar, saved);
     parser.defineSym(sym);
 
     return new Expression(sym, saved);

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
 import jscan.symtab.Ident;
 
@@ -14,7 +15,7 @@ public class Function {
   public Statement block;
   public final Set<Ident> gotos;
   public final Set<Ident> labels;
-  public final List<CSymbol> locals;
+  public final List<CSymLocalVar> locals;
 
   public Function(CSymbol symbol) {
     this.symbol = symbol;
@@ -31,7 +32,7 @@ public class Function {
     labels.add(label);
   }
 
-  public void addLocal(CSymbol sym) {
+  public void addLocal(CSymLocalVar sym) {
     locals.add(sym);
   }
 

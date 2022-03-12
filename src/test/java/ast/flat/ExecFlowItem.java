@@ -100,11 +100,11 @@ public class ExecFlowItem {
     if (opc == ExecFlowBase.jmp || opc == ExecFlowBase.jz) {
       return id + opc.toString() + " " + label;
     }
-    if (opc == ExecFlowBase.sym) {
-      String base = var.type.toString() + " " + var.name;
-      String init = var.initializer == null ? "" : " = " + var.initializer.get(0).toString();
-      return base + init;
-    }
+//    if (opc == ExecFlowBase.sym) {
+//      String base = var.type.toString() + " " + var.name;
+//      String init = var.initializer == null ? "" : " = " + var.initializer.get(0).toString();
+//      return base + init;
+//    }
     if (opc == ExecFlowBase.test) {
       return id + opc.toString() + " " + expr;
     }

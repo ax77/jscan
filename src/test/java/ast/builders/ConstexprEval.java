@@ -1,6 +1,8 @@
 package ast.builders;
 
 import ast.parse.Parse;
+import ast.symtab.CSymbol;
+import ast.symtab.CSymbolBase;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;
 import jscan.tokenize.T;
@@ -151,8 +153,11 @@ public class ConstexprEval {
     }
 
     if (base == ExpressionBase.EPRIMARY_IDENT) {
-      //TODO:
-      return expression.getSymbol().enumValue;
+      CSymbol sym = expression.getSymbol();
+      if (sym.base != CSymbolBase.SYM_ENUM_CONST) {
+        parser.perror("not a enum constant");
+      }
+      return sym.enumConst.value;
     }
 
     // try expand _Generic

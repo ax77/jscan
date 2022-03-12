@@ -1,19 +1,16 @@
     //@formatter:off
     StringBuilder sb = new StringBuilder();
-    sb.append(" /*001*/  struct x {    \n");
-    sb.append(" /*002*/  	char c;      \n");
-    sb.append(" /*003*/  	short s;     \n");
-    sb.append(" /*004*/  	int i;       \n");
-    sb.append(" /*005*/  	long l;      \n");
-    sb.append(" /*006*/  	float f;     \n");
-    sb.append(" /*007*/  	double d;    \n");
-    sb.append(" /*008*/  	struct {     \n");
-    sb.append(" /*009*/  		char c;     \n");
-    sb.append(" /*010*/  		short s;    \n");
-    sb.append(" /*011*/  		int i;      \n");
-    sb.append(" /*012*/  		long l;     \n");
-    sb.append(" /*013*/  		float f;    \n");
-    sb.append(" /*014*/  		double d;   \n");
-    sb.append(" /*015*/  	};           \n");
-    sb.append(" /*016*/  };            \n");
+    sb.append(" /*001*/  struct tok {                        \n");
+    sb.append(" /*002*/  	int f, pos;                        \n");
+    sb.append(" /*003*/  };                                  \n");
+    sb.append(" /*004*/                                      \n");
+    sb.append(" /*005*/  int f(int a, int b, int c) {        \n");
+    sb.append(" /*006*/  	int d = 0;                         \n");
+    sb.append(" /*007*/  	return a+b+c*d;                    \n");
+    sb.append(" /*008*/  }                                   \n");
+    sb.append(" /*009*/                                      \n");
+    sb.append(" /*010*/  int main(int argc, char **argv) {   \n");
+    sb.append(" /*011*/  	struct tok varname;                \n");
+    sb.append(" /*012*/  	return f(1,2,argc);                \n");
+    sb.append(" /*013*/  }                                   \n");
     //@formatter:on

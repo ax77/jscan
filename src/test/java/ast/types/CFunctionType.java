@@ -17,6 +17,7 @@ public class CFunctionType {
     this.returnType = type;
     this.parameters = parameters;
     this.isVariadic = isVariadic;
+
   }
 
   public boolean isVariadic() {

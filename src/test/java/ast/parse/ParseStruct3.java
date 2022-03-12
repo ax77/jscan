@@ -12,6 +12,7 @@ import ast.builders.ApplyStructInfo;
 import ast.builders.ConstexprEval;
 import ast.builders.SemanticBitfield;
 import ast.builders.TypeMerger;
+import ast.symtab.CSymTag;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
@@ -20,6 +21,7 @@ import ast.types.CStructField;
 import ast.types.CStructType;
 import ast.types.CType;
 import jscan.symtab.Ident;
+import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 import jscan.utils.NullChecker;
@@ -58,8 +60,8 @@ public class ParseStruct3 {
 
     if (tag != null) {
 
-      CSymbol cur = parser.getTagFromCurrentScope(tag);
-      CSymbol all = parser.getTag(tag);
+      CSymTag cur = parser.getTagFromCurrentScope(tag);
+      CSymTag all = parser.getTag(tag);
       if (all != null) {
         // A declaration of the identifier as a tag
         // is visible in this or an enclosing scope.
@@ -265,10 +267,10 @@ public class ParseStruct3 {
   }
 
   private CType incompl(Ident tag, Token pos) {
-    CStructType s = new CStructType(isUnion, tag);
-    CType typ = new CType(s, -1, -1);
-    final CSymbol sym = new CSymbol(CSymbolBase.SYM_STRUCT_DECLARATION, tag, typ, pos);
-    parser.defineTag(sym);
+    final CStructType su = new CStructType(isUnion, tag);
+    final CType typ = new CType(su, -1, -1);
+    final Ident keyword = isUnion ? Keywords.union_ident : Keywords.struct_ident;
+    parser.defineTag(new CSymTag(keyword, tag, typ));
     return typ;
   }
 

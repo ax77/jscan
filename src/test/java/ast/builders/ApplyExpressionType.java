@@ -117,7 +117,7 @@ public abstract class ApplyExpressionType {
 
     else if (base == EPRIMARY_IDENT) {
 
-      final CType symtype = e.getSymbol().type;
+      final CType symtype = e.getSymbol().getType();
       e.setResultType(symtype);
 
       if (stage == TypeApplierStage.generic_control_expr) {

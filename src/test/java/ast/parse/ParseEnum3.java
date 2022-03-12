@@ -3,6 +3,8 @@ package ast.parse;
 import static jscan.tokenize.T.TOKEN_IDENT;
 
 import ast.builders.ConstexprEval;
+import ast.symtab.CSymTag;
+import ast.symtab.CSymEnumConst;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Expression;
@@ -10,6 +12,7 @@ import ast.types.CEnumType;
 import ast.types.CType;
 import ast.types.CTypeImpl;
 import jscan.symtab.Ident;
+import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 import jscan.utils.NullChecker;
@@ -42,8 +45,8 @@ public class ParseEnum3 {
 
     if (tag != null) {
       CType tp = null;
-      CSymbol cur = parser.getTagFromCurrentScope(tag);
-      CSymbol all = parser.getTag(tag);
+      CSymTag cur = parser.getTagFromCurrentScope(tag);
+      CSymTag all = parser.getTag(tag);
       if (all != null) {
         // A declaration of the identifier as a tag
         // is visible in this or an enclosing scope.
@@ -90,8 +93,8 @@ public class ParseEnum3 {
         val = (int) new ConstexprEval(parser).ce(exp);
       }
 
-      CSymbol sym = new CSymbol(CSymbolBase.SYM_ENUM_CONST, enm, type, pos);
-      sym.enumValue = val;
+      CSymEnumConst enumConst = new CSymEnumConst(enm, type, val);
+      CSymbol sym = new CSymbol(enumConst, pos);
       parser.defineSym(sym);
       val += 1;
 
@@ -106,8 +109,7 @@ public class ParseEnum3 {
 
   private CType incompl(Ident tag, Token pos) {
     final CType typ = new CType(new CEnumType(tag));
-    final CSymbol sym = new CSymbol(CSymbolBase.SYM_ENUM_DECLARATION, tag, typ, pos);
-    parser.defineTag(sym);
+    parser.defineTag(new CSymTag(Keywords.enum_ident, tag, typ));
     return typ;
   }
 

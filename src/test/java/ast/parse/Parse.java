@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.builders.TypeMerger;
+import ast.symtab.CSymTag;
+import ast.symtab.CSymTypedef;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declarator;
@@ -36,8 +38,8 @@ public class Parse {
 
   // symbol-tables
   private Symtab<Ident, CSymbol> symbols;
-  private Symtab<Ident, CType> typedefs;
-  private Symtab<Ident, CSymbol> tags;
+  private Symtab<Ident, CSymTypedef> typedefs;
+  private Symtab<Ident, CSymTag> tags;
 
   // location, error-handling
   private String lastloc;
@@ -58,7 +60,7 @@ public class Parse {
     return symbols;
   }
 
-  public Symtab<Ident, CSymbol> getTags() {
+  public Symtab<Ident, CSymTag> getTags() {
     return tags;
   }
 
@@ -72,25 +74,22 @@ public class Parse {
 
   public void defineSym(CSymbol sym) {
 
-    if (sym.base == CSymbolBase.SYM_TYPEDEF) {
-      defineTypedef(sym.name, sym.type);
-      return;
-    }
-
-    CSymbol prevsym = symbols.getsymFromCurrentScope(sym.name);
+    CSymbol prevsym = symbols.getsymFromCurrentScope(sym.getNameId());
     if (prevsym != null) {
-      if (sym.isFunction() && prevsym.type.isEqualTo(sym.type)) {
+      if (sym.isFunction() && prevsym.getType().isEqualTo(sym.getType())) {
         // TODO: normal prototype logic.
       } else {
-        perror("redefinition, previous defined here: " + prevsym.getLocationToString());
+        perror("redefinition, previous defined here"); // TODO:
       }
     }
 
     if (currentFn != null) {
-      currentFn.addLocal(sym);
+      if (sym.base == CSymbolBase.SYM_LVAR) {
+        currentFn.addLocal(sym.localVar);
+      }
     }
 
-    symbols.addsym(sym.name, sym);
+    symbols.addsym(sym.getNameId(), sym);
   }
 
   public void log(String what) {
@@ -102,24 +101,28 @@ public class Parse {
   // TODO: defineProto()
   // TODO: saveStrLabel()
 
-  private void defineTypedef(Ident key, CType type) {
+  public void defineTypedef(CSymTypedef tpdef) {
     //System.out.println("typedef " + type.toString() + " " + key.getName());
 
-    CType prevsym = typedefs.getsymFromCurrentScope(key);
+    CSymTypedef prevsym = typedefs.getsymFromCurrentScope(tpdef.name);
     if (prevsym != null) {
-      if (!prevsym.isEqualTo(type)) {
+      if (!prevsym.type.isEqualTo(tpdef.type)) {
         perror("typedefed-name redefinition with different kind of type");
       }
     }
-    typedefs.addsym(key, type);
+    typedefs.addsym(tpdef.name, tpdef);
   }
 
-  public void defineTag(CSymbol sym) {
-    tags.addsym(sym.name, sym);
+  public void defineTag(CSymTag sym) {
+    tags.addsym(sym.tag, sym);
   }
 
-  public CSymbol getTagFromCurrentScope(Ident name) {
+  public CSymTag getTagFromCurrentScope(Ident name) {
     return tags.getsymFromCurrentScope(name);
+  }
+
+  public CSymTag getTag(Ident name) {
+    return tags.getsym(name);
   }
 
   public CSymbol getSym(Ident name) {
@@ -127,11 +130,11 @@ public class Parse {
   }
 
   public CType getTypedefName(Ident id) {
-    return typedefs.getsym(id);
-  }
-
-  public CSymbol getTag(Ident name) {
-    return tags.getsym(name);
+    final CSymTypedef sym = typedefs.getsym(id);
+    if (sym != null) {
+      return sym.type;
+    }
+    return null;
   }
 
   //TODO:SEMANTIC
@@ -386,7 +389,7 @@ public class Parse {
     if (!isUserDefinedId(tok)) {
       return false;
     }
-    CType tp = typedefs.getsym(tok.getIdent());
+    CSymTypedef tp = typedefs.getsym(tok.getIdent());
     return tp != null;
   }
 

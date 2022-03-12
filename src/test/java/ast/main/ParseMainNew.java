@@ -20,6 +20,7 @@ import jscan.tokenize.Token;
 
 public class ParseMainNew {
 
+  private static final String FILENAME_STUB_FOR_STRING_INPUT = "<string-input>";
   public final ParseOpts[] opts;
 
   public ParseMainNew(ParseOpts[] opts) {
@@ -32,15 +33,32 @@ public class ParseMainNew {
     KeywordsInits.initIdents();
   }
 
+  public List<Token> tokenizeFile(String filename) throws IOException {
+    final String content = new FileWrapper(filename).readToString(FileReadKind.APPEND_LF);
+    final List<Token> tokenized = new Stream(filename, content).getTokenlist();
+    initSymbols();
+    return tokenized;
+  }
+
+  public List<Token> tokenizeString(String text) throws IOException {
+    final List<Token> tokenized = new Stream(FILENAME_STUB_FOR_STRING_INPUT, text).getTokenlist();
+    initSymbols();
+    return tokenized;
+  }
+
   public List<Token> preprocessFile(String filename) throws IOException {
     final String content = new FileWrapper(filename).readToString(FileReadKind.APPEND_LF);
     final List<Token> tokenized = new Stream(filename, content).getTokenlist();
-    return makeBuffer(tokenized);
+    final List<Token> result = makeBuffer(tokenized);
+    initSymbols();
+    return result;
   }
 
   public List<Token> preprocessString(String text) throws IOException {
-    final List<Token> tokenized = new Stream("<string-input>", text).getTokenlist();
-    return makeBuffer(tokenized);
+    final List<Token> tokenized = new Stream(FILENAME_STUB_FOR_STRING_INPUT, text).getTokenlist();
+    final List<Token> result = makeBuffer(tokenized);
+    initSymbols();
+    return result;
   }
 
   public TranslationUnit parseFile(String filename) throws IOException {

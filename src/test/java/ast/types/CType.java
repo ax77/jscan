@@ -154,8 +154,19 @@ public class CType {
   }
 
   public boolean isInteger() {
-    return isBool() || isChar() || isUchar() || isShort() || isUshort() || isInt() || isUint() || isLong() || isUlong()
-        || isLongLong() || isUlongLong() || isBitfield() || isEnumeration();
+    return isBool()
+      || isChar()
+      || isUchar()
+      || isShort()
+      || isUshort()
+      || isInt()
+      || isUint()
+      || isLong()
+      || isUlong()
+      || isLongLong()
+      || isUlongLong()
+      || isBitfield()
+      || isEnumeration();
   }
 
   public boolean isBitfield() {

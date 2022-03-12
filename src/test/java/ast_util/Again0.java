@@ -11,6 +11,7 @@ import ast.flat.ExecFlowItem;
 import ast.flat.RewriteStmt;
 import ast.main.ParseMainNew;
 import ast.main.ParseOpts;
+import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
 import ast.tree.Function;
 import ast.tree.TranslationUnit;
@@ -182,7 +183,7 @@ public class Again0 {
 
   int applyLocalOffset(Function fn) {
     int curoffset = 0;
-    for (CSymbol sym : fn.locals) {
+    for (CSymLocalVar sym : fn.locals) {
       CType tp = sym.type;
       int tsz = tp.size;
       if (tsz <= 8) {

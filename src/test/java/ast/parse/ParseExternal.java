@@ -6,6 +6,8 @@ import java.util.List;
 
 import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeMerger;
+import ast.symtab.CSymGlobalVar;
+import ast.symtab.CSymLocalVar;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
@@ -129,15 +131,16 @@ public class ParseExternal {
       parser.perror("expect function definition");
     }
 
-    CSymbol funcSymbol = new CSymbol(CSymbolBase.SYM_FUNC, decl.getName(), type, parser.tok());
+    CSymGlobalVar gvar = new CSymGlobalVar(decl.getName(), type);
+    CSymbol funcSymbol = new CSymbol(gvar, parser.tok());
     parser.defineSym(funcSymbol);
 
     Function fd = new Function(funcSymbol);
     parser.setCurrentFn(fd);
     parser.pushscope(ScopeLevels.METHOD_SCOPE);
 
-    defineParameters(fd.symbol.type);
-    define__func__(fd.symbol.name);
+    defineParameters(fd.symbol.getType());
+    define__func__(fd.symbol.getNameStr());
 
     fd.block = new ParseStatement(parser).parseCompoundStatement(true);
 
@@ -156,7 +159,7 @@ public class ParseExternal {
     }
   }
 
-  private void define__func__(Ident funcName) {
+  private void define__func__(String funcName) {
   }
 
   private void defineParameters(CType signature) {
@@ -170,9 +173,12 @@ public class ParseExternal {
       }
     }
 
+    int paramidx = 0;
     for (CFuncParam fparam : parameters) {
-      CSymbol paramsym = new CSymbol(CSymbolBase.SYM_LVAR, fparam.name, fparam.type, parser.tok());
-      parser.defineSym(paramsym);
+      CSymLocalVar param = new CSymLocalVar(fparam.name, fparam.type);
+      param.paramidx = paramidx++;
+      param.isFparam = true;
+      parser.defineSym(new CSymbol(param, parser.tok()));
     }
   }
 

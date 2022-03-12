@@ -1,16 +1,13 @@
-struct x {
-	char c;
-	short s;
-	int i;
-	long l;
-	float f;
-	double d;
-	struct {
-		char c;
-		short s;
-		int i;
-		long l;
-		float f;
-		double d;
-	};
+struct tok {
+	int f, pos;
 };
+
+int f(int a, int b, int c) {
+	int d = 0;
+	return a+b+c*d;
+}
+
+int main(int argc, char **argv) {
+	struct tok varname;
+	return f(1,2,argc);
+}

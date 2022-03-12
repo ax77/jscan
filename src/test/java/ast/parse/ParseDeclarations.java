@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.builders.TypeMerger;
+import ast.symtab.CSymGlobalVar;
+import ast.symtab.CSymLocalVar;
+import ast.symtab.CSymTypedef;
 import ast.symtab.CSymbol;
 import ast.symtab.CSymbolBase;
 import ast.tree.Declaration;
@@ -11,8 +14,10 @@ import ast.tree.Declarator;
 import ast.tree.Initializer;
 import ast.types.CStorageKind;
 import ast.types.CType;
+import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.AstParseException;
 import jscan.utils.NullChecker;
 
 public class ParseDeclarations {
@@ -59,8 +64,10 @@ public class ParseDeclarations {
     return declaration;
   }
 
+  // TODO: ignore typedefs here: `initDeclaratorList.add(initDeclarator);` :)
+
   private List<CSymbol> parseInitDeclaratorList() {
-    List<CSymbol> initDeclaratorList = new ArrayList<CSymbol>(0);
+    List<CSymbol> initDeclaratorList = new ArrayList<>();
 
     CSymbol initDeclarator = parseInitDeclarator();
     initDeclaratorList.add(initDeclarator);
@@ -83,8 +90,9 @@ public class ParseDeclarations {
 
     Token saved = parser.tok();
 
-    Declarator decl = new ParseDeclarator(parser).parse();
-    CType type = TypeMerger.build(basetype, decl);
+    final Declarator decl = new ParseDeclarator(parser).parse();
+    final CType type = TypeMerger.build(basetype, decl);
+    final Ident name = decl.getName();
 
     if (parser.tp() != T.T_ASSIGN) {
       CSymbolBase symBase = parser.isFileScope() ? CSymbolBase.SYM_GVAR : CSymbolBase.SYM_LVAR;
@@ -93,13 +101,26 @@ public class ParseDeclarations {
       }
 
       if (storagespec == CStorageKind.ST_TYPEDEF) {
-        symBase = CSymbolBase.SYM_TYPEDEF;
+        final CSymTypedef sym = new CSymTypedef(name, type);
+        parser.defineTypedef(sym);
+        return new CSymbol(sym, saved);
       }
 
-      CSymbol uninit = new CSymbol(symBase, decl.getName(), type, saved);
-      parser.defineSym(uninit);
+      if (symBase == CSymbolBase.SYM_LVAR) {
+        final CSymLocalVar lvar = new CSymLocalVar(name, type);
+        final CSymbol sym = new CSymbol(lvar, saved);
+        parser.defineSym(sym);
+        return sym;
+      }
 
-      return uninit;
+      if (symBase == CSymbolBase.SYM_GVAR || symBase == CSymbolBase.SYM_FUNC) {
+        final CSymGlobalVar gvar = new CSymGlobalVar(name, type);
+        final CSymbol sym = new CSymbol(gvar, saved);
+        parser.defineSym(sym);
+        return sym;
+      }
+
+      throw new AstParseException("unreachable");
     }
 
     parser.checkedMove(T.T_ASSIGN);
@@ -109,7 +130,8 @@ public class ParseDeclarations {
       parser.perror("typedef with initializer.");
     }
 
-    CSymbol sym = new CSymbol(CSymbolBase.SYM_LVAR, decl.getName(), type, inits, saved);
+    CSymLocalVar lvar = new CSymLocalVar(name, type, inits);
+    CSymbol sym = new CSymbol(lvar, saved);
     parser.defineSym(sym);
 
     return sym;

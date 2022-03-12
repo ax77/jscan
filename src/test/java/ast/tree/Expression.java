@@ -293,7 +293,7 @@ public class Expression {
     }
 
     case EPRIMARY_IDENT: {
-      return symbol.name.getName();
+      return symbol.getNameStr();
     }
 
     case EPRIMARY_NUMBER: {

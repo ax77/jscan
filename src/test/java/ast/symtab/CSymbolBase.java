@@ -7,6 +7,4 @@ public enum CSymbolBase {
     , SYM_LVAR
     , SYM_GVAR
     , SYM_FUNC
-    , SYM_STRUCT_DECLARATION
-    , SYM_ENUM_DECLARATION,
 }
