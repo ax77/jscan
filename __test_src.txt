@@ -1,59 +1,16 @@
-#define COMPOUND_DESIGNATORS (0)
-
-struct typedef_after {
-    int flag;
-} typedef typedef_after, *p_typedef_after;
-
-static int test_typedefs_1() {
-    typedef int i32;
-    typedef i32 i32;
-    int signed typedef i32;
-    i32 typedef i32;
-    typedef i32 dword;
-    
-    i32 x = 1;
-    x -= 1;
-    
-    dword y = 1;
-    y -= 1;
-    
-    return x + y;
-}
-
-static int test_desg_1() {
-#if COMPOUND_DESIGNATORS
-    struct s {
-        int a[2][2];
-    };
-    struct s var = {
-        .a[0][0] = 1,
-        .a[1][0] = 2,
-    };
-    int result = var.a[0][0] + var.a[1][0];
-    return (result == 3) ? 0 : 1;
-#else
-    return 0;
-#endif
-}
-
-struct some {
-    enum toktype {
-        t_ident, t_string,
-    };   // warning: declaration does not declare anything
-    int; // warning: declaration does not declare anything
-    int field;
+struct x {
+	char c;
+	short s;
+	int i;
+	long l;
+	float f;
+	double d;
+	struct {
+		char c;
+		short s;
+		int i;
+		long l;
+		float f;
+		double d;
+	};
 };
-
-int main() {
-    enum toktype tp = t_ident;
-    long long result = 0;
-    result += test_desg_1();
-    result += test_typedefs_1();
-    
-    return (result == 0) ? 0 : 1;
-}
-
-
-
-
-

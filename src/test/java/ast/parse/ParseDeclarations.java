@@ -30,36 +30,32 @@ public class ParseDeclarations {
 
     boolean skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
     if (skip) {
-      return new Declaration();
+      return new Declaration(startLocation);
     }
 
     ParseBaseType pb = new ParseBaseType(parser);
-    basetype = pb.parse();
-
-    storagespec = pb.getStorageSpec();
-    NullChecker.check(basetype, storagespec); // paranoia
+    this.basetype = pb.parse();
+    this.storagespec = pb.getStorageSpec();
+    NullChecker.check(this.basetype, this.storagespec); // paranoia
 
     /// this may be struct/union/enum declaration
     ///
     if (parser.tp() == T.T_SEMI_COLON) {
+      @SuppressWarnings("unused")
       Token endLocation = parser.semicolon();
-
-      boolean isStructUnionEnum = basetype.isStrUnion() || basetype.isEnumeration();
-      if (!isStructUnionEnum) {
-        //parser.perror("expect struct/union/enum declaration. but was: " + basetype.toString());
-      }
 
       // semicolon after mean: this declaration has no name, no declarator after...
       // if this aggregate declared without name in function-scope, it NOT change stack-size.
 
-      final Declaration agregate = new Declaration(startLocation, endLocation, basetype);
-      return agregate;
+      return new Declaration(basetype, startLocation);
     }
 
     List<CSymbol> initDeclaratorList = parseInitDeclaratorList();
+
+    @SuppressWarnings("unused")
     Token endLocation = parser.semicolon();
 
-    final Declaration declaration = new Declaration(startLocation, endLocation, initDeclaratorList);
+    final Declaration declaration = new Declaration(initDeclaratorList, startLocation);
     return declaration;
   }
 
@@ -100,10 +96,10 @@ public class ParseDeclarations {
         symBase = CSymbolBase.SYM_TYPEDEF;
       }
 
-      CSymbol tentative = new CSymbol(symBase, decl.getName(), type, saved);
-      parser.defineSym(tentative);
+      CSymbol uninit = new CSymbol(symBase, decl.getName(), type, saved);
+      parser.defineSym(uninit);
 
-      return tentative;
+      return uninit;
     }
 
     parser.checkedMove(T.T_ASSIGN);

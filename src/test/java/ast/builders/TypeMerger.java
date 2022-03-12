@@ -10,8 +10,6 @@ import ast.types.CFunctionType;
 import ast.types.CPointerType;
 import ast.types.CType;
 import ast.types.CTypeKind;
-import jscan.symtab.Ident;
-import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
 
 public abstract class TypeMerger {
@@ -54,16 +52,6 @@ public abstract class TypeMerger {
       return new CType(fn);
     }
     throw new AstParseException("build from declarator fail: entry=" + e.base.toString() + "; type=" + type.toString());
-  }
-
-  public static void checkTagNotNullForReference(Token tag) {
-    if (tag == null) {
-      throw new AstParseException("for struct/union/enum reference tag must be present always");
-    }
-  }
-
-  public static Ident getIdentOrNull(Token tag) {
-    return tag == null ? null : tag.getIdent();
   }
 
 }

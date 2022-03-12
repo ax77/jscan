@@ -36,14 +36,9 @@ public class CStructField {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    if (name != null) {
-      sb.append("name=");
-      sb.append(name.getName());
-    }
-    sb.append("; type=");
-    sb.append(type.toString());
-    return sb.toString();
+    String t = (type == null) ? "" : type.toString();
+    String n = (name == null) ? "" : name.getName();
+    return String.format("%-3d:%-3d:%s %s", pos, offset, t, n);
   }
 
 }

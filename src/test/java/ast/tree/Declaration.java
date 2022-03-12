@@ -19,30 +19,24 @@ public class Declaration {
   //      | static_assert_declaration
   //      ;
 
-  private final CType agregate; // TODO:symbol
-  private final List<CSymbol> variables;
+  public final Token pos;
+  public CType agregate;
 
-  public Declaration(Token from, Token to, CType agregate) {
+  // we're interested only with variables
+  public List<CSymbol> variables;
+
+  public Declaration(CType agregate, Token pos) {
+    this.pos = pos;
     this.agregate = agregate;
-    this.variables = null;
   }
 
-  public Declaration(Token from, Token to, List<CSymbol> variables) {
-    this.agregate = null;
+  public Declaration(List<CSymbol> variables, Token pos) {
+    this.pos = pos;
     this.variables = variables;
   }
 
-  public Declaration() {
-    this.agregate = null;
-    this.variables = null;
-  }
-
-  public CType getAgregate() {
-    return agregate;
-  }
-
-  public List<CSymbol> getVariables() {
-    return variables;
+  public Declaration(Token pos) {
+    this.pos = pos;
   }
 
   public boolean isAgregate() {
@@ -50,7 +44,7 @@ public class Declaration {
   }
 
   public boolean isStaticAssertStub() {
-    return !isAgregate() && !isVarlist();
+    return variables == null && agregate == null;
   }
 
   public boolean isVarlist() {

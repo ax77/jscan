@@ -95,9 +95,7 @@ public class ParseStruct3 {
   private void fields(CType tp) {
     List<CStructField> fields = parseFields();
     tp.tpStruct.setFields(fields);
-    ApplyStructInfo sizeAlignDto = finalizeStructType(tp.tpStruct);
-    tp.setSize(sizeAlignDto.getSize());
-    tp.setAlign(sizeAlignDto.getAlign());
+    finalizeStruct(tp);
   }
 
   private List<CStructField> parseFields() {
@@ -107,19 +105,18 @@ public class ParseStruct3 {
     //           ^
     if (parser.tp() == T.T_RIGHT_BRACE) {
       parser.pwarning("empty struct declaration list");
-
-      parser.checkedMove(T.T_RIGHT_BRACE); // TODO:location
+      parser.rbrace();
       return new ArrayList<>();
     }
 
-    List<CStructField> structDeclarationList = new ArrayList<>();
-    structDeclarationList.addAll(parseStructDeclaration());
+    List<CStructField> flds = new ArrayList<>();
+    flds.addAll(parseStructDeclaration());
     while (parser.isDeclSpecStart()) {
-      structDeclarationList.addAll(parseStructDeclaration());
+      flds.addAll(parseStructDeclaration());
     }
 
     parser.rbrace();
-    return structDeclarationList;
+    return flds;
   }
 
   //struct_declaration
@@ -257,11 +254,14 @@ public class ParseStruct3 {
     return new CStructField(decl.getName(), type);
   }
 
-  private ApplyStructInfo finalizeStructType(CStructType su) {
+  private void finalizeStruct(CType tp) {
+    CStructType su = tp.tpStruct;
     if (!su.isComplete) {
       parser.unimplemented("incomplete struct finalization");
     }
-    return new ApplyStructInfo(su.isUnion, su.getFields());
+    final ApplyStructInfo info = new ApplyStructInfo(su.isUnion, su.getFields());
+    tp.setSize(info.getSize());
+    tp.setAlign(info.getAlign());
   }
 
   private CType incompl(Ident tag, Token pos) {

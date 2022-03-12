@@ -139,7 +139,7 @@ public class ParseExpression {
     final Expression initexpr = new Expression(saved.getStrconstant(), saved);
     final Initializer initializer = new Initializer(initexpr, new CType(arrtype), 0);
 
-    List<Initializer> initlist = new ArrayList<Initializer>();
+    List<Initializer> initlist = new ArrayList<>();
     initlist.add(initializer);
 
     CSymbol sym = new CSymbol(CSymbolBase.SYM_GVAR, varname, new CType(arrtype), initlist, saved);

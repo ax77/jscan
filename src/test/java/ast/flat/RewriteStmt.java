@@ -168,7 +168,7 @@ public class RewriteStmt {
 
   private void genDeclaration(Declaration declaration) {
     if (declaration.isVarlist()) {
-      for (CSymbol sym : declaration.getVariables()) {
+      for (CSymbol sym : declaration.variables) {
         genSym(sym);
       }
     } else {
