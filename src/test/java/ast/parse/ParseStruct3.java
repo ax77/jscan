@@ -23,6 +23,7 @@ import jscan.symtab.Ident;
 import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.AstParseException;
 import jscan.utils.NullChecker;
 
 public class ParseStruct3 {
@@ -94,12 +95,14 @@ public class ParseStruct3 {
   }
 
   private void fields(CType tp) {
-    List<CStructField> fields = parseFields();
+    List<CStructField> fields = new ArrayList<>();
+    parseFields(fields);
     tp.tpStruct.setFields(fields);
-    finalizeStruct(tp);
+    finalize1(tp);
+    finalize2(tp);
   }
 
-  private List<CStructField> parseFields() {
+  private void parseFields(List<CStructField> fields) {
     parser.lbrace();
 
     // struct S {};
@@ -107,17 +110,15 @@ public class ParseStruct3 {
     if (parser.tp() == T.T_RIGHT_BRACE) {
       parser.pwarning("empty struct declaration list");
       parser.rbrace();
-      return new ArrayList<>();
+      return;
     }
 
-    List<CStructField> flds = new ArrayList<>();
-    flds.addAll(parseStructDeclaration());
+    parseStructDeclaration(fields);
     while (parser.isDeclSpecStart()) {
-      flds.addAll(parseStructDeclaration());
+      parseStructDeclaration(fields);
     }
 
     parser.rbrace();
-    return flds;
   }
 
   //struct_declaration
@@ -126,13 +127,13 @@ public class ParseStruct3 {
   //  | static_assert_declaration
   //  ;
 
-  private List<CStructField> parseStructDeclaration() {
+  private void parseStructDeclaration(List<CStructField> fields) {
 
     // static_assert
     //
     StaticAssertDeclarationStub skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
     if (skip != null) {
-      return new ArrayList<>();
+      return;
     }
 
     // TODO: this is spec-qual
@@ -143,7 +144,7 @@ public class ParseStruct3 {
       parser.move();
 
       if (basetype.isEnumeration()) {
-        return new ArrayList<>();
+        return;
       }
 
       /// struct some {                                             
@@ -159,24 +160,24 @@ public class ParseStruct3 {
       if (basetype.isStrUnion()) {
         boolean isAnonymousDeclaration = !basetype.tpStruct.hasTag();
         if (isAnonymousDeclaration) {
-          List<CStructField> fieldsInside = basetype.tpStruct.getFields();
-          return fieldsInside;
+          basetype.isAnonymousStructUnion = true;
+          fields.add(new CStructField(basetype));
+          return;
         }
       }
 
       // int ;
       // ... ^
       parser.pwarning("declaration does not declare anything");
-      return new ArrayList<>();
+      return;
 
     }
 
     // otherwise declarator-list like: [int a,b,c;]
-    List<CStructField> r = new ArrayList<>();
-    parseStructDeclaratorList(r, basetype);
+
+    parseStructDeclaratorList(fields, basetype);
     parser.checkedMove(T_SEMI_COLON);
 
-    return r;
   }
 
   //struct_declarator_list
@@ -190,7 +191,7 @@ public class ParseStruct3 {
   //  | declarator
   //  ;
 
-  private void parseStructDeclaratorList(List<CStructField> out, CType tp) {
+  private void parseStructDeclaratorList(List<CStructField> fields, CType tp) {
 
     CStructField structDeclarator = parseStructDeclarator(tp);
 
@@ -198,7 +199,7 @@ public class ParseStruct3 {
       parser.perror("incomplete struct field");
     }
 
-    out.add(structDeclarator);
+    fields.add(structDeclarator);
 
     while (parser.tp() == T.T_COMMA) {
       parser.move();
@@ -208,7 +209,7 @@ public class ParseStruct3 {
         parser.perror("incomplete struct field");
       }
 
-      out.add(structDeclaratorSeq);
+      fields.add(structDeclaratorSeq);
     }
 
   }
@@ -255,7 +256,9 @@ public class ParseStruct3 {
     return new CStructField(decl.getName(), type);
   }
 
-  private void finalizeStruct(CType tp) {
+  // I) apply main offset for each field
+
+  private void finalize1(CType tp) {
     CStructType su = tp.tpStruct;
     if (!su.isComplete) {
       parser.unimplemented("incomplete struct finalization");
@@ -263,6 +266,54 @@ public class ParseStruct3 {
     final ApplyStructInfo info = new ApplyStructInfo(su.isUnion, su.getFields());
     tp.setSize(info.getSize());
     tp.setAlign(info.getAlign());
+  }
+
+  // II) re-calculate offsets for anonymous
+
+  private void walk(CStructType s) {
+    for (CStructField f : s.fields) {
+      if (f.type.isStruct() && f.type.isAnonymousStructUnion) {
+        walkAnonymousStruct(f.type.tpStruct, f.offset);
+      }
+      if (f.type.isUnion() && f.type.isAnonymousStructUnion) {
+        walkAnonymousUnion(f.type.tpStruct, f.offset);
+      }
+    }
+  }
+
+  private void walkAnonymousUnion(CStructType s, int offset) {
+    for (CStructField f : s.fields) {
+      f.offset = offset;
+      if (f.type.isStrUnion()) {
+        walk(f.type.tpStruct);
+      }
+    }
+  }
+
+  private void walkAnonymousStruct(CStructType s, int offset) {
+    for (CStructField f : s.fields) {
+      f.offset += offset;
+      if (f.type.isStrUnion()) {
+        walk(f.type.tpStruct);
+      }
+    }
+  }
+
+  // III) set the posision of each field
+  private void repos(CStructType s) {
+    List<CStructField> allfields = s.allfields();
+    for (int i = 0; i < allfields.size(); i++) {
+      allfields.get(i).pos = i;
+    }
+  }
+
+  private void finalize2(CType t) {
+    if (!t.isStrUnion()) {
+      throw new AstParseException("expect struct/union");
+    }
+    CStructType tp = t.tpStruct;
+    walk(tp);
+    repos(tp);
   }
 
   private CType incompl(Ident tag, Token pos) {

@@ -1,7 +1,9 @@
 package ast.types;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jscan.hashed.Hash_ident;
 import jscan.symtab.Ident;
 import jscan.utils.AstParseException;
 
@@ -43,30 +45,32 @@ public class CStructType {
     return tag != null;
   }
 
-  public boolean hasField(String s) {
-    checkHasFields();
-    for (CStructField f : fields) {
-      if (!f.hasName()) {
-        continue;
-      }
-      if (f.name.getName().equals(s)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public CStructField getFieldByName(Ident fieldName) {
     checkHasFields();
-    for (CStructField f : fields) {
-      if (!f.hasName()) {
-        continue; // unnamed bf. TODO:
+    List<CStructField> allfields = allfields();
+    for (CStructField f : allfields) {
+      if (f.name == null) {
+        continue; // TODO: bitfields
       }
       if (f.name.equals(fieldName)) {
         return f;
       }
     }
     return null;
+  }
+
+  public CStructField getFieldByName(String string) {
+    return getFieldByName(Hash_ident.getHashedIdent(string));
+  }
+
+  private void fill(CStructType from, List<CStructField> allfields) {
+    for (CStructField f : from.fields) {
+      if (f.type.isStrUnion() && f.type.isAnonymousStructUnion) {
+        fill(f.type.tpStruct, allfields);
+      } else {
+        allfields.add(f);
+      }
+    }
   }
 
   public void setFields(List<CStructField> fields) {
@@ -78,6 +82,12 @@ public class CStructType {
   public String toString() {
     final String strun = isUnion ? "union" : "struct";
     return "(" + strun + " " + (hasTag() ? tag.getName() : "<no-tag>") + ")";
+  }
+
+  public List<CStructField> allfields() {
+    List<CStructField> allfields = new ArrayList<>();
+    fill(this, allfields);
+    return allfields;
   }
 
 }
