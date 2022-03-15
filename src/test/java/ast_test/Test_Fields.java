@@ -12,6 +12,7 @@ import ast.main.ParseOpts;
 import ast.tree.TranslationUnit;
 import ast.types.CStructField;
 import ast.types.CType;
+import jscan.utils.Aligner;
 
 public class Test_Fields {
 
@@ -23,41 +24,38 @@ public class Test_Fields {
 
   static class Info {
     int max_align;
-    int bit_size;
+    int size;
 
     public Info() {
       max_align = 1;
-      bit_size = 0;
+      size = 0;
     }
   }
 
   private void lay_out_union_field(CStructField f, Info info) {
 
-    CType sym = f.type;
-    examine_symbol_type(sym);
+    CType tp = f.type;
+    examine_symbol_type(tp);
 
-    if (sym.align > info.max_align)
-      info.max_align = sym.align;
-    if (sym.size > info.bit_size)
-      info.bit_size = sym.size;
+    if (tp.align > info.max_align)
+      info.max_align = tp.align;
+    if (tp.size > info.size)
+      info.size = tp.size;
 
     f.offset = 0;
   }
 
   private void lay_out_struct_field(CStructField f, Info info) {
 
-    CType sym = f.type;
-    examine_symbol_type(sym);
+    CType tp = f.type;
+    examine_symbol_type(tp);
 
-    if (sym.align > info.max_align)
-      info.max_align = sym.align;
+    if (tp.align > info.max_align)
+      info.max_align = tp.align;
 
-    int bit_size = info.bit_size;
-    int align_bit_mask = (sym.align << 3) - 1;
-
-    bit_size = (bit_size + align_bit_mask) & ~align_bit_mask;
-    f.offset = bit_size >> 3;
-    info.bit_size = bit_size + (sym.size);
+    int size = Aligner.align(info.size, tp.align);
+    f.offset = size;
+    info.size = size + tp.size;
   }
 
   private void iterate_st(List<CStructField> fields, Info info) {
@@ -72,58 +70,58 @@ public class Test_Fields {
     }
   }
 
-  private void examine_struct_union_type(CType sym, boolean struc) {
-    Info info = new Info();
+  private void examine_struct_union_type(CType tp, boolean struc) {
 
-    final List<CStructField> fields = sym.tpStruct.fields;
+    final Info info = new Info();
+    final List<CStructField> fields = tp.tpStruct.fields;
+
     if (struc) {
       iterate_st(fields, info);
     } else {
       iterate_un(fields, info);
     }
 
-    if (sym.align <= 0)
-      sym.align = info.max_align;
+    if (tp.align <= 0)
+      tp.align = info.max_align;
 
-    int bit_size = info.bit_size;
-    int bit_align = (sym.align << 3) - 1;
-    bit_size = (bit_size + bit_align) & ~bit_align;
-    sym.size = bit_size;
+    tp.size = Aligner.align(info.size, tp.align);
   }
 
-  private CType examine_symbol_type(CType sym) {
-    if (sym.size > 0) {
-      return sym;
-    }
+  private CType examine_symbol_type(CType tp) {
 
     // TODO.flexible.array
 
-    if (sym.isStrUnion()) {
-      examine_struct_union_type(sym, sym.isStruct());
-      return sym;
+    if (tp.size > 0) {
+      return tp;
     }
 
-    return sym;
+    if (tp.isStrUnion()) {
+      examine_struct_union_type(tp, tp.isStruct());
+      return tp;
+    }
+
+    return tp;
   }
 
   private CStructField find_identifier(String ident, List<CStructField> list, int[] o) {
     for (int i = 0; i < list.size(); i++) {
-      CStructField sym = list.get(i);
-      if (sym.hasName()) {
-        if (!sym.name.getName().equals(ident)) {
+      final CStructField field = list.get(i);
+      if (field.hasName()) {
+        if (!field.name.getName().equals(ident)) {
           continue;
         }
-        o[0] = sym.offset;
-        return sym;
+        o[0] = field.offset;
+        return field;
       } else {
-        if (!sym.type.isStrUnion()) {
+        if (!field.type.isStrUnion()) {
           continue;
         }
-        CStructField sub = find_identifier(ident, sym.type.tpStruct.fields, o);
+        final List<CStructField> fields = field.type.tpStruct.fields;
+        final CStructField sub = find_identifier(ident, fields, o);
         if (sub == null) {
           continue;
         }
-        o[0] += sym.offset;
+        o[0] += field.offset;
         return sub;
       }
     }
@@ -161,11 +159,17 @@ public class Test_Fields {
     final CType typ = unit.getExternalDeclarations().get(0).declaration.agregate;
     examine_symbol_type(typ);
 
+    assertEquals(36, typ.size);
+    assertEquals(4, typ.align);
+
     int offsets[] = { 0, 4, 8, 12, 8, 8, 16, 20, 24, 28, 32, 32, 32, };
     String names[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", };
     for (int i = 0; i < names.length; i++) {
       int o[] = { 0 };
+
       CStructField f = find_identifier(names[i], typ.tpStruct.fields, o);
+      assertNotNull(f);
+
       assertEquals(offsets[i], o[0]);
     }
 
