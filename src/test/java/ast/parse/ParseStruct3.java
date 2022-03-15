@@ -95,6 +95,7 @@ public class ParseStruct3 {
   private void fields(CType tp) {
     List<CStructField> fields = parseFields();
     tp.tpStruct.setFields(fields);
+    TypeSizeApplier.examine_symbol_type(tp);
   }
 
   /// struct some {                                             
