@@ -31,20 +31,24 @@ public class Test_Fields {
     }
   }
 
-  private void lay_out_union(CType sym, Info info) {
+  private void lay_out_union_field(CStructField f, Info info) {
 
+    CType sym = f.type;
     examine_symbol_type(sym);
+
     if (sym.align > info.max_align)
       info.max_align = sym.align;
     if (sym.size > info.bit_size)
       info.bit_size = sym.size;
 
-    sym.offset = 0;
+    f.offset = 0;
   }
 
-  private void lay_out_struct(CType sym, Info info) {
+  private void lay_out_struct_field(CStructField f, Info info) {
 
+    CType sym = f.type;
     examine_symbol_type(sym);
+
     if (sym.align > info.max_align)
       info.max_align = sym.align;
 
@@ -52,29 +56,30 @@ public class Test_Fields {
     int align_bit_mask = (sym.align << 3) - 1;
 
     bit_size = (bit_size + align_bit_mask) & ~align_bit_mask;
-    sym.offset = bit_size >> 3;
+    f.offset = bit_size >> 3;
     info.bit_size = bit_size + (sym.size);
   }
 
-  private void iterate_st(CType sym, Info info) {
-    for (CStructField f : sym.tpStruct.fields) {
-      lay_out_struct(f.type, info);
+  private void iterate_st(List<CStructField> fields, Info info) {
+    for (CStructField f : fields) {
+      lay_out_struct_field(f, info);
     }
   }
 
-  private void iterate_un(CType sym, Info info) {
-    for (CStructField f : sym.tpStruct.fields) {
-      lay_out_union(f.type, info);
+  private void iterate_un(List<CStructField> fields, Info info) {
+    for (CStructField f : fields) {
+      lay_out_union_field(f, info);
     }
   }
 
   private void examine_struct_union_type(CType sym, boolean struc) {
     Info info = new Info();
 
+    final List<CStructField> fields = sym.tpStruct.fields;
     if (struc) {
-      iterate_st(sym, info);
+      iterate_st(fields, info);
     } else {
-      iterate_un(sym, info);
+      iterate_un(fields, info);
     }
 
     if (sym.align <= 0)
@@ -93,13 +98,8 @@ public class Test_Fields {
 
     // TODO.flexible.array
 
-    if (sym.isStruct()) {
-      examine_struct_union_type(sym, true);
-      return sym;
-    }
-
-    if (sym.isUnion()) {
-      examine_struct_union_type(sym, false);
+    if (sym.isStrUnion()) {
+      examine_struct_union_type(sym, sym.isStruct());
       return sym;
     }
 
@@ -113,7 +113,7 @@ public class Test_Fields {
         if (!sym.name.getName().equals(ident)) {
           continue;
         }
-        o[0] = sym.type.offset;
+        o[0] = sym.offset;
         return sym;
       } else {
         if (!sym.type.isStrUnion()) {
@@ -123,7 +123,7 @@ public class Test_Fields {
         if (sub == null) {
           continue;
         }
-        o[0] += sym.type.offset;
+        o[0] += sym.offset;
         return sub;
       }
     }
@@ -135,14 +135,13 @@ public class Test_Fields {
     //@formatter:off
     StringBuilder sb = new StringBuilder();
     sb.append(" /*001*/  struct x {                          \n");
-    sb.append(" /*002*/      struct { int a; int b; };       \n");
+    sb.append(" /*002*/      struct { int a, b; };           \n");
     sb.append(" /*003*/      union {                         \n");
     sb.append(" /*004*/          struct { int c; int d; };   \n");
     sb.append(" /*005*/          int e;                      \n");
     sb.append(" /*006*/          int f;                      \n");
     sb.append(" /*007*/      };                              \n");
-    sb.append(" /*008*/      int g;                          \n");
-    sb.append(" /*008*/      int h;                          \n");
+    sb.append(" /*008*/      int g,h;                        \n");
     sb.append(" /*008*/      int i;                          \n");
     sb.append(" /*009*/      struct {                        \n");
     sb.append(" /*010*/          struct {                    \n");
@@ -159,99 +158,78 @@ public class Test_Fields {
 
     TranslationUnit unit = parseUnit(sb);
 
-    /// Aligner
-    ///
-    /// s   0 a             s   0 int
-    /// s   4 b             s   4 int
-    /// s   0 <noident>     s   0 (struct <no-tag>)
-    /// s   0 c             s   0 int
-    /// s   4 d             s   4 int
-    /// u   0 <noident>     u   0 (struct <no-tag>)
-    /// u   0 e             u   0 int
-    /// u   0 f             u   0 int
-    /// s   8 <noident>     s   8 (union <no-tag>)
-    /// s  16 g             s  16 int
-    /// s  20 h             s  20 int
-    /// s  24 i             s  24 int
-    /// s   0 j             s   0 int
-    /// s   0 <noident>     s   0 (struct <no-tag>)
-    /// u   0 k             u   0 int
-    /// u   0 l             u   0 int
-    /// u   0 m             u   0 int
-    /// s   0 <noident>     s   0 (union <no-tag>)
-    /// s   4 <noident>     s   4 (struct <no-tag>)
-    /// s  28 <noident>     s  28 (struct <no-tag>)
-
-    /// Find identifier 1 (*offset)
-    ///
-    /// 0 a
-    /// 4 b
-    /// 0 c
-    /// 4 d
-    /// 0 e
-    /// 0 f
-    /// 16 g
-    /// 20 h
-    /// 24 i
-    /// 0 j
-    /// 0 k
-    /// 0 l
-    /// 0 m
-
-    /// Find identifier 2 (+=sym->offset)
-    ///
-    /// 0     0
-    /// 0     0
-    /// 0     0
-    /// 8     8
-    /// 0     0
-    /// 8     8
-    /// 8     8
-    /// 8     8
-    /// 0     0
-    /// 28    28
-    /// 0     0
-    /// 4     4
-    /// 28    28
-    /// 0     0
-    /// 4     4
-    /// 28    28
-    /// 0     0
-    /// 4     4
-    /// 28    28
-
     final CType typ = unit.getExternalDeclarations().get(0).declaration.agregate;
     examine_symbol_type(typ);
-    //System.out.println(typ.size + " " + typ.align);
 
     int offsets[] = { 0, 4, 8, 12, 8, 8, 16, 20, 24, 28, 32, 32, 32, };
     String names[] = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", };
-    for (int i = 0; i < offsets.length; i++) {
+    for (int i = 0; i < names.length; i++) {
       int o[] = { 0 };
       CStructField f = find_identifier(names[i], typ.tpStruct.fields, o);
       assertEquals(offsets[i], o[0]);
     }
 
-    // assertEquals(24, typ.size);
-    // assertEquals(4, typ.align);
-    // 
-    // final CStructType s = typ.tpStruct;
-    // //@formatter:off
-    // assertEquals(0 , s.getFieldByName("a").offset);
-    // assertEquals(4 , s.getFieldByName("b").offset);
-    // assertEquals(8 , s.getFieldByName("c").offset);
-    // assertEquals(12, s.getFieldByName("d").offset);
-    // assertEquals(8 , s.getFieldByName("e").offset);
-    // assertEquals(8 , s.getFieldByName("f").offset);
-    // assertEquals(16, s.getFieldByName("g").offset);
-    // assertEquals(20, s.getFieldByName("h").offset);
-    // assertEquals(24, s.getFieldByName("i").offset);
-    // assertEquals(28, s.getFieldByName("j").offset);
-    // assertEquals(32, s.getFieldByName("k").offset);
-    // assertEquals(32, s.getFieldByName("l").offset);
-    // assertEquals(32, s.getFieldByName("m").offset);
-    // //@formatter:on
-
   }
+
+  /// Aligner
+  ///
+  /// s   0 a             s   0 int
+  /// s   4 b             s   4 int
+  /// s   0 <noident>     s   0 (struct <no-tag>)
+  /// s   0 c             s   0 int
+  /// s   4 d             s   4 int
+  /// u   0 <noident>     u   0 (struct <no-tag>)
+  /// u   0 e             u   0 int
+  /// u   0 f             u   0 int
+  /// s   8 <noident>     s   8 (union <no-tag>)
+  /// s  16 g             s  16 int
+  /// s  20 h             s  20 int
+  /// s  24 i             s  24 int
+  /// s   0 j             s   0 int
+  /// s   0 <noident>     s   0 (struct <no-tag>)
+  /// u   0 k             u   0 int
+  /// u   0 l             u   0 int
+  /// u   0 m             u   0 int
+  /// s   0 <noident>     s   0 (union <no-tag>)
+  /// s   4 <noident>     s   4 (struct <no-tag>)
+  /// s  28 <noident>     s  28 (struct <no-tag>)
+
+  /// Find identifier 1 (*offset)
+  ///
+  /// 0 a
+  /// 4 b
+  /// 0 c
+  /// 4 d
+  /// 0 e
+  /// 0 f
+  /// 16 g
+  /// 20 h
+  /// 24 i
+  /// 0 j
+  /// 0 k
+  /// 0 l
+  /// 0 m
+
+  /// Find identifier 2 (+=sym->offset)
+  ///
+  /// 0     0
+  /// 0     0
+  /// 0     0
+  /// 8     8
+  /// 0     0
+  /// 8     8
+  /// 8     8
+  /// 8     8
+  /// 0     0
+  /// 28    28
+  /// 0     0
+  /// 4     4
+  /// 28    28
+  /// 0     0
+  /// 4     4
+  /// 28    28
+  /// 0     0
+  /// 4     4
+  /// 28    28
 
 }

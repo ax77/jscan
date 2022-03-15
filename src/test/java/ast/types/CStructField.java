@@ -38,7 +38,7 @@ public class CStructField {
   public String toString() {
     String t = (type == null) ? "" : type.toString();
     String n = (name == null) ? "" : name.getName();
-    return String.format("%-3d:%-3d:%s %s", pos, offset, t, n);
+    return String.format("%s %s", t, n);
   }
 
 }

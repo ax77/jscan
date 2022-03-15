@@ -93,120 +93,97 @@ public class ParseStruct3 {
   }
 
   private void fields(CType tp) {
-    List<CStructField> fields = new ArrayList<>();
-    parseFields(fields);
+    List<CStructField> fields = parseFields();
     tp.tpStruct.setFields(fields);
   }
 
-  private void parseFields(List<CStructField> fields) {
+  /// struct some {                                             
+  ///     enum toktype {                                        
+  ///         t_ident, t_string,                                
+  ///     };   // warning: declaration does not declare anything
+  ///     int; // warning: declaration does not declare anything
+  ///     int field;                                            
+  /// }; 
+
+  private List<CStructField> parseFields() {
     parser.lbrace();
+
+    List<CStructField> fields = new ArrayList<>();
 
     // struct S {};
     //           ^
     if (parser.tp() == T.T_RIGHT_BRACE) {
       parser.pwarning("empty struct declaration list");
       parser.rbrace();
-      return;
+      return fields;
     }
 
-    parseStructDeclaration(fields);
-    while (parser.isDeclSpecStart()) {
-      parseStructDeclaration(fields);
+    //struct_declaration
+    //  : specifier_qualifier_list ';'  /* for anonymous struct/union */
+    //  | specifier_qualifier_list struct_declarator_list ';'
+    //  | static_assert_declaration
+    //  ;
+
+    while (!parser.is(T.T_RIGHT_BRACE)) {
+
+      // static_assert
+      //
+      StaticAssertDeclarationStub skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
+      if (skip != null) {
+        continue;
+      }
+
+      // TODO: this is spec-qual
+      // no storage here...
+      CType basetype = new ParseBaseType(parser).parse();
+
+      if (parser.is(T_SEMI_COLON)) {
+
+        if (basetype.isEnumeration()) {
+          //parser.pwarning("declaration does not declare anything");
+        }
+
+        if (basetype.isStrUnion()) {
+          boolean isAnonymousDeclaration = !basetype.tpStruct.hasTag();
+          if (isAnonymousDeclaration) {
+            fields.add(new CStructField(basetype));
+          } else {
+            // TODO:
+          }
+        }
+
+        else {
+          // int ;
+          // ... ^
+          parser.pwarning("declaration does not declare anything");
+        }
+
+      }
+
+      else {
+        // otherwise declarator-list like: [int a,b,c;]
+        fields.add(onefield(basetype));
+        while (parser.is(T.T_COMMA)) {
+          parser.move();
+          fields.add(onefield(basetype));
+        }
+
+      }
+
+      parser.checkedMove(T_SEMI_COLON);
+
     }
 
     parser.rbrace();
+    return fields;
   }
 
-  //struct_declaration
-  //  : specifier_qualifier_list ';'  /* for anonymous struct/union */
-  //  | specifier_qualifier_list struct_declarator_list ';'
-  //  | static_assert_declaration
-  //  ;
-
-  private void parseStructDeclaration(List<CStructField> fields) {
-
-    // static_assert
-    //
-    StaticAssertDeclarationStub skip = new ParseStaticAssert(parser).isStaticAssertAndItsOk();
-    if (skip != null) {
-      return;
-    }
-
-    // TODO: this is spec-qual
-    // no storage here...
-    CType basetype = new ParseBaseType(parser).parse();
-
-    if (parser.tp() == T_SEMI_COLON) {
-      parser.move();
-
-      if (basetype.isEnumeration()) {
-        return;
-      }
-
-      /// struct some {                                             
-      ///     enum toktype {                                        
-      ///         t_ident, t_string,                                
-      ///     };   // warning: declaration does not declare anything
-      ///     int; // warning: declaration does not declare anything
-      ///     int field;                                            
-      /// };                                                        
-
-      // TODO:XXX: fields offset, if it's from anonymous UNION...
-
-      if (basetype.isStrUnion()) {
-        boolean isAnonymousDeclaration = !basetype.tpStruct.hasTag();
-        if (isAnonymousDeclaration) {
-          fields.add(new CStructField(basetype));
-          return;
-        }
-      }
-
-      // int ;
-      // ... ^
-      parser.pwarning("declaration does not declare anything");
-      return;
-
-    }
-
-    // otherwise declarator-list like: [int a,b,c;]
-
-    parseStructDeclaratorList(fields, basetype);
-    parser.checkedMove(T_SEMI_COLON);
-
-  }
-
-  //struct_declarator_list
-  //  : struct_declarator
-  //  | struct_declarator_list ',' struct_declarator
-  //  ;
-  //
-  //struct_declarator
-  //  : ':' constant_expression
-  //  | declarator ':' constant_expression
-  //  | declarator
-  //  ;
-
-  private void parseStructDeclaratorList(List<CStructField> fields, CType tp) {
-
-    CStructField structDeclarator = parseStructDeclarator(tp);
-
-    if (structDeclarator.type.isIncomplete()) {
+  private CStructField onefield(CType tp) {
+    CStructField f = parseStructDeclarator(tp);
+    if (f.type.isIncomplete()) {
       parser.perror("incomplete struct field");
     }
-
-    fields.add(structDeclarator);
-
-    while (parser.tp() == T.T_COMMA) {
-      parser.move();
-      CStructField structDeclaratorSeq = parseStructDeclarator(tp);
-
-      if (structDeclaratorSeq.type.isIncomplete()) {
-        parser.perror("incomplete struct field");
-      }
-
-      fields.add(structDeclaratorSeq);
-    }
-
+    return f;
   }
 
   //struct_declarator
@@ -231,11 +208,13 @@ public class ParseStruct3 {
 
     // need normal field or named bit-field
 
-    Declarator decl = new ParseDeclarator(parser).parse();
-    CType type = TypeMerger.build(tp, decl);
+    final Declarator decl = new ParseDeclarator(parser).parse();
+    final CType type = TypeMerger.build(tp, decl);
+    final Ident name = decl.getName();
 
     // named-bit-field
     //
+
     if (parser.tp() == T_COLON) {
       parser.move();
 
@@ -243,12 +222,12 @@ public class ParseStruct3 {
       int width = (int) new ConstexprEval(parser).ce(consterpr);
 
       final CType bf = new SemanticBitfield(parser).buildBitfield(type, width);
-      return new CStructField(decl.getName(), bf);
+      return new CStructField(name, bf);
     }
 
     // plain-field
     //
-    return new CStructField(decl.getName(), type);
+    return new CStructField(name, type);
   }
 
   private CType incompl(Ident tag, Token pos) {

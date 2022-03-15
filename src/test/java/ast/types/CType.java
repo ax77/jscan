@@ -20,8 +20,20 @@ public class CType {
   public CStructType tpStruct;
   public CEnumType tpEnum;
   public CBitfieldType tpBitfield;
-  public int offset;
-  
+
+  public CType(CType another) {
+    this.kind = another.kind;
+    this.qualifiers = another.qualifiers;
+    this.size = another.size;
+    this.align = another.align;
+    this.tpPointer = another.tpPointer;
+    this.tpArray = another.tpArray;
+    this.tpFunction = another.tpFunction;
+    this.tpStruct = another.tpStruct;
+    this.tpEnum = another.tpEnum;
+    this.tpBitfield = another.tpBitfield;
+  }
+
   public void applyTqual(int f) {
     qualifiers |= f;
   }
@@ -155,19 +167,8 @@ public class CType {
   }
 
   public boolean isInteger() {
-    return isBool()
-      || isChar()
-      || isUchar()
-      || isShort()
-      || isUshort()
-      || isInt()
-      || isUint()
-      || isLong()
-      || isUlong()
-      || isLongLong()
-      || isUlongLong()
-      || isBitfield()
-      || isEnumeration();
+    return isBool() || isChar() || isUchar() || isShort() || isUshort() || isInt() || isUint() || isLong() || isUlong()
+        || isLongLong() || isUlongLong() || isBitfield() || isEnumeration();
   }
 
   public boolean isBitfield() {
