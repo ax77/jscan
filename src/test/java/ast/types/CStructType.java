@@ -65,7 +65,7 @@ public class CStructType {
 
   private void fill(CStructType from, List<CStructField> allfields) {
     for (CStructField f : from.fields) {
-      if (f.type.isStrUnion() && f.type.isAnonymousStructUnion) {
+      if (f.type.isStrUnion() && !f.hasName()) {
         fill(f.type.tpStruct, allfields);
       } else {
         allfields.add(f);

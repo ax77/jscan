@@ -20,8 +20,8 @@ public class CType {
   public CStructType tpStruct;
   public CEnumType tpEnum;
   public CBitfieldType tpBitfield;
-  public boolean isAnonymousStructUnion;
-
+  public int offset;
+  
   public void applyTqual(int f) {
     qualifiers |= f;
   }

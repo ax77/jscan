@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.attributes.AttributesAsmsLists;
-import ast.builders.ApplyStructInfo;
 import ast.builders.ConstexprEval;
 import ast.builders.SemanticBitfield;
 import ast.builders.TypeMerger;
@@ -23,7 +22,6 @@ import jscan.symtab.Ident;
 import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
-import jscan.utils.AstParseException;
 import jscan.utils.NullChecker;
 
 public class ParseStruct3 {
@@ -98,8 +96,6 @@ public class ParseStruct3 {
     List<CStructField> fields = new ArrayList<>();
     parseFields(fields);
     tp.tpStruct.setFields(fields);
-    finalize1(tp);
-    finalize2(tp);
   }
 
   private void parseFields(List<CStructField> fields) {
@@ -160,7 +156,6 @@ public class ParseStruct3 {
       if (basetype.isStrUnion()) {
         boolean isAnonymousDeclaration = !basetype.tpStruct.hasTag();
         if (isAnonymousDeclaration) {
-          basetype.isAnonymousStructUnion = true;
           fields.add(new CStructField(basetype));
           return;
         }
@@ -254,66 +249,6 @@ public class ParseStruct3 {
     // plain-field
     //
     return new CStructField(decl.getName(), type);
-  }
-
-  // I) apply main offset for each field
-
-  private void finalize1(CType tp) {
-    CStructType su = tp.tpStruct;
-    if (!su.isComplete) {
-      parser.unimplemented("incomplete struct finalization");
-    }
-    final ApplyStructInfo info = new ApplyStructInfo(su.isUnion, su.getFields());
-    tp.setSize(info.getSize());
-    tp.setAlign(info.getAlign());
-  }
-
-  // II) re-calculate offsets for anonymous
-
-  private void walk(CStructType s) {
-    for (CStructField f : s.fields) {
-      if (f.type.isStruct() && f.type.isAnonymousStructUnion) {
-        walkAnonymousStruct(f.type.tpStruct, f.offset);
-      }
-      if (f.type.isUnion() && f.type.isAnonymousStructUnion) {
-        walkAnonymousUnion(f.type.tpStruct, f.offset);
-      }
-    }
-  }
-
-  private void walkAnonymousUnion(CStructType s, int offset) {
-    for (CStructField f : s.fields) {
-      f.offset = offset;
-      if (f.type.isStrUnion()) {
-        walk(f.type.tpStruct);
-      }
-    }
-  }
-
-  private void walkAnonymousStruct(CStructType s, int offset) {
-    for (CStructField f : s.fields) {
-      f.offset += offset;
-      if (f.type.isStrUnion()) {
-        walk(f.type.tpStruct);
-      }
-    }
-  }
-
-  // III) set the posision of each field
-  private void repos(CStructType s) {
-    List<CStructField> allfields = s.allfields();
-    for (int i = 0; i < allfields.size(); i++) {
-      allfields.get(i).pos = i;
-    }
-  }
-
-  private void finalize2(CType t) {
-    if (!t.isStrUnion()) {
-      throw new AstParseException("expect struct/union");
-    }
-    CStructType tp = t.tpStruct;
-    walk(tp);
-    repos(tp);
   }
 
   private CType incompl(Ident tag, Token pos) {

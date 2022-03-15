@@ -2,7 +2,6 @@ package ast_util;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -37,7 +36,7 @@ public class FindFilesToTest {
         continue;
       }
 
-      FileWriter writer = new FileWriter(out + f.getName(), Charset.forName("UTF-8"));
+      FileWriter writer = new FileWriter(out + f.getName());
       writer.write(content);
       writer.write("\n");
       writer.close();
