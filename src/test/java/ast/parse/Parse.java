@@ -14,6 +14,7 @@ import ast.tree.ExternalDeclaration;
 import ast.tree.TranslationUnit;
 import ast.tree.CSymbol.CSymFunction;
 import ast.tree.CSymbol.CSymTag;
+import ast.types.CStorageKind;
 import ast.types.CType;
 import jscan.parse.RingBuf;
 import jscan.parse.Tokenlist;
@@ -77,7 +78,11 @@ public class Parse {
       if (sym.isFunction() && prevsym.getType().isEqualTo(sym.getType())) {
         // TODO: normal prototype logic.
       } else {
-        perror("redefinition, previous defined here"); // TODO:
+        if (prevsym.storagespec == CStorageKind.ST_EXTERN && sym.storagespec == CStorageKind.ST_EXTERN) {
+
+        } else {
+          perror("redefinition, previous defined here: " + prevsym.loc());
+        }
       }
     }
 

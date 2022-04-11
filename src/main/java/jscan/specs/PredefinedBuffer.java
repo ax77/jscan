@@ -292,6 +292,7 @@ public abstract class PredefinedBuffer {
     // 
     addline("void __builtin_va_start(void);");
     addline("void __builtin_va_arg(void);");
+    addline("void __builtin_va_end(void*);");
     addline("typedef struct {");
     addline("        unsigned int gp_offset;");
     addline("        unsigned int fp_offset;");
@@ -303,6 +304,7 @@ public abstract class PredefinedBuffer {
     // 
     addline("#define noreturn _Noreturn");
     addline("#define __extension__");
+    addline("#define __attribute__(x)");
 
     addline("#endif"); // CC_SETTINGS_DEFINED
   }

@@ -104,6 +104,10 @@ public class CSymbol {
   public boolean isFunction() {
     return getType().isFunction();
   }
+  
+  public String loc() {
+    return pos.loc();
+  }
 
   // Nodes
 
