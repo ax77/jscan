@@ -1,4 +1,4 @@
-package ast.symtab;
+package ast.builders;
 
 import java.util.List;
 

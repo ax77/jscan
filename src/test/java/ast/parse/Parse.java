@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.builders.TypeMerger;
-import ast.symtab.CSymTag;
-import ast.symtab.CSymbol;
+import ast.tree.CSymbol;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;
-import ast.tree.Function;
 import ast.tree.TranslationUnit;
+import ast.tree.CSymbol.CSymFunction;
+import ast.tree.CSymbol.CSymTag;
 import ast.types.CType;
 import jscan.parse.RingBuf;
 import jscan.parse.Tokenlist;
@@ -32,7 +32,7 @@ public class Parse {
   private Token tok;
 
   // need for labels, also for binding local variable's
-  private Function currentFn;
+  private CSymFunction currentFn;
 
   // symbol-tables
   private Symtab<Ident, CSymbol> symbols;
@@ -66,7 +66,7 @@ public class Parse {
     return tok;
   }
 
-  public Function getCurrentFn() {
+  public CSymFunction getCurrentFn() {
     return currentFn;
   }
 
@@ -412,7 +412,7 @@ public class Parse {
     return tokenlist;
   }
 
-  public void setCurrentFn(Function currentFn) {
+  public void setCurrentFn(CSymFunction currentFn) {
     this.currentFn = currentFn;
   }
 

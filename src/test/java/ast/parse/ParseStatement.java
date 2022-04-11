@@ -27,7 +27,6 @@ import ast.builders.BreakContinue;
 import ast.tree.BlockItem;
 import ast.tree.Declaration;
 import ast.tree.Expression;
-import ast.tree.Function;
 import ast.tree.Statement;
 import ast.tree.Statement.StmtCase;
 import ast.tree.Statement.StmtDefault;
@@ -37,6 +36,7 @@ import ast.tree.Statement.StmtSelect;
 import ast.tree.Statement.StmtSwitch;
 import ast.tree.Statement.StmtWhileDo;
 import ast.tree.StatementBase;
+import ast.tree.CSymbol.CSymFunction;
 import jscan.symtab.Ident;
 import jscan.symtab.ScopeLevels;
 import jscan.tokenize.T;
@@ -142,7 +142,7 @@ public class ParseStatement {
     // goto label;
 
     if (parser.tok().isIdent(goto_ident)) {
-      Function function = parser.getCurrentFn();
+      CSymFunction function = parser.getCurrentFn();
       Statement labelstmt = null; // XXX: ok
 
       if (function == null) {
@@ -404,7 +404,7 @@ public class ParseStatement {
 
   private Statement parseLabel() {
 
-    Function function = parser.getCurrentFn();
+    CSymFunction function = parser.getCurrentFn();
 
     if (function == null) {
       parser.perror("label statement outside function");

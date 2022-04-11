@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.builders.TypeMerger;
-import ast.symtab.CSymGlobalVar;
-import ast.symtab.CSymLocalVar;
-import ast.symtab.CSymbol;
+import ast.tree.CSymbol;
 import ast.tree.Declaration;
 import ast.tree.Declaration.StaticAssertDeclarationStub;
 import ast.tree.Declaration.TypedefDeclarationStub;
 import ast.tree.Declarator;
 import ast.tree.Initializer;
+import ast.tree.CSymbol.CSymGlobalVar;
+import ast.tree.CSymbol.CSymLocalVar;
 import ast.types.CStorageKind;
 import ast.types.CType;
 import jscan.symtab.Ident;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
-import jscan.utils.AstParseException;
 import jscan.utils.NullChecker;
 
 public class ParseDeclarations {
@@ -122,24 +121,10 @@ public class ParseDeclarations {
     final CType type = TypeMerger.build(basetype, decl);
     final Ident name = decl.getName();
 
+    boolean isGlobal = parser.isFileScope();
+
     if (parser.tp() != T.T_ASSIGN) {
-      boolean isGlobal = parser.isFileScope();
-
-      if (!isGlobal) {
-        final CSymLocalVar lvar = new CSymLocalVar(name, type);
-        final CSymbol sym = new CSymbol(lvar, saved);
-        parser.defineSym(sym);
-        return sym;
-      }
-
-      if (isGlobal) {
-        final CSymGlobalVar gvar = new CSymGlobalVar(name, type);
-        final CSymbol sym = new CSymbol(gvar, saved);
-        parser.defineSym(sym);
-        return sym;
-      }
-
-      throw new AstParseException("unreachable");
+      return defineSym(isGlobal, storagespec, saved, name, type, null);
     }
 
     parser.checkedMove(T.T_ASSIGN);
@@ -149,10 +134,22 @@ public class ParseDeclarations {
       parser.perror("typedef with initializer.");
     }
 
-    CSymLocalVar lvar = new CSymLocalVar(name, type, inits);
-    CSymbol sym = new CSymbol(lvar, saved);
-    parser.defineSym(sym);
+    return defineSym(isGlobal, storagespec, saved, name, type, inits);
+  }
 
+  private CSymbol defineSym(boolean isGlobal, CStorageKind storagespec, Token saved, Ident name, CType type,
+      List<Initializer> inits) {
+
+    if (isGlobal) {
+      final CSymGlobalVar gvar = new CSymGlobalVar(name, type, inits);
+      final CSymbol sym = new CSymbol(storagespec, saved, gvar);
+      parser.defineSym(sym);
+      return sym;
+    }
+
+    final CSymLocalVar lvar = new CSymLocalVar(name, type, inits);
+    final CSymbol sym = new CSymbol(storagespec, saved, lvar);
+    parser.defineSym(sym);
     return sym;
   }
 

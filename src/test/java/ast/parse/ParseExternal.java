@@ -6,14 +6,14 @@ import java.util.List;
 
 import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeMerger;
-import ast.symtab.CSymGlobalVar;
-import ast.symtab.CSymLocalVar;
-import ast.symtab.CSymbol;
+import ast.tree.CSymbol;
 import ast.tree.Declaration;
 import ast.tree.Declarator;
 import ast.tree.ExternalDeclaration;
-import ast.tree.Function;
+import ast.tree.CSymbol.CSymFunction;
+import ast.tree.CSymbol.CSymLocalVar;
 import ast.types.CFuncParam;
+import ast.types.CStorageKind;
 import ast.types.CType;
 import jscan.symtab.Ident;
 import jscan.symtab.ScopeLevels;
@@ -113,7 +113,9 @@ public class ParseExternal {
 
   private ExternalDeclaration functionDefinition() {
 
-    CType base = new ParseBaseType(parser).parse();
+    final ParseBaseType parseBaseType = new ParseBaseType(parser);
+    CType base = parseBaseType.parse();
+    CStorageKind storagespec = parseBaseType.getStorageSpec();
 
     Declarator decl = new ParseDeclarator(parser).parse();
     CType type = TypeMerger.build(base, decl);
@@ -130,27 +132,24 @@ public class ParseExternal {
       parser.perror("expect function definition");
     }
 
-    CSymGlobalVar gvar = new CSymGlobalVar(decl.getName(), type);
-    CSymbol funcSymbol = new CSymbol(gvar, parser.tok());
-    parser.defineSym(funcSymbol);
-
-    Function fd = new Function(funcSymbol);
-    parser.setCurrentFn(fd);
+    CSymFunction func = new CSymFunction(decl.getName(), type);
+    parser.defineSym(new CSymbol(storagespec, parser.tok(), func));
+    parser.setCurrentFn(func);
     parser.pushscope(ScopeLevels.METHOD_SCOPE);
 
-    defineParameters(fd.symbol.getType());
-    define__func__(fd.symbol.getNameStr());
+    defineParameters(func.type);
+    define__func__(func.name.getName());
 
-    fd.block = new ParseStatement(parser).parseCompoundStatement(true);
+    func.block = new ParseStatement(parser).parseCompoundStatement(true);
 
     parser.setCurrentFn(null);
     parser.popscope();
 
-    checkLabels(fd);
-    return new ExternalDeclaration(fd);
+    checkLabels(func);
+    return new ExternalDeclaration(func);
   }
 
-  private void checkLabels(Function fd) {
+  private void checkLabels(CSymFunction fd) {
     for (Ident id : fd.gotos) {
       if (!fd.labels.contains(id)) {
         parser.perror("goto " + id.getName() + " has no target label");
@@ -174,10 +173,10 @@ public class ParseExternal {
 
     int paramidx = 0;
     for (CFuncParam fparam : parameters) {
-      CSymLocalVar param = new CSymLocalVar(fparam.name, fparam.type);
+      CSymLocalVar param = new CSymLocalVar(fparam.name, fparam.type, null);
       param.paramidx = paramidx++;
       param.isFparam = true;
-      parser.defineSym(new CSymbol(param, parser.tok()));
+      parser.defineSym(new CSymbol(CStorageKind.ST_AUTO, parser.tok(), param));
     }
   }
 

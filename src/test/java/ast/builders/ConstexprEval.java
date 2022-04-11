@@ -1,7 +1,7 @@
 package ast.builders;
 
 import ast.parse.Parse;
-import ast.symtab.CSymbol;
+import ast.tree.CSymbol;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;
 import jscan.tokenize.T;

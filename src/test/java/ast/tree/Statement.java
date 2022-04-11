@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ast.attributes.AsmList;
+import ast.tree.CSymbol.CSymFunction;
 import jscan.symtab.Ident;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
@@ -179,11 +180,11 @@ public class Statement {
   }
 
   public static class StmtLabel {
-    public final Function function;
+    public final CSymFunction function;
     public final Ident label;
     public final Statement stmt;
 
-    public StmtLabel(Function function, Ident label, Statement stmt) {
+    public StmtLabel(CSymFunction function, Ident label, Statement stmt) {
       this.function = function;
       this.label = label;
       this.stmt = stmt;

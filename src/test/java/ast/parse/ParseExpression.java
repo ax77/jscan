@@ -37,12 +37,13 @@ import ast.builders.ApplyExpressionType;
 import ast.builders.ApplyGenericResult;
 import ast.builders.ExprUtil;
 import ast.builders.TypeApplierStage;
-import ast.symtab.CSymGlobalVar;
-import ast.symtab.CSymbol;
+import ast.tree.CSymbol;
 import ast.tree.Expression;
 import ast.tree.ExpressionBase;
 import ast.tree.Initializer;
+import ast.tree.CSymbol.CSymGlobalVar;
 import ast.types.CArrayType;
+import ast.types.CStorageKind;
 import ast.types.CStructField;
 import ast.types.CStructType;
 import ast.types.CType;
@@ -143,7 +144,7 @@ public class ParseExpression {
     initlist.add(initializer);
 
     CSymGlobalVar gvar = new CSymGlobalVar(varname, new CType(arrtype), initlist);
-    CSymbol sym = new CSymbol(gvar, saved);
+    CSymbol sym = new CSymbol(CStorageKind.ST_STATIC, saved, gvar);
     parser.defineSym(sym);
 
     return new Expression(sym, saved);

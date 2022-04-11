@@ -3,11 +3,12 @@ package ast.parse;
 import static jscan.tokenize.T.TOKEN_IDENT;
 
 import ast.builders.ConstexprEval;
-import ast.symtab.CSymEnumConst;
-import ast.symtab.CSymTag;
-import ast.symtab.CSymbol;
+import ast.tree.CSymbol;
 import ast.tree.Expression;
+import ast.tree.CSymbol.CSymEnumConst;
+import ast.tree.CSymbol.CSymTag;
 import ast.types.CEnumType;
+import ast.types.CStorageKind;
 import ast.types.CType;
 import ast.types.CTypeImpl;
 import jscan.symtab.Ident;
@@ -93,7 +94,7 @@ public class ParseEnum3 {
       }
 
       CSymEnumConst enumConst = new CSymEnumConst(enm, type, val);
-      CSymbol sym = new CSymbol(enumConst, pos);
+      CSymbol sym = new CSymbol(CStorageKind.ST_EXTERN, pos, enumConst);
       parser.defineSym(sym);
       val += 1;
 

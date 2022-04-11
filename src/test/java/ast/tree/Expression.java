@@ -14,7 +14,6 @@ import static ast.tree.ExpressionBase.EUNARY;
 
 import java.util.List;
 
-import ast.symtab.CSymbol;
 import ast.types.CStructField;
 import ast.types.CType;
 import jscan.literals.IntLiteral;

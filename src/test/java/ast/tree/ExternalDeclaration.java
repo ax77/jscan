@@ -1,11 +1,13 @@
 package ast.tree;
 
+import ast.tree.CSymbol.CSymFunction;
+
 public class ExternalDeclaration {
-  public Function functionDefinition;
+  public CSymFunction func;
   public Declaration declaration;
 
-  public ExternalDeclaration(Function functionDefinition) {
-    this.functionDefinition = functionDefinition;
+  public ExternalDeclaration(CSymFunction functionDefinition) {
+    this.func = functionDefinition;
   }
 
   public ExternalDeclaration(Declaration declaration) {
@@ -13,7 +15,7 @@ public class ExternalDeclaration {
   }
 
   public boolean isFunctionDefinition() {
-    return functionDefinition != null;
+    return func != null;
   }
 
   public boolean isDeclaration() {

@@ -3,7 +3,6 @@ package ast.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.symtab.CSymbol;
 import ast.types.CType;
 import jscan.symtab.Ident;
 import jscan.tokenize.Token;

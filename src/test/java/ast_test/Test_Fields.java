@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import ast.builders.Finders;
 import ast.main.ParseMainNew;
 import ast.main.ParseOpts;
-import ast.symtab.Finders;
 import ast.tree.TranslationUnit;
 import ast.types.CStructField;
 import ast.types.CType;

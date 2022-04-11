@@ -3,13 +3,13 @@ package ast.parse;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.tree.Function;
+import ast.tree.CSymbol.CSymFunction;
 import jscan.tokenize.Token;
 
 public class ParseState {
   private final int tokenlistOffset;
   private final Token tok;
-  private final Function currentFn;
+  private final CSymFunction currentFn;
   private final List<Token> ringBuffer;
   private final String lastloc;
   private final Token prevtok;
@@ -31,7 +31,7 @@ public class ParseState {
     return tok;
   }
 
-  public Function getCurrentFn() {
+  public CSymFunction getCurrentFn() {
     return currentFn;
   }
 
