@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ast.attributes.AttributesAsmsLists;
 import ast.builders.ConstexprEval;
 import ast.builders.TypeMerger;
+import ast.tree.AttributesAsmsLists;
 import ast.tree.Declarator;
 import ast.tree.Declarator.DeclaratorEntry;
 import ast.tree.Expression;

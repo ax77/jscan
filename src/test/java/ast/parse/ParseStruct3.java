@@ -7,14 +7,15 @@ import static jscan.tokenize.T.T_SEMI_COLON;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.attributes.AttributesAsmsLists;
 import ast.builders.ConstexprEval;
 import ast.builders.SemanticBitfield;
 import ast.builders.TypeMerger;
+import ast.builders.TypeSizeApplier;
+import ast.tree.AttributesAsmsLists;
+import ast.tree.CSymbol.CSymTag;
 import ast.tree.Declaration.StaticAssertDeclarationStub;
 import ast.tree.Declarator;
 import ast.tree.Expression;
-import ast.tree.CSymbol.CSymTag;
 import ast.types.CStructField;
 import ast.types.CStructType;
 import ast.types.CType;

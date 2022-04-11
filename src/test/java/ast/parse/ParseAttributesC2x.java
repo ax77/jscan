@@ -5,8 +5,8 @@ import static jscan.tokenize.T.T_RIGHT_BRACKET;
 
 import java.util.List;
 
-import ast.attributes.Attribute;
-import ast.attributes.AttributeList;
+import ast.tree.AttributesAsmsLists.AttributeList;
+import ast.tree.AttributesAsmsLists.CAttribute;
 import jscan.tokenize.Token;
 
 public class ParseAttributesC2x {
@@ -20,16 +20,16 @@ public class ParseAttributesC2x {
     AttributeList result = new AttributeList();
 
     while (parser.isAttributeStartC2X()) {
-      Attribute attr = parseOneAttribute();
+      CAttribute attr = parseOneAttribute();
       result.push(attr);
     }
 
     return result;
   }
 
-  private Attribute parseOneAttribute() {
+  private CAttribute parseOneAttribute() {
 
-    Attribute result = new Attribute();
+    CAttribute result = new CAttribute();
     ParseBalancedTokenlist balanced = new ParseBalancedTokenlist(parser);
 
     List<Token> list = balanced.parse(T_LEFT_BRACKET, T_RIGHT_BRACKET);

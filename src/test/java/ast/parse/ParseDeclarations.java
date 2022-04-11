@@ -5,13 +5,13 @@ import java.util.List;
 
 import ast.builders.TypeMerger;
 import ast.tree.CSymbol;
+import ast.tree.CSymbol.CSymGlobalVar;
+import ast.tree.CSymbol.CSymLocalVar;
 import ast.tree.Declaration;
 import ast.tree.Declaration.StaticAssertDeclarationStub;
 import ast.tree.Declaration.TypedefDeclarationStub;
 import ast.tree.Declarator;
 import ast.tree.Initializer;
-import ast.tree.CSymbol.CSymGlobalVar;
-import ast.tree.CSymbol.CSymLocalVar;
 import ast.types.CStorageKind;
 import ast.types.CType;
 import jscan.symtab.Ident;

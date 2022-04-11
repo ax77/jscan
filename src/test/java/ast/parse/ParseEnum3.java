@@ -4,9 +4,9 @@ import static jscan.tokenize.T.TOKEN_IDENT;
 
 import ast.builders.ConstexprEval;
 import ast.tree.CSymbol;
-import ast.tree.Expression;
 import ast.tree.CSymbol.CSymEnumConst;
 import ast.tree.CSymbol.CSymTag;
+import ast.tree.Expression;
 import ast.types.CEnumType;
 import ast.types.CStorageKind;
 import ast.types.CType;

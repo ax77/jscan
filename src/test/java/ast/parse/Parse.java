@@ -9,11 +9,11 @@ import java.util.List;
 
 import ast.builders.TypeMerger;
 import ast.tree.CSymbol;
-import ast.tree.Declarator;
-import ast.tree.ExternalDeclaration;
-import ast.tree.TranslationUnit;
 import ast.tree.CSymbol.CSymFunction;
 import ast.tree.CSymbol.CSymTag;
+import ast.tree.Declarator;
+import ast.tree.TranslationUnit;
+import ast.tree.TranslationUnit.ExternalDeclaration;
 import ast.types.CStorageKind;
 import ast.types.CType;
 import jscan.parse.RingBuf;

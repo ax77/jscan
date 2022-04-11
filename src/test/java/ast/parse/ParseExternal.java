@@ -4,14 +4,14 @@ import static jscan.tokenize.T.T_LEFT_BRACE;
 
 import java.util.List;
 
-import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeMerger;
+import ast.tree.AttributesAsmsLists;
 import ast.tree.CSymbol;
-import ast.tree.Declaration;
-import ast.tree.Declarator;
-import ast.tree.ExternalDeclaration;
 import ast.tree.CSymbol.CSymFunction;
 import ast.tree.CSymbol.CSymLocalVar;
+import ast.tree.Declaration;
+import ast.tree.Declarator;
+import ast.tree.TranslationUnit.ExternalDeclaration;
 import ast.types.CFuncParam;
 import ast.types.CStorageKind;
 import ast.types.CType;

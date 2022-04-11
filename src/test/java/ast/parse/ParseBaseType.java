@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import ast.attributes.AttributesAsmsLists;
 import ast.builders.TypeCombiner;
+import ast.tree.AttributesAsmsLists;
 import ast.types.CStorageKind;
 import ast.types.CType;
 import ast.types.CTypeImpl;

@@ -2,8 +2,8 @@ package ast.parse;
 
 import java.util.List;
 
-import ast.attributes.Attribute;
-import ast.attributes.AttributeList;
+import ast.tree.AttributesAsmsLists.AttributeList;
+import ast.tree.AttributesAsmsLists.CAttribute;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 
@@ -18,16 +18,16 @@ public class ParseAttributesGcc {
     AttributeList result = new AttributeList();
 
     while (parser.isAttributeStartGnuc()) {
-      Attribute attr = parseOneAttribute();
+      CAttribute attr = parseOneAttribute();
       result.push(attr);
     }
 
     return result;
   }
 
-  private Attribute parseOneAttribute() {
+  private CAttribute parseOneAttribute() {
 
-    Attribute result = new Attribute();
+    CAttribute result = new CAttribute();
     parser.move(); // __attribute__
 
     ParseBalancedTokenlist balanced = new ParseBalancedTokenlist(parser);

@@ -1,8 +1,8 @@
 package ast.parse;
 
-import ast.attributes.AsmList;
-import ast.attributes.AttributeList;
-import ast.attributes.AttributesAsmsLists;
+import ast.tree.AttributesAsmsLists;
+import ast.tree.AttributesAsmsLists.AsmList;
+import ast.tree.AttributesAsmsLists.AttributeList;
 
 public class ParseAttributesAsms {
   private final Parse parser;

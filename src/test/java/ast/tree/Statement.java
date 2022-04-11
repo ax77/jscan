@@ -3,7 +3,7 @@ package ast.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.attributes.AsmList;
+import ast.tree.AttributesAsmsLists.AsmList;
 import ast.tree.CSymbol.CSymFunction;
 import jscan.symtab.Ident;
 import jscan.tokenize.Token;

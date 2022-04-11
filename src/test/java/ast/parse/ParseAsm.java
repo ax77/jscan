@@ -7,7 +7,7 @@ import static jscan.tokenize.T.T_RIGHT_PAREN;
 import java.util.ArrayList;
 import java.util.List;
 
-import ast.attributes.AsmList;
+import ast.tree.AttributesAsmsLists.AsmList;
 import jscan.tokenize.Token;
 
 public class ParseAsm {
