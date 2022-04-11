@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import ast.main.ParseMainNew;
-import ast.main.ParseOpts;
-import ast.tree.CSymbol;
-import ast.tree.CSymbol.CSymFunction;
-import ast.tree.Declaration;
-import ast.tree.TranslationUnit;
-import ast.tree.TranslationUnit.ExternalDeclaration;
+import cc.main.ParseMainNew;
+import cc.main.ParseOpts;
+import cc.tree.CSymbol;
+import cc.tree.Declaration;
+import cc.tree.TranslationUnit;
+import cc.tree.CSymbol.CSymFunction;
+import cc.tree.TranslationUnit.ExternalDeclaration;
 import jscan.fio.FileReadKind;
 import jscan.fio.FileWrapper;
 import jscan.fio.IO;
@@ -26,7 +26,7 @@ public class Test_ParseTcc {
   @Test
   public void parseTcc() throws IOException {
     String dir = IO.userDir();
-    String fname = dir + "/cc_tests/tcc.c";
+    String fname = dir + "/data/test_cc/cc_tests/tcc.c";
 
     TranslationUnit unit = parseUnit(new StringBuilder(new FileWrapper(fname).readToString(FileReadKind.AS_IS)));
     for (ExternalDeclaration d : unit.getExternalDeclarations()) {

@@ -146,12 +146,12 @@ public class PeWriterControl {
 
     // write the file.
     String dir = System.getProperty("user.dir");
-    String filename = dir + "/bins/pefile.exe";
+    String filename = dir + "/data/test_pe/pefile.exe";
     strm.fout(filename);
     chmodX(filename);
 
     File f1 = new File(filename);
-    File f2 = new File(dir + "/bins/evmc.exe");
+    File f2 = new File(dir + "/data/test_pe/evmc.exe");
     boolean diff = ByteBuffDiff.findDiff(IO.toBytes(f1), IO.toBytes(f2), false);
     assertFalse(diff);
 

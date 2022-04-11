@@ -11,13 +11,13 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
-import ast.builders.ConstexprEval;
-import ast.main.ParseMainNew;
-import ast.main.ParseOpts;
-import ast.parse.Parse;
-import ast.parse.ParseExpression;
-import ast.tree.Expression;
-import ast.tree.TranslationUnit;
+import cc.builders.ConstexprEval;
+import cc.main.ParseMainNew;
+import cc.main.ParseOpts;
+import cc.parse.Parse;
+import cc.parse.ParseExpression;
+import cc.tree.Expression;
+import cc.tree.TranslationUnit;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
 

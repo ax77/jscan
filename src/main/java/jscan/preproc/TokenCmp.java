@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jscan.hashed.Hash_stream;
-import jscan.main.Env;
 import jscan.preproc.preprocess.Scan;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.Env;
 
 public class TokenCmp {
   private final String srcFname;

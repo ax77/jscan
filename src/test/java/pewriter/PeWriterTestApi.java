@@ -101,7 +101,7 @@ public class PeWriterTestApi {
     Asm86 code = construct_code();
 
     PeMainWriter writer = new PeMainWriter(datas, imports, code);
-    writer.write("/bins/pewriter5.exe");
+    writer.write("/data/test_pe/pewriter5.exe");
 
   }
 

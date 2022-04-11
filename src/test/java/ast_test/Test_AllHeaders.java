@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ast.parse.Parse;
-import ast.tree.TranslationUnit;
+import cc.parse.Parse;
+import cc.tree.TranslationUnit;
 import jscan.preproc.preprocess.Scan;
 import jscan.symtab.KeywordsInits;
 import jscan.tokenize.Stream;

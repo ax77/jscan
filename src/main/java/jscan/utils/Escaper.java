@@ -1,15 +1,14 @@
 package jscan.utils;
 
-import static jscan.main.Env.hexValue;
-import static jscan.main.Env.isHex;
-import static jscan.main.Env.isOct;
-import static jscan.main.Env.octValue;
+import static jscan.utils.Env.hexValue;
+import static jscan.utils.Env.isHex;
+import static jscan.utils.Env.isOct;
+import static jscan.utils.Env.octValue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jscan.buffers.Cbuf;
-import jscan.main.Env;
 
 public abstract class Escaper {
 

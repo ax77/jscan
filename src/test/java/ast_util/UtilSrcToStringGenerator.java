@@ -48,8 +48,8 @@ public class UtilSrcToStringGenerator {
   @Test
   public void tostr() throws IOException {
     final String dir = System.getProperty("user.dir");
-    final String fnameinput = dir + "/__test_src.txt";
-    final String fnameout = dir + "/__test_src_out.txt";
+    final String fnameinput = dir + "/data/__test_src.txt";
+    final String fnameout = dir + "/data/__test_src_out.txt";
 
     String q = "\"";
     String n = "\\n";

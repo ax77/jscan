@@ -3,8 +3,6 @@ package jscan.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import jscan.main.Env;
-
 public abstract class Normalizer {
 
   public static String normalize(final String given) {

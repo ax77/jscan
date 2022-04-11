@@ -8,9 +8,9 @@ import java.util.List;
 import jscan.fio.FileWrapper;
 import jscan.hashed.Hash_once;
 import jscan.hashed.Hash_stream;
-import jscan.main.Env;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.Env;
 import jscan.utils.Normalizer;
 
 public final class PP_include implements PP_directive {

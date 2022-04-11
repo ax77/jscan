@@ -1,10 +1,10 @@
 package jscan.literals;
 
-import static jscan.main.Env.isBin;
-import static jscan.main.Env.isDec;
-import static jscan.main.Env.isHex;
-import static jscan.main.Env.isLetter;
-import static jscan.main.Env.isOct;
+import static jscan.utils.Env.isBin;
+import static jscan.utils.Env.isDec;
+import static jscan.utils.Env.isHex;
+import static jscan.utils.Env.isLetter;
+import static jscan.utils.Env.isOct;
 
 import java.util.ArrayList;
 import java.util.HashMap;

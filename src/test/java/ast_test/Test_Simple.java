@@ -8,10 +8,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ast.main.ParseMainNew;
-import ast.main.ParseOpts;
-import ast.parse.Parse;
-import ast.tree.TranslationUnit;
+import cc.main.ParseMainNew;
+import cc.main.ParseOpts;
+import cc.parse.Parse;
+import cc.tree.TranslationUnit;
 import jscan.tokenize.Token;
 
 class UtilTestDto {

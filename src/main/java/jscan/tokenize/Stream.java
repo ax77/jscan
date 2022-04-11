@@ -1,12 +1,12 @@
 package jscan.tokenize;
 
-import static jscan.main.Env.EOF_TOKEN_ENTRY;
-import static jscan.main.Env.HC_FEOF;
-import static jscan.main.Env.isDec;
-import static jscan.main.Env.isLetter;
-import static jscan.main.Env.isOpStart;
 import static jscan.tokenize.T.TOKEN_EOF;
 import static jscan.tokenize.T.TOKEN_ERROR;
+import static jscan.utils.Env.EOF_TOKEN_ENTRY;
+import static jscan.utils.Env.HC_FEOF;
+import static jscan.utils.Env.isDec;
+import static jscan.utils.Env.isLetter;
+import static jscan.utils.Env.isOpStart;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +16,11 @@ import java.util.Map;
 
 import jscan.buffers.Cbuf;
 import jscan.hashed.Hash_ident;
-import jscan.main.Env;
 import jscan.preproc.preprocess.ScanExc;
 import jscan.sourceloc.SourceLocation;
 import jscan.symtab.Ident;
 import jscan.utils.AstParseException;
+import jscan.utils.Env;
 import jscan.utils.Escaper;
 
 public class Stream {

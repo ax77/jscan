@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import ast.main.ParseMainNew;
-import ast.main.ParseOpts;
-import ast.tree.TranslationUnit;
+import cc.main.ParseMainNew;
+import cc.main.ParseOpts;
+import cc.tree.TranslationUnit;
 
 public class Test_Current {
 

@@ -383,7 +383,7 @@ public class Asm86 {
 
   private List<AsmDatas> readDatas() throws IOException, StreamReadException, DatabindException {
     ObjectMapper mapper = new ObjectMapper();
-    List<AsmDatas> datas = Arrays.asList(mapper.readValue(Paths.get("datas.json").toFile(), AsmDatas[].class));
+    List<AsmDatas> datas = Arrays.asList(mapper.readValue(Paths.get("data/asm/datas.json").toFile(), AsmDatas[].class));
     return datas;
   }
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import ast.types.CTypeKind;
+import cc.types.CTypeKind;
 import jscan.preproc.TokenPrint;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;

@@ -1,6 +1,6 @@
 package jscan.buffers;
 
-import static jscan.main.Env.HC_FEOF;
+import static jscan.utils.Env.HC_FEOF;
 
 public class Cbuf {
   private static final int EOFS_PADDING_BUFLEN = 16;

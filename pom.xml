@@ -52,7 +52,7 @@
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>libs/</classpathPrefix>
 							<mainClass>
-								jscan.main.Main
+								cc.main.Main
 							</mainClass>
 						</manifest>
 					</archive>

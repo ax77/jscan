@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import jscan.main.Env;
 import jscan.preproc.Error;
 import jscan.preproc.ErrorCode;
 import jscan.preproc.Sym;
@@ -19,6 +18,7 @@ import jscan.tokenize.Fcategory;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.Env;
 
 public final class Scan {
   private final List<Token> tokens;

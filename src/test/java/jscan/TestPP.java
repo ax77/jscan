@@ -13,7 +13,7 @@ import jscan.preproc.preprocess.PpEnv;
 
 public class TestPP {
 
-  private static final String PP_TEST_DIR_MAIN = "pp_tests/__unload";
+  private static final String PP_TEST_DIR_MAIN = "data/test_cc/pp_tests/__unload";
 
   private void addAngleDir(String p) throws IOException {
     PpEnv.INC_ANGLE_DIRS.add(p);
@@ -133,12 +133,12 @@ public class TestPP {
 
     final String dir = System.getProperty("user.dir");
 
-    addAngleDir(dir + "\\pp_tests\\__include");
-    addAngleDir(dir + "\\pp_tests\\__include\\chaos_pp\\");
-    addAngleDir(dir + "\\pp_tests\\__include\\boost_pp\\");
-    addAngleDir(dir + "\\pp_tests\\__include\\vrm_pp\\");
-    addAngleDir(dir + "\\pp_tests\\__unload\\a_test_include\\");
-    addAngleDir(dir + "\\pp_tests\\__unload\\a_test_expansion_include\\");
+    addAngleDir(dir + "\\data\\test_cc\\pp_tests\\__include");
+    addAngleDir(dir + "\\data\\test_cc\\pp_tests\\__include\\chaos_pp\\");
+    addAngleDir(dir + "\\data\\test_cc\\pp_tests\\__include\\boost_pp\\");
+    addAngleDir(dir + "\\data\\test_cc\\pp_tests\\__include\\vrm_pp\\");
+    addAngleDir(dir + "\\data\\test_cc\\pp_tests\\__unload\\a_test_include\\");
+    addAngleDir(dir + "\\data\\test_cc\\pp_tests\\__unload\\a_test_expansion_include\\");
 
     long start = System.currentTimeMillis();
     runTests();

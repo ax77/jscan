@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ast.main.ParseMainNew;
-import ast.main.ParseOpts;
-import ast.tree.TranslationUnit;
+import cc.main.ParseMainNew;
+import cc.main.ParseOpts;
+import cc.tree.TranslationUnit;
 import jscan.fio.FileSearchKind;
 import jscan.fio.FileWrapper;
 import jscan.fio.IO;
@@ -16,7 +16,7 @@ public class RunCcTests {
 
   @Test
   public void runTestSuite() throws IOException {
-    String dir = IO.userDir() + "/cc_tests/suite";
+    String dir = IO.userDir() + "/data/test_cc/cc_tests/suite";
     FileWrapper wrapper = new FileWrapper(dir);
     List<FileWrapper> files = wrapper.allFilesInThisDirectory(FileSearchKind.FILES_ONLY);
     for (FileWrapper f : files) {

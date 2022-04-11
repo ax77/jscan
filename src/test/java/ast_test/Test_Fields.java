@@ -7,12 +7,12 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import ast.builders.Finders;
-import ast.main.ParseMainNew;
-import ast.main.ParseOpts;
-import ast.tree.TranslationUnit;
-import ast.types.CStructField;
-import ast.types.CType;
+import cc.builders.Finders;
+import cc.main.ParseMainNew;
+import cc.main.ParseOpts;
+import cc.tree.TranslationUnit;
+import cc.types.CStructField;
+import cc.types.CType;
 
 public class Test_Fields {
 
