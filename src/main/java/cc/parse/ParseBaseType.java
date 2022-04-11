@@ -7,11 +7,11 @@ import java.util.Set;
 
 import cc.builders.TypeCombiner;
 import cc.tree.AttributesAsmsLists;
+import cc.tree.Keywords;
 import cc.types.CStorageKind;
 import cc.types.CType;
 import cc.types.CTypeImpl;
 import cc.types.CTypeKind;
-import jscan.symtab.Keywords;
 import jscan.tokenize.Token;
 import jscan.utils.NullChecker;
 

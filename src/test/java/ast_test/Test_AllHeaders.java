@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import cc.main.KeywordsInits;
 import cc.parse.Parse;
 import cc.tree.TranslationUnit;
 import jscan.preproc.preprocess.Scan;
-import jscan.symtab.KeywordsInits;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;

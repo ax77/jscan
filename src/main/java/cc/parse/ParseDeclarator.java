@@ -13,12 +13,12 @@ import cc.builders.TypeMerger;
 import cc.tree.AttributesAsmsLists;
 import cc.tree.Declarator;
 import cc.tree.Expression;
+import cc.tree.Keywords;
 import cc.tree.Declarator.DeclaratorEntry;
 import cc.types.CFuncParam;
 import cc.types.CType;
 import cc.types.CTypeKind;
 import jscan.symtab.Ident;
-import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 

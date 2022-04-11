@@ -8,8 +8,8 @@ import java.util.List;
 import cc.parse.Parse;
 import cc.parse.ParseExpression;
 import cc.tree.Expression;
+import cc.tree.Keywords;
 import cc.types.CType;
-import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 

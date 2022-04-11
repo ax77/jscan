@@ -2,9 +2,9 @@ package cc.builders;
 
 import cc.parse.Parse;
 import cc.parse.ParseStatement;
+import cc.tree.Keywords;
 import cc.tree.Statement;
 import cc.tree.StatementBase;
-import jscan.symtab.Keywords;
 import jscan.tokenize.Token;
 
 public class BreakContinue {

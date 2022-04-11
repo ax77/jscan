@@ -1,4 +1,4 @@
-package jscan.parse;
+package jscan.utils;
 
 import java.util.ArrayList;
 import java.util.List;

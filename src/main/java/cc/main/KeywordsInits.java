@@ -1,7 +1,8 @@
-package jscan.symtab;
+package cc.main;
 
 import java.lang.reflect.Field;
 
+import cc.tree.Keywords;
 import jscan.hashed.Hash_ident;
 import jscan.utils.AstParseException;
 

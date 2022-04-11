@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.builders.TypeMerger;
+import cc.main.KeywordsInits;
 import cc.tree.CSymbol;
 import cc.tree.Declarator;
 import cc.tree.TranslationUnit;
@@ -16,15 +17,14 @@ import cc.tree.CSymbol.CSymTag;
 import cc.tree.TranslationUnit.ExternalDeclaration;
 import cc.types.CStorageKind;
 import cc.types.CType;
-import jscan.parse.RingBuf;
-import jscan.parse.Tokenlist;
 import jscan.symtab.Ident;
-import jscan.symtab.KeywordsInits;
 import jscan.symtab.ScopeLevels;
 import jscan.symtab.Symtab;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 import jscan.utils.AstParseException;
+import jscan.utils.RingBuf;
+import jscan.utils.Tokenlist;
 
 public class Parse {
 

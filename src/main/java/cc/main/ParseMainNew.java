@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.builders.StrConcat;
 import cc.parse.Parse;
 import cc.tree.TranslationUnit;
 import jscan.fio.FileReadKind;
@@ -11,9 +12,6 @@ import jscan.fio.FileWrapper;
 import jscan.hashed.Hash_all;
 import jscan.preproc.preprocess.Scan;
 import jscan.sourceloc.SourceLocation;
-import jscan.specs.PredefinedBuffer;
-import jscan.specs.StrConcat;
-import jscan.symtab.KeywordsInits;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;

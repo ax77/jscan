@@ -1,11 +1,9 @@
-package jscan.parse;
+package jscan.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jscan.tokenize.Token;
-import jscan.utils.AstParseException;
-import jscan.utils.Env;
 
 public class Tokenlist {
   private final List<Token> list;

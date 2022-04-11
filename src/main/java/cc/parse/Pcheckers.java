@@ -7,7 +7,7 @@ import static jscan.tokenize.T.T_PLUS;
 import static jscan.tokenize.T.T_TILDE;
 import static jscan.tokenize.T.T_TIMES;
 
-import jscan.symtab.Keywords;
+import cc.tree.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 

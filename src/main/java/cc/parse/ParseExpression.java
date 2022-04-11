@@ -41,6 +41,7 @@ import cc.tree.CSymbol;
 import cc.tree.Expression;
 import cc.tree.ExpressionBase;
 import cc.tree.Initializer;
+import cc.tree.Keywords;
 import cc.tree.CSymbol.CSymGlobalVar;
 import cc.types.CArrayType;
 import cc.types.CStorageKind;
@@ -53,7 +54,6 @@ import jscan.literals.IntLiteral;
 import jscan.literals.IntLiteralParser;
 import jscan.literals.IntLiteralType;
 import jscan.symtab.Ident;
-import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 

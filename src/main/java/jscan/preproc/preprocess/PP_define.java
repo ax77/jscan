@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jscan.hashed.Hash_ident;
-import jscan.parse.Tokenlist;
 import jscan.preproc.Error;
 import jscan.preproc.Sym;
 import jscan.tokenize.Fcategory;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.Tokenlist;
 
 public final class PP_define implements PP_directive {
 

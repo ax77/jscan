@@ -1,6 +1,7 @@
-package jscan.symtab;
+package cc.tree;
 
 import jscan.hashed.Hash_ident;
+import jscan.symtab.Ident;
 
 public final class Keywords {
 
@@ -14,25 +15,7 @@ public final class Keywords {
   }
 
   //@formatter:off
-//  public static final Ident implements_ident       = g("implements");
-//  public static final Ident import_ident           = g("import");
-//  public static final Ident new_ident              = g("new");
-//  public static final Ident native_ident           = g("native");
-//  public static final Ident final_ident            = g("final");
-//  public static final Ident private_ident          = g("private");
-//  public static final Ident public_ident           = g("public");
-//  public static final Ident true_ident             = g("true");
-//  public static final Ident false_ident            = g("false");
-//  public static final Ident this_ident             = g("this");
-//  public static final Ident cast_ident             = g("cast");
-//  public static final Ident deinit_ident           = g("deinit");
-//  public static final Ident test_ident             = g("test");
-//  public static final Ident static_assert_ident    = g("static_assert");
-//  public static final Ident assert_true_ident      = g("assert_true");
-//  public static final Ident boolean_ident          = g("boolean");
-//  public static final Ident class_ident            = g("class");
-//  public static final Ident interface_ident        = g("interface");
-  
+
   public static final Ident auto_ident             = g("auto"            );
   public static final Ident break_ident            = g("break"           );
   public static final Ident case_ident             = g("case"            );
@@ -107,23 +90,6 @@ public final class Keywords {
   public static final Ident __label___ident        = g("__label__"       );
   public static final Ident __extension___ident    = g("__extension__"   );
   
-  //public static final Ident define_ident           = g("define");
-  //public static final Ident undef_ident            = g("undef");
-  //public static final Ident include_ident          = g("include");
-  //public static final Ident ifdef_ident            = g("ifdef");
-  //public static final Ident ifndef_ident           = g("ifndef");
-  //public static final Ident endif_ident            = g("endif");
-  //public static final Ident elif_ident             = g("elif");
-  //public static final Ident line_ident             = g("line");
-  //public static final Ident error_ident            = g("error");
-  //public static final Ident pragma_ident           = g("pragma");
-  //public static final Ident warning_ident          = g("warning");
-  //public static final Ident include_next_ident     = g("include_next");
-  public static final Ident __FILE___ident         = g("__FILE__");
-  public static final Ident __LINE___ident         = g("__LINE__");
-  public static final Ident __DATE___ident         = g("__DATE__");
-  public static final Ident __TIME___ident         = g("__TIME__");
-
   //@formatter:on
 
 }

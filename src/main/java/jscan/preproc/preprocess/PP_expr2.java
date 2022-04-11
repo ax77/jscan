@@ -23,9 +23,9 @@ import java.util.TreeMap;
 
 import jscan.literals.IntLiteral;
 import jscan.literals.IntLiteralParser;
-import jscan.parse.Tokenlist;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
+import jscan.utils.Tokenlist;
 
 enum PP_ExprNodeType {
     e_cnd,

@@ -1,4 +1,4 @@
-package jscan.specs;
+package cc.builders;
 
 import java.io.IOException;
 import java.util.ArrayList;

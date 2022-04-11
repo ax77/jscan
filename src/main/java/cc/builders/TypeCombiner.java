@@ -1,22 +1,22 @@
 package cc.builders;
 
-import static jscan.symtab.Keywords._Bool_ident;
-import static jscan.symtab.Keywords._Complex_ident;
-import static jscan.symtab.Keywords._Imaginary_ident;
-import static jscan.symtab.Keywords.auto_ident;
-import static jscan.symtab.Keywords.char_ident;
-import static jscan.symtab.Keywords.double_ident;
-import static jscan.symtab.Keywords.extern_ident;
-import static jscan.symtab.Keywords.float_ident;
-import static jscan.symtab.Keywords.int_ident;
-import static jscan.symtab.Keywords.long_ident;
-import static jscan.symtab.Keywords.register_ident;
-import static jscan.symtab.Keywords.short_ident;
-import static jscan.symtab.Keywords.signed_ident;
-import static jscan.symtab.Keywords.static_ident;
-import static jscan.symtab.Keywords.typedef_ident;
-import static jscan.symtab.Keywords.unsigned_ident;
-import static jscan.symtab.Keywords.void_ident;
+import static cc.tree.Keywords._Bool_ident;
+import static cc.tree.Keywords._Complex_ident;
+import static cc.tree.Keywords._Imaginary_ident;
+import static cc.tree.Keywords.auto_ident;
+import static cc.tree.Keywords.char_ident;
+import static cc.tree.Keywords.double_ident;
+import static cc.tree.Keywords.extern_ident;
+import static cc.tree.Keywords.float_ident;
+import static cc.tree.Keywords.int_ident;
+import static cc.tree.Keywords.long_ident;
+import static cc.tree.Keywords.register_ident;
+import static cc.tree.Keywords.short_ident;
+import static cc.tree.Keywords.signed_ident;
+import static cc.tree.Keywords.static_ident;
+import static cc.tree.Keywords.typedef_ident;
+import static cc.tree.Keywords.unsigned_ident;
+import static cc.tree.Keywords.void_ident;
 
 import java.util.List;
 

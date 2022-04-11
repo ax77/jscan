@@ -2,8 +2,8 @@ package cc.parse;
 
 import cc.builders.ConstexprEval;
 import cc.tree.Expression;
+import cc.tree.Keywords;
 import cc.tree.Declaration.StaticAssertDeclarationStub;
-import jscan.symtab.Keywords;
 import jscan.tokenize.T;
 import jscan.tokenize.Token;
 

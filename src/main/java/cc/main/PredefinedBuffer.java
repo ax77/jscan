@@ -1,4 +1,4 @@
-package jscan.specs;
+package cc.main;
 
 public abstract class PredefinedBuffer {
 

@@ -13,7 +13,6 @@ import jscan.preproc.preprocess.args.ArgInfo;
 import jscan.preproc.preprocess.args.ArgInfoVararg;
 import jscan.preproc.preprocess.args.ArgVariants;
 import jscan.sourceloc.SourceLocation;
-import jscan.symtab.Keywords;
 import jscan.tokenize.Fcategory;
 import jscan.tokenize.Stream;
 import jscan.tokenize.T;
@@ -171,13 +170,13 @@ public final class Scan {
       return false;
     }
 
-    if (t.isIdent(Keywords.__FILE___ident)) {
+    if (t.getValue().equals("__FILE__")) {
       t.setValue("\"" + t.getFilename() + "\"");
       t.setType(T.TOKEN_STRING);
       return true;
     }
 
-    if (t.isIdent(Keywords.__LINE___ident)) {
+    if (t.getValue().equals("__LINE__")) {
       t.setValue(String.valueOf(t.getLine()));
       t.setType(T.TOKEN_NUMBER);
       return true;
